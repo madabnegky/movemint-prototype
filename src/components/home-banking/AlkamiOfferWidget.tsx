@@ -5,7 +5,7 @@ import { ChevronRight, ChevronDown, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/context/StoreContext";
 import type { Offer } from "@/context/StoreContext";
-import { PrequalificationWidget } from "@/components/home-banking/PrequalificationWidget";
+import { PrequalificationCard } from "@/components/storefront/PrequalificationCard";
 import { CreditMountainCard } from "@/components/storefront/CreditMountainCard";
 import { useStorefront, CREDIT_MOUNTAIN_SECTION } from "@/hooks/useStorefront";
 import type { GeneratedOffer } from "@/lib/ruleEvaluator";
@@ -212,6 +212,7 @@ export function AlkamiOfferWidget() {
     const getBorderColor = (variant?: string) => {
         switch (variant) {
             case 'preapproved':
+            case 'prequalified':
                 return 'border-l-emerald-500';
             case 'apply':
             case 'ita':
@@ -231,6 +232,12 @@ export function AlkamiOfferWidget() {
                 return (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 uppercase">
                         Pre-Approved
+                    </span>
+                );
+            case 'prequalified':
+                return (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 uppercase">
+                        Pre-Qualified
                     </span>
                 );
             case 'apply':
@@ -281,7 +288,7 @@ export function AlkamiOfferWidget() {
             <div className="space-y-3">
                 {/* Consumer Prequalification Widget */}
                 {featureFlags.consumer_prequalification && (
-                    <PrequalificationWidget />
+                    <PrequalificationCard variant="compact" />
                 )}
 
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -341,12 +348,17 @@ export function AlkamiOfferWidget() {
                                             PRE-APPROVED
                                         </span>
                                     )}
-                                    {(currentPage.offer.variant === 'apply' || currentPage.offer.variant === 'ita') && (
+                                    {currentPage.offer.variant === 'prequalified' && (
+                                        <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-emerald-500 text-white">
+                                            PRE-QUALIFIED
+                                        </span>
+                                    )}
+                                    {(currentPage.offer.variant === 'ita') && (
                                         <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-indigo-500 text-white">
                                             APPLY NOW
                                         </span>
                                     )}
-                                    {currentPage.offer.variant === 'special' && (
+                                    {(currentPage.offer.variant === 'wildcard' || currentPage.offer.variant === 'protection') && (
                                         <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-gray-500 text-white">
                                             SPECIAL OFFER
                                         </span>

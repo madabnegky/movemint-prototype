@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/context/StoreContext";
 import type { Offer } from "@/context/StoreContext";
 import { CreditMountainCard } from "@/components/storefront/CreditMountainCard";
-import { PrequalificationWidget } from "@/components/home-banking/PrequalificationWidget";
+import { PrequalificationCard } from "@/components/storefront/PrequalificationCard";
 import { useStorefront, CREDIT_MOUNTAIN_SECTION } from "@/hooks/useStorefront";
 import type { GeneratedOffer } from "@/lib/ruleEvaluator";
 import Link from "next/link";
@@ -236,6 +236,7 @@ export function Q2ComposableWidget() {
     const getBorderColor = (variant?: string) => {
         switch (variant) {
             case 'preapproved':
+            case 'prequalified':
                 return 'border-l-green-500';
             case 'apply':
                 return 'border-l-purple-500';
@@ -252,6 +253,12 @@ export function Q2ComposableWidget() {
                 return (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 uppercase">
                         Preapproved
+                    </span>
+                );
+            case 'prequalified':
+                return (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 uppercase">
+                        Prequalified
                     </span>
                 );
             case 'apply':
@@ -301,7 +308,7 @@ export function Q2ComposableWidget() {
             <div className="space-y-3">
                 {/* Consumer Prequalification Widget */}
                 {featureFlags.consumer_prequalification && (
-                    <PrequalificationWidget />
+                    <PrequalificationCard variant="compact" />
                 )}
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -358,15 +365,20 @@ export function Q2ComposableWidget() {
                                 <div className="mb-2">
                                     {currentPage.offer.variant === 'preapproved' && (
                                         <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-green-500 text-white">
-                                            YOU'RE PREAPPROVED
+                                            YOU&apos;RE PREAPPROVED
                                         </span>
                                     )}
-                                    {currentPage.offer.variant === 'apply' && (
+                                    {currentPage.offer.variant === 'prequalified' && (
+                                        <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-green-500 text-white">
+                                            YOU&apos;RE PREQUALIFIED
+                                        </span>
+                                    )}
+                                    {currentPage.offer.variant === 'ita' && (
                                         <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-purple-500 text-white">
                                             APPLY NOW
                                         </span>
                                     )}
-                                    {currentPage.offer.variant === 'special' && (
+                                    {(currentPage.offer.variant === 'wildcard' || currentPage.offer.variant === 'protection') && (
                                         <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-gray-500 text-white">
                                             SPECIAL OFFER
                                         </span>

@@ -50,6 +50,7 @@ function Select({ className, ...props }: React.SelectHTMLAttributes<HTMLSelectEl
 // Variant display config
 const VARIANT_CONFIG: Record<OfferVariant, { label: string; color: string }> = {
     'preapproved': { label: "Preapproved", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+    'prequalified': { label: "Prequalified", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
     'ita': { label: "Invite to Apply", color: "bg-purple-50 text-purple-700 border-purple-200" },
     'wildcard': { label: "Special Offer", color: "bg-amber-50 text-amber-700 border-amber-200" },
     'redeemed': { label: "Redeemed", color: "bg-slate-50 text-slate-500 border-slate-200" },

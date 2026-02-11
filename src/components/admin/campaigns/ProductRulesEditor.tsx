@@ -65,6 +65,7 @@ const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
     "gap": "GAP Coverage",
     "mrc": "MRC",
     "debt-protection": "Debt Protection",
+    "personal-loan": "Personal Loan",
     // Deposit products
     "savings": "Savings Account",
     "checking": "Checking Account",

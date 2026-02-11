@@ -6,7 +6,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Offer variants matching the design spec
 export type OfferVariant =
-    | 'preapproved'      // "You're preapproved!" - teal badge
+    | 'preapproved'      // "You're preapproved!" - green badge
+    | 'prequalified'     // "You're prequalified!" - green badge (consumer-initiated)
     | 'ita'              // "Apply Now" - Invited to Apply
     | 'wildcard'         // "Special Offer" - promotional
     | 'redeemed'         // Greyed out, already claimed

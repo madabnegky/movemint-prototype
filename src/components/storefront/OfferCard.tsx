@@ -46,7 +46,13 @@ export function OfferCard({
             case 'credit-limit':
                 return (
                     <span className="inline-block bg-[#4D9B56] text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                        You're Preapproved!
+                        You&apos;re Preapproved!
+                    </span>
+                );
+            case 'prequalified':
+                return (
+                    <span className="inline-block bg-[#4D9B56] text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        You&apos;re Prequalified!
                     </span>
                 );
             case 'ita':

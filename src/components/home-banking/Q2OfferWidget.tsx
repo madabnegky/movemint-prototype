@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/context/StoreContext";
 import type { Offer } from "@/context/StoreContext";
 import { CreditMountainCard } from "@/components/storefront/CreditMountainCard";
-import { PrequalificationWidget } from "@/components/home-banking/PrequalificationWidget";
+import { PrequalificationCard } from "@/components/storefront/PrequalificationCard";
 import { useStorefront } from "@/hooks/useStorefront";
 
 type WidgetView = 'list' | 'details' | 'review' | 'vehicle' | 'contact' | 'terms' | 'confirmation';
@@ -75,6 +75,8 @@ export function Q2OfferWidget() {
             case 'auto-refi':
             case 'credit-limit':
                 return { text: "YOU'RE PREAPPROVED!", className: "bg-green-500 text-white" };
+            case 'prequalified':
+                return { text: "YOU'RE PREQUALIFIED!", className: "bg-green-500 text-white" };
             case 'ita':
                 return { text: "APPLY NOW", className: "bg-purple-500 text-white" };
             default:
@@ -179,7 +181,7 @@ export function Q2OfferWidget() {
             <div className="space-y-3">
                 {/* Consumer Prequalification Widget */}
                 {featureFlags.consumer_prequalification && (
-                    <PrequalificationWidget />
+                    <PrequalificationCard variant="compact" />
                 )}
 
                 <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">

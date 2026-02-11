@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started with the DSF Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid #6366f1;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: #475569;
+        }
+
+        a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 32px 0;
+        }
+
+        code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 13px;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #6366f1;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+            font-size: 13px;
+        }
+
+        ul, ol {
+            margin: 12px 0 16px 24px;
+            color: #475569;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #6366f1;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .tip-box {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+
+        .tip-box strong {
+            color: #92400e;
+        }
+
+        .tip-box p {
+            color: #92400e;
+            margin: 0;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+
+        .info-box p {
+            color: #1e40af;
+            margin: 0;
+        }
+
+        .section-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+            }
+
+            pre {
+                background: #f1f5f9 !important;
+                color: #1e293b !important;
+                border: 1px solid #e2e8f0;
+            }
+
+            pre code {
+                color: #1e293b !important;
+            }
+
+            h2 {
+                page-break-after: avoid;
+            }
+
+            .section-card, pre, table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Getting Started with the DSF Prototype</h1>
+    <p>This guide will help you set up and run the Movemint DSF prototype on your local machine.</p>
+
+    <hr>
+
+    <h2>Prerequisites</h2>
+    <p>Before you begin, you'll need to install the following:</p>
+
+    <h3><span class="step-number">1</span>Visual Studio Code</h3>
+    <p>Download and install from: <a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p>
+
+    <h3><span class="step-number">2</span>Node.js (version 18 or higher)</h3>
+    <p>Download and install from: <a href="https://nodejs.org/">https://nodejs.org/</a></p>
+    <ul>
+        <li>Choose the <strong>LTS</strong> (Long Term Support) version</li>
+        <li>During installation, accept all default options</li>
+    </ul>
+
+    <h3><span class="step-number">3</span>Git</h3>
+    <p>Download and install from: <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a></p>
+    <ul>
+        <li>During installation, accept all default options</li>
+    </ul>
+
+    <hr>
+
+    <h2>Setup Instructions</h2>
+
+    <h3><span class="step-number">1</span>Open VS Code</h3>
+    <p>Launch Visual Studio Code from your Applications folder (Mac) or Start Menu (Windows).</p>
+
+    <h3><span class="step-number">2</span>Open the Terminal in VS Code</h3>
+    <ol>
+        <li>Go to the menu bar and click <strong>Terminal</strong> &rarr; <strong>New Terminal</strong></li>
+        <li>A terminal panel will appear at the bottom of VS Code</li>
+    </ol>
+
+    <h3><span class="step-number">3</span>Choose a Location for the Project</h3>
+    <p>In the terminal, navigate to where you want to store the project. For example:</p>
+
+    <p><strong>Mac:</strong></p>
+    <pre><code>cd ~/Documents</code></pre>
+
+    <p><strong>Windows:</strong></p>
+    <pre><code>cd C:\Users\YourName\Documents</code></pre>
+
+    <h3><span class="step-number">4</span>Clone the Repository</h3>
+    <p>Copy and paste this command into the terminal and press Enter:</p>
+    <pre><code>git clone https://github.com/madabnegky/movemint-prototype.git</code></pre>
+    <p>This will download the project to your computer.</p>
+
+    <h3><span class="step-number">5</span>Open the Project Folder</h3>
+    <ol>
+        <li>In VS Code, go to <strong>File</strong> &rarr; <strong>Open Folder...</strong></li>
+        <li>Navigate to the <code>movemint-prototype</code> folder you just cloned</li>
+        <li>Click <strong>Open</strong></li>
+    </ol>
+
+    <h3><span class="step-number">6</span>Install Dependencies</h3>
+    <ol>
+        <li>Open a new terminal in VS Code (<strong>Terminal</strong> &rarr; <strong>New Terminal</strong>)</li>
+        <li>Run this command:</li>
+    </ol>
+    <pre><code>npm install</code></pre>
+    <p>Wait for it to finish (this may take a minute or two).</p>
+
+    <h3><span class="step-number">7</span>Start the Development Server</h3>
+    <p>Run this command:</p>
+    <pre><code>npm run dev</code></pre>
+    <p>You should see output that includes something like:</p>
+    <pre><code>▲ Next.js 15.x.x (Turbopack)
+- Local: http://localhost:3000</code></pre>
+
+    <h3><span class="step-number">8</span>View the Prototype</h3>
+    <ol>
+        <li>Open your web browser (Chrome, Safari, Edge, etc.)</li>
+        <li>Go to: <strong>http://localhost:3000</strong></li>
+    </ol>
+
+    <div class="info-box">
+        <p><strong>Success!</strong> You should now see the DSF prototype running!</p>
+    </div>
+
+    <hr>
+
+    <h2>Stopping and Restarting</h2>
+
+    <h3>To Stop the Server</h3>
+    <p>In the VS Code terminal, press <strong>Ctrl + C</strong> (Windows) or <strong>Cmd + C</strong> (Mac)</p>
+
+    <h3>To Restart Later</h3>
+    <ol>
+        <li>Open VS Code</li>
+        <li>Open the project folder</li>
+        <li>Open terminal and run: <code>npm run dev</code></li>
+        <li>Go to <a href="http://localhost:3000">http://localhost:3000</a> in your browser</li>
+    </ol>
+
+    <hr>
+
+    <h2>Project Navigation</h2>
+    <p>Once running, here are the main areas of the prototype:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>/</code></td>
+                <td>Landing page</td>
+            </tr>
+            <tr>
+                <td><code>/storefront</code></td>
+                <td>Member-facing storefront with offers</td>
+            </tr>
+            <tr>
+                <td><code>/home-banking</code></td>
+                <td>Home banking dashboard simulation</td>
+            </tr>
+            <tr>
+                <td><code>/admin</code></td>
+                <td>Admin dashboard</td>
+            </tr>
+            <tr>
+                <td><code>/admin/campaigns</code></td>
+                <td>Campaign management</td>
+            </tr>
+            <tr>
+                <td><code>/admin/feature-flags</code></td>
+                <td>Toggle prototype features on/off</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Feature Flags</h2>
+    <p>The prototype has feature flags that let you turn features on and off:</p>
+    <ol>
+        <li>Go to <strong>http://localhost:3000/admin/feature-flags</strong></li>
+        <li>Toggle any features you want to test</li>
+        <li>Changes apply immediately and persist in your browser</li>
+    </ol>
+
+    <hr>
+
+    <h2>Troubleshooting</h2>
+
+    <div class="section-card">
+        <h3>"command not found: npm" or "command not found: git"</h3>
+        <ul>
+            <li>Make sure you installed Node.js and Git (see Prerequisites)</li>
+            <li>Close and reopen VS Code after installing</li>
+        </ul>
+    </div>
+
+    <div class="section-card">
+        <h3>"Port 3000 is already in use"</h3>
+        <p>Another application is using port 3000. Either:</p>
+        <ul>
+            <li>Close the other application, or</li>
+            <li>Run on a different port: <code>npm run dev -- -p 3001</code></li>
+        </ul>
+    </div>
+
+    <div class="section-card">
+        <h3>Changes not showing up</h3>
+        <ul>
+            <li>Make sure you saved the file (<strong>Cmd + S</strong> or <strong>Ctrl + S</strong>)</li>
+            <li>Try refreshing your browser (<strong>Cmd + R</strong> or <strong>Ctrl + R</strong>)</li>
+            <li>Try a hard refresh (<strong>Cmd + Shift + R</strong> or <strong>Ctrl + Shift + R</strong>)</li>
+        </ul>
+    </div>
+
+    <div class="section-card">
+        <h3>"Cannot find module" errors</h3>
+        <p>Run <code>npm install</code> again to make sure all dependencies are installed.</p>
+    </div>
+
+    <hr>
+
+    <h2>Making Changes</h2>
+    <p>You can edit any file in the <code>src</code> folder. The browser will automatically refresh when you save changes.</p>
+
+    <p><strong>Key folders:</strong></p>
+    <ul>
+        <li><code>src/app/</code> &ndash; Pages and routes</li>
+        <li><code>src/components/</code> &ndash; Reusable UI components</li>
+        <li><code>src/context/</code> &ndash; State management (StoreContext.tsx has all the data)</li>
+    </ul>
+
+    <hr>
+
+    <div class="tip-box">
+        <p><strong>Questions?</strong> Reach out to Kyle if you run into any issues!</p>
+    </div>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, CheckCircle2, Info, X } from "lucide-react";
 import { OfferCard } from "@/components/storefront/OfferCard";
 import { HeroCarousel } from "@/components/storefront/HeroCarousel";
 import { CreditMountainCard } from "@/components/storefront/CreditMountainCard";
@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useStore } from "@/context/StoreContext";
 import { useStorefront } from "@/hooks/useStorefront";
+import type { Offer } from "@/context/StoreContext";
 
 export default function StorefrontPage() {
-    const { storefrontConfig, featureFlags, previewMode } = useStore();
+    const { storefrontConfig, featureFlags, previewMode, addOffer, addSection, sections: storeSections } = useStore();
     const {
         sections,
         selectedProfile,
@@ -24,6 +25,30 @@ export default function StorefrontPage() {
     } = useStorefront();
 
     const [activeCategory, setActiveCategory] = useState("All");
+
+    // Prequalification state
+    const [prequalStatus, setPrequalStatus] = useState<'idle' | 'has_offers' | 'no_offers'>('idle');
+    const [prequalOffers, setPrequalOffers] = useState<Offer[]>([]);
+    const [bannerDismissed, setBannerDismissed] = useState(false);
+    const [prequalCarouselSlide, setPrequalCarouselSlide] = useState(0);
+
+    const handlePrequalComplete = (offers: Offer[]) => {
+        if (offers.length > 0) {
+            setPrequalStatus('has_offers');
+            setPrequalOffers(offers);
+
+            // Add offers to the store so they appear in sections
+            const prequalSection = "Your Prequalified Offers";
+            if (!storeSections.includes(prequalSection)) {
+                addSection(prequalSection);
+            }
+            offers.forEach(offer => {
+                addOffer(offer);
+            });
+        } else {
+            setPrequalStatus('no_offers');
+        }
+    };
 
     // Get section names for filter buttons
     const sectionNames = sections.map(s => s.name);
@@ -40,6 +65,15 @@ export default function StorefrontPage() {
     const greeting = storefrontConfig.userName
         ? `Hi ${storefrontConfig.userName},`
         : "Offers for You";
+
+    // Prequal carousel navigation
+    const currentPrequalOffer = prequalOffers[prequalCarouselSlide];
+    const goToPrevPrequal = () => {
+        setPrequalCarouselSlide(prev => (prev === 0 ? prequalOffers.length - 1 : prev - 1));
+    };
+    const goToNextPrequal = () => {
+        setPrequalCarouselSlide(prev => (prev === prequalOffers.length - 1 ? 0 : prev + 1));
+    };
 
     return (
         <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30]">
@@ -102,10 +136,143 @@ export default function StorefrontPage() {
                     </p>
                 </div>
 
-                {/* Consumer Prequalification Card */}
-                {featureFlags.consumer_prequalification && (
+                {/* Prequalification Banner - Success */}
+                {prequalStatus === 'has_offers' && !bannerDismissed && (
+                    <div className="mb-6 bg-[#d4edda] border-l-4 border-[#4D9B56] rounded-r-lg px-5 py-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <CheckCircle2 className="w-5 h-5 text-[#4D9B56] shrink-0" />
+                            <p className="text-[14px] text-[#1a472a] font-medium">
+                                You have {prequalOffers.length} prequalified offers below.
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => setBannerDismissed(true)}
+                            className="text-[#1a472a]/60 hover:text-[#1a472a] transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+                )}
+
+                {/* Prequalification Banner - No Offers */}
+                {prequalStatus === 'no_offers' && !bannerDismissed && (
+                    <div className="mb-6 bg-[#d6e4f0] border-l-4 border-[#6b8db5] rounded-r-lg px-5 py-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <Info className="w-5 h-5 text-[#3b6a9a] shrink-0" />
+                            <p className="text-[14px] text-[#1e3a5f] font-medium">
+                                There are no prequalified offers at this time, come back again.
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => setBannerDismissed(true)}
+                            className="text-[#1e3a5f]/60 hover:text-[#1e3a5f] transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+                )}
+
+                {/* Consumer Prequalification Card - only show before submission */}
+                {featureFlags.consumer_prequalification && prequalStatus === 'idle' && (
                     <div className="mb-6">
-                        <PrequalificationCard />
+                        <PrequalificationCard onPrequalComplete={handlePrequalComplete} />
+                    </div>
+                )}
+
+                {/* Prequalified Offers Carousel */}
+                {prequalStatus === 'has_offers' && prequalOffers.length > 0 && currentPrequalOffer && (
+                    <div className="mb-8">
+                        <div className="bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-gray-200">
+                            <div className="flex flex-col min-[804px]:flex-row min-h-[280px]">
+                                {/* Content Section */}
+                                <div className="min-[804px]:w-[40%] p-6 min-[804px]:p-8 flex flex-col justify-center order-2 min-[804px]:order-1">
+                                    <h2 className="text-xl min-[804px]:text-2xl font-semibold text-[#262C30] mb-2 leading-tight">
+                                        {currentPrequalOffer.featuredHeadline || "You\u2019re prequalified!"}
+                                    </h2>
+                                    <p className="text-[#677178] text-[14px] leading-relaxed mb-5 max-w-md">
+                                        {currentPrequalOffer.featuredDescription || currentPrequalOffer.description || "Check out this exclusive offer tailored just for you."}
+                                    </p>
+
+                                    {/* Attributes */}
+                                    {currentPrequalOffer.attributes && currentPrequalOffer.attributes.length > 0 && (
+                                        <div className="flex gap-8 mb-5">
+                                            {currentPrequalOffer.attributes.map((attr, idx) => (
+                                                <div key={idx}>
+                                                    <div className="text-[10px] text-[#677178] mb-0.5">
+                                                        {attr.label}
+                                                    </div>
+                                                    <div className="text-2xl min-[804px]:text-[28px] font-bold text-[#262C30] leading-none">
+                                                        {attr.value}
+                                                        {attr.subtext && (
+                                                            <span className="text-[11px] font-normal text-[#677178] ml-1">
+                                                                {attr.subtext}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* CTA */}
+                                    <div className="flex flex-col gap-3 items-center min-[804px]:items-stretch max-w-[280px]">
+                                        <Link
+                                            href={`/storefront/offer/${currentPrequalOffer.id}`}
+                                            className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-[#B8C4E0] text-[#1e293b] text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-[#a3b1d1] transition-colors"
+                                        >
+                                            REVIEW OFFER
+                                        </Link>
+                                        <Link
+                                            href="#disclosures"
+                                            className="text-[12px] text-[#677178] hover:text-[#262C30] underline underline-offset-2 text-center"
+                                        >
+                                            Details & disclosures
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Image Section */}
+                                <div className="min-[804px]:w-[60%] order-1 min-[804px]:order-2 relative">
+                                    <div className="w-full h-full min-h-[200px] min-[804px]:min-h-full">
+                                        <img
+                                            src={currentPrequalOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                                            alt={currentPrequalOffer.title}
+                                            className="w-full h-full object-cover object-center"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Carousel Navigation */}
+                        <div className="flex items-center justify-center gap-4 mt-4">
+                            <button
+                                onClick={goToPrevPrequal}
+                                className="w-8 h-8 flex items-center justify-center text-[#677178] hover:text-[#262C30] transition-colors"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <div className="flex items-center gap-2">
+                                {prequalOffers.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setPrequalCarouselSlide(idx)}
+                                        className={cn(
+                                            "w-2 h-2 rounded-full transition-all duration-200",
+                                            prequalCarouselSlide === idx
+                                                ? "bg-[#262C30]"
+                                                : "bg-[#262C30]/25 hover:bg-[#262C30]/40"
+                                        )}
+                                    />
+                                ))}
+                            </div>
+                            <button
+                                onClick={goToNextPrequal}
+                                className="w-8 h-8 flex items-center justify-center text-[#677178] hover:text-[#262C30] transition-colors"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </div>
                     </div>
                 )}
 

@@ -308,6 +308,10 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
             status: type === "perpetual" ? "live" : "draft", // Perpetual campaigns are always live
             startDate: type === "perpetual" ? new Date().toISOString().split("T")[0] : startDate,
             endDate: endDate || undefined,
+            acceptanceRules: [],
+            reconciliationRule: 'no_change',
+            customReconciliationRules: [],
+            productReconciliationRules: [],
         });
 
         // Reset form

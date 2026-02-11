@@ -332,12 +332,14 @@ export default function ScenariosPage() {
         const sections = [...new Set(scenario.offers.map(o => o.section))];
         localStorage.setItem('movemint_sections', JSON.stringify(sections));
 
-        // Apply feature flags if specified
-        if (scenario.featureFlags) {
-            const currentFlags = JSON.parse(localStorage.getItem('movemint_feature_flags') || '{}');
-            const updatedFlags = { ...currentFlags, ...scenario.featureFlags };
-            localStorage.setItem('movemint_feature_flags', JSON.stringify(updatedFlags));
-        }
+        // Apply feature flags - reset Credit Mountain unless scenario explicitly enables it
+        const currentFlags = JSON.parse(localStorage.getItem('movemint_feature_flags') || '{}');
+        const updatedFlags = {
+            ...currentFlags,
+            storefront_creditMountain: false,
+            ...(scenario.featureFlags || {}),
+        };
+        localStorage.setItem('movemint_feature_flags', JSON.stringify(updatedFlags));
 
         setAppliedScenario(scenario.id);
 
