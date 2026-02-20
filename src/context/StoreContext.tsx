@@ -13,7 +13,15 @@ export type OfferVariant =
     | 'redeemed'         // Greyed out, already claimed
     | 'auto-refi'        // Auto refinance with savings display
     | 'credit-limit'     // Credit card limit increase
-    | 'protection';      // GAP, MRC, etc.
+    | 'protection'       // GAP, MRC, etc.
+    | 'new-member';      // "Become a Member Today" - membership offer
+
+// Stranger storefront offer selection with per-offer variant override
+export interface StrangerOffer {
+    offerId: string;
+    variant: OfferVariant;
+    isFeatured: boolean;
+}
 
 // Product types for redemption flow routing
 export type ProductType =
@@ -32,7 +40,9 @@ export type ProductType =
     | 'savings'
     | 'checking'
     | 'money-market'
-    | 'certificate';
+    | 'certificate'
+    // Membership
+    | 'membership';
 
 export interface OfferAttribute {
     label: string;       // e.g., "Up to", "As low as", "Save up to"
@@ -357,6 +367,8 @@ interface StoreContextType {
     memberProfiles: MemberProfile[];
     selectedProfileId: string | null;
     previewMode: PreviewMode;
+    strangerOffers: StrangerOffer[];
+    strangerWelcomeMessage: string;
     addOffer: (offer: Offer) => void;
     updateOffer: (offer: Offer) => void;
     deleteOffer: (id: string) => void;
@@ -372,6 +384,8 @@ interface StoreContextType {
     deleteProduct: (id: string) => void;
     setSelectedProfileId: (id: string | null) => void;
     setPreviewMode: (mode: PreviewMode) => void;
+    updateStrangerOffers: (offers: StrangerOffer[]) => void;
+    updateStrangerWelcomeMessage: (message: string) => void;
 }
 
 // --- Defaults ---
@@ -1206,6 +1220,19 @@ const DEFAULT_OFFERS: Offer[] = [
         imageUrl: "https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?auto=format&fit=crop&w=800&q=80",
         ctaText: "Open Certificate"
     },
+    // Membership Offer (for Stranger Storefront)
+    {
+        id: "demo-11",
+        title: "Become a Member Today",
+        variant: 'new-member',
+        productType: 'membership',
+        section: "Special Offers",
+        isFeatured: false,
+        description: "Join our credit union family and unlock exclusive rates, lower fees, and personalized financial guidance.",
+        attributes: [],
+        imageUrl: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Join Now"
+    },
     // Credit Mountain Graduate Personal Loan ITA
     {
         id: "demo-10",
@@ -1237,6 +1264,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const [products, setProducts] = useState<Product[]>([]);
     const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
     const [previewMode, setPreviewMode] = useState<PreviewMode>('demo');
+    const [strangerOffers, setStrangerOffers] = useState<StrangerOffer[]>([]);
+    const [strangerWelcomeMessage, setStrangerWelcomeMessage] = useState("Explore our offerings and find the right financial products for you.");
     const [isInitialized, setIsInitialized] = useState(false);
 
     // Load from LocalStorage on mount
@@ -1283,6 +1312,24 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             setProducts(DEFAULT_PRODUCTS);
         }
 
+        const savedStrangerOffers = localStorage.getItem("movemint_stranger_offers");
+        if (savedStrangerOffers) {
+            setStrangerOffers(JSON.parse(savedStrangerOffers));
+        } else {
+            // Migrate from old format (array of IDs)
+            const savedStrangerOfferIds = localStorage.getItem("movemint_stranger_offer_ids");
+            if (savedStrangerOfferIds) {
+                const ids = JSON.parse(savedStrangerOfferIds) as string[];
+                setStrangerOffers(ids.map(id => ({ offerId: id, variant: 'ita' as OfferVariant, isFeatured: false })));
+                localStorage.removeItem("movemint_stranger_offer_ids");
+            }
+        }
+
+        const savedStrangerWelcome = localStorage.getItem("movemint_stranger_welcome_message");
+        if (savedStrangerWelcome) {
+            setStrangerWelcomeMessage(JSON.parse(savedStrangerWelcome));
+        }
+
         setIsInitialized(true);
     }, []);
 
@@ -1295,7 +1342,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("movemint_feature_flags", JSON.stringify(featureFlags));
         localStorage.setItem("movemint_campaigns", JSON.stringify(campaigns));
         localStorage.setItem("movemint_products", JSON.stringify(products));
-    }, [offers, sections, storefrontConfig, featureFlags, campaigns, products, isInitialized]);
+        localStorage.setItem("movemint_stranger_offers", JSON.stringify(strangerOffers));
+        localStorage.setItem("movemint_stranger_welcome_message", JSON.stringify(strangerWelcomeMessage));
+    }, [offers, sections, storefrontConfig, featureFlags, campaigns, products, strangerOffers, strangerWelcomeMessage, isInitialized]);
 
     // Offer Actions
     const addOffer = (offer: Offer) => {
@@ -1354,6 +1403,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setProducts(prev => prev.filter(p => p.id !== id));
     };
 
+    // Stranger Storefront Actions
+    const updateStrangerOffers = (offers: StrangerOffer[]) => {
+        setStrangerOffers(offers);
+    };
+
+    const updateStrangerWelcomeMessage = (message: string) => {
+        setStrangerWelcomeMessage(message);
+    };
+
     return (
         <StoreContext.Provider value={{
             offers,
@@ -1366,6 +1424,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             memberProfiles: DEFAULT_MEMBER_PROFILES,
             selectedProfileId,
             previewMode,
+            strangerOffers,
+            strangerWelcomeMessage,
             addOffer,
             updateOffer,
             deleteOffer,
@@ -1380,7 +1440,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             updateProduct,
             deleteProduct,
             setSelectedProfileId,
-            setPreviewMode
+            setPreviewMode,
+            updateStrangerOffers,
+            updateStrangerWelcomeMessage
         }}>
             {children}
         </StoreContext.Provider>

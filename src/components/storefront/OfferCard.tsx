@@ -63,6 +63,7 @@ export function OfferCard({
                 );
             case 'wildcard':
             case 'protection':
+            case 'new-member':
                 return (
                     <span className="inline-block bg-[#374151] text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                         Special Offer
@@ -86,11 +87,11 @@ export function OfferCard({
 
                 {/* Title */}
                 <h3 className="text-[15px] font-normal text-[#1F2937] leading-snug mb-3">
-                    {title}
+                    {variant === 'new-member' ? 'Become a Member Today' : title}
                 </h3>
 
-                {/* Description for wildcard/protection variants */}
-                {(variant === 'wildcard' || variant === 'protection') && description && (
+                {/* Description for wildcard/protection/new-member variants */}
+                {(variant === 'wildcard' || variant === 'protection' || variant === 'new-member') && description && (
                     <p className="text-[11px] text-[#6B7280] leading-relaxed mb-2 line-clamp-2">
                         {description}
                     </p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Campaign, CustomerFileUpload, EnhancedCustomerFile, useStore } from "@/context/StoreContext";
 import {
     Upload,
@@ -20,6 +20,13 @@ import { cn } from "@/lib/utils";
 interface FileProcessingTabProps {
     campaign: Campaign;
     onUpdate: (updates: Partial<Campaign>) => void;
+}
+
+interface RevioScoreBucket {
+    label: string;
+    min: number;
+    max: number;
+    count: number;
 }
 
 // File upload zone component
@@ -189,19 +196,67 @@ function UploadedFileCard({
     );
 }
 
+// Generate a realistic, center-weighted distribution of propensity scores
+function generateRevioScores(totalMembers: number): RevioScoreBucket[] {
+    const buckets = [
+        { label: "0–19", min: 0, max: 19, weight: 0.05 },
+        { label: "20–39", min: 20, max: 39, weight: 0.15 },
+        { label: "40–59", min: 40, max: 59, weight: 0.35 },
+        { label: "60–79", min: 60, max: 79, weight: 0.30 },
+        { label: "80–100", min: 80, max: 100, weight: 0.15 },
+    ];
+
+    // Add jitter so it looks different each time
+    const jittered = buckets.map((b) => ({
+        ...b,
+        weight: b.weight * (0.85 + Math.random() * 0.3),
+    }));
+
+    const totalWeight = jittered.reduce((sum, b) => sum + b.weight, 0);
+
+    let remaining = totalMembers;
+    return jittered.map((b, i) => {
+        const isLast = i === jittered.length - 1;
+        const count = isLast ? remaining : Math.round(totalMembers * (b.weight / totalWeight));
+        remaining -= count;
+        return { label: b.label, min: b.min, max: b.max, count };
+    });
+}
+
 export default function FileProcessingTab({ campaign, onUpdate }: FileProcessingTabProps) {
     const { featureFlags } = useStore();
     const [isUploading, setIsUploading] = useState<"customer" | "enhanced" | null>(null);
     const [optimizationExpanded, setOptimizationExpanded] = useState(false);
-    const [revioSliderValue, setRevioSliderValue] = useState(0);
     const [verticeThreshold, setVerticeThreshold] = useState(50);
+
+    // Revio state
+    const [revioStatus, setRevioStatus] = useState<"idle" | "loading" | "complete">("idle");
+    const [revioScoreDistribution, setRevioScoreDistribution] = useState<RevioScoreBucket[]>([]);
+    const [revioThreshold, setRevioThreshold] = useState(0);
 
     const isLiveOrCompleted = campaign.status === "live" || campaign.status === "completed";
 
-    // Calculate members to remove based on Revio slider value (0-100%)
     const totalMembers = campaign.customerFile?.recordCount || 0;
-    const membersToRemove = Math.floor(totalMembers * (revioSliderValue / 100));
-    const membersRemaining = totalMembers - membersToRemove;
+
+    // Revio derived calculations
+    const revioMembersExcluded = revioScoreDistribution
+        .filter((bucket) => bucket.max < revioThreshold)
+        .reduce((sum, bucket) => sum + bucket.count, 0);
+    const revioMembersRemaining = totalMembers - revioMembersExcluded;
+    const maxBucketCount = Math.max(...revioScoreDistribution.map((b) => b.count), 0);
+
+    // Combined optimization for export
+    const hasRevioOptimization = revioStatus === "complete" && revioThreshold > 0;
+    const hasVerticeOptimization = featureFlags.admin_optimizationVertice && verticeThreshold > 0;
+
+    let exportRecordCount = totalMembers;
+    if (hasRevioOptimization) {
+        exportRecordCount -= revioMembersExcluded;
+    }
+    if (hasVerticeOptimization) {
+        const verticeExclusionsOnRemaining = Math.floor(exportRecordCount * (verticeThreshold / 100) * 0.8);
+        exportRecordCount -= verticeExclusionsOnRemaining;
+    }
 
     // Calculate Vertice optimization (threshold-based)
     const verticeExcludedMembers = Math.floor(totalMembers * (verticeThreshold / 100) * 0.8);
@@ -281,9 +336,29 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
         });
     };
 
+    // Reset Revio state when customer file changes
+    useEffect(() => {
+        setRevioStatus("idle");
+        setRevioScoreDistribution([]);
+        setRevioThreshold(0);
+    }, [campaign.customerFile?.id]);
+
+    const handleGetRevioScores = () => {
+        setRevioStatus("loading");
+        setRevioThreshold(0);
+
+        const delay = 2000 + Math.random() * 1000;
+        setTimeout(() => {
+            const scores = generateRevioScores(totalMembers);
+            setRevioScoreDistribution(scores);
+            setRevioStatus("complete");
+        }, delay);
+    };
+
     const handleExportProcessedFile = () => {
-        // In a real app, this would trigger a download
-        alert("In production, this would download the processed customer file formatted for your credit bureau.");
+        alert(
+            `In production, this would download a processed customer file with ${exportRecordCount.toLocaleString()} records, formatted for your credit bureau.`
+        );
     };
 
     return (
@@ -444,52 +519,137 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
                             {/* Revio Optimization (Sub-feature flag) */}
                             {featureFlags.admin_optimizationRevio && (
                                 <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                                    {/* Header */}
                                     <div className="mb-4">
-                                        <h3 className="font-semibold text-slate-900">Revio ROI Optimization</h3>
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-semibold text-slate-900">Revio ROI Optimization</h3>
+                                            {revioStatus === "complete" && (
+                                                <button
+                                                    onClick={handleGetRevioScores}
+                                                    disabled={isLiveOrCompleted}
+                                                    className="text-xs text-slate-500 hover:text-slate-700 underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                >
+                                                    Re-fetch scores
+                                                </button>
+                                            )}
+                                        </div>
                                         <p className="text-sm text-slate-500 mt-0.5">
-                                            Remove members with low propensity to redeem based on Revio behavioral data.
+                                            {revioStatus === "complete"
+                                                ? "Propensity scores retrieved. Set a minimum threshold to exclude low-propensity members."
+                                                : "Send your customer file to Revio for behavioral propensity scoring."}
                                         </p>
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-slate-600">Optimize for ROI</span>
-                                            <span className="font-medium text-slate-900">
-                                                Remove {membersToRemove.toLocaleString()} members
-                                            </span>
-                                        </div>
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="50"
-                                            value={revioSliderValue}
-                                            onChange={(e) => setRevioSliderValue(Number(e.target.value))}
-                                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
-                                        />
-                                        <div className="flex items-center justify-between text-xs text-slate-500">
-                                            <span>Include all ({totalMembers.toLocaleString()})</span>
-                                            <span>Maximum optimization ({Math.floor(totalMembers * 0.5).toLocaleString()} removed)</span>
-                                        </div>
+                                    {/* Idle: Get Propensity Scores button */}
+                                    {revioStatus === "idle" && (
+                                        <button
+                                            onClick={handleGetRevioScores}
+                                            disabled={isLiveOrCompleted}
+                                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            Get Propensity Scores
+                                        </button>
+                                    )}
 
-                                        {revioSliderValue > 0 && (
-                                            <div className="mt-4 p-4 bg-white rounded-lg border border-slate-200">
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <p className="text-xs text-slate-500 mb-1">Members remaining</p>
-                                                        <p className="text-lg font-bold text-slate-900">
-                                                            {membersRemaining.toLocaleString()}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs text-slate-500 mb-1">Projected ROI improvement</p>
-                                                        <p className="text-lg font-bold text-slate-900">
-                                                            +{Math.round(revioSliderValue * 2)}%
-                                                        </p>
-                                                    </div>
+                                    {/* Loading: Spinner */}
+                                    {revioStatus === "loading" && (
+                                        <div className="flex flex-col items-center py-6">
+                                            <Loader2 className="w-8 h-8 text-slate-500 animate-spin mb-3" />
+                                            <p className="text-sm font-medium text-slate-700">Retrieving propensity scores from Revio...</p>
+                                            <p className="text-xs text-slate-500 mt-1">This usually takes a few moments.</p>
+                                        </div>
+                                    )}
+
+                                    {/* Complete: Distribution + Threshold Slider */}
+                                    {revioStatus === "complete" && (
+                                        <div className="space-y-4">
+                                            {/* Score Distribution */}
+                                            <div>
+                                                <h4 className="text-xs font-medium text-slate-700 uppercase tracking-wider mb-3">Score Distribution</h4>
+                                                <div className="space-y-2">
+                                                    {revioScoreDistribution.map((bucket) => {
+                                                        const widthPercent = maxBucketCount > 0 ? (bucket.count / maxBucketCount) * 100 : 0;
+                                                        const isExcluded = bucket.max < revioThreshold;
+                                                        return (
+                                                            <div key={bucket.label} className="flex items-center gap-3">
+                                                                <span className={cn(
+                                                                    "text-xs font-mono w-14 text-right shrink-0",
+                                                                    isExcluded ? "text-slate-400" : "text-slate-600"
+                                                                )}>
+                                                                    {bucket.label}
+                                                                </span>
+                                                                <div className="flex-1 h-6 bg-slate-100 rounded overflow-hidden">
+                                                                    <div
+                                                                        className={cn(
+                                                                            "h-full rounded transition-all",
+                                                                            isExcluded ? "bg-slate-300" : "bg-slate-700"
+                                                                        )}
+                                                                        style={{ width: `${widthPercent}%` }}
+                                                                    />
+                                                                </div>
+                                                                <span className={cn(
+                                                                    "text-xs w-16 text-right shrink-0",
+                                                                    isExcluded ? "text-slate-400 line-through" : "text-slate-700 font-medium"
+                                                                )}>
+                                                                    {bucket.count.toLocaleString()}
+                                                                </span>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
-                                        )}
-                                    </div>
+
+                                            {/* Threshold Slider */}
+                                            <div className="space-y-3 pt-2">
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-slate-600">Remove members scoring below</span>
+                                                    <span className="font-medium text-slate-900">
+                                                        {revioThreshold === 0 ? "None" : revioThreshold}
+                                                    </span>
+                                                </div>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="80"
+                                                    step="20"
+                                                    value={revioThreshold}
+                                                    onChange={(e) => setRevioThreshold(Number(e.target.value))}
+                                                    disabled={isLiveOrCompleted}
+                                                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                />
+                                                <div className="flex items-center justify-between text-xs text-slate-500">
+                                                    <span>Include all</span>
+                                                    <span>High-propensity only (80+)</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Stats Card */}
+                                            {revioThreshold > 0 && (
+                                                <div className="p-4 bg-white rounded-lg border border-slate-200">
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div>
+                                                            <p className="text-xs text-slate-500 mb-1">Members excluded</p>
+                                                            <p className="text-lg font-bold text-slate-900">
+                                                                {revioMembersExcluded.toLocaleString()}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-slate-500 mb-1">Members remaining</p>
+                                                            <p className="text-lg font-bold text-slate-900">
+                                                                {revioMembersRemaining.toLocaleString()}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-slate-500 mb-1">Est. ROI improvement</p>
+                                                            <p className="text-lg font-bold text-slate-900">
+                                                                +{Math.round(revioThreshold * 0.6)}%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -534,6 +694,21 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
                     </p>
                 </div>
                 <div className="p-6">
+                    {(hasRevioOptimization || hasVerticeOptimization) && (
+                        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div className="flex items-center gap-2 text-sm">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                <span className="text-slate-700">
+                                    Optimized file: <span className="font-semibold">{exportRecordCount.toLocaleString()}</span> records
+                                    {totalMembers > 0 && (
+                                        <span className="text-slate-500 ml-1">
+                                            (reduced from {totalMembers.toLocaleString()})
+                                        </span>
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+                    )}
                     <button
                         onClick={handleExportProcessedFile}
                         disabled={!campaign.customerFile || isLiveOrCompleted}

@@ -21,7 +21,9 @@ const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
     'savings': 'Savings Account',
     'checking': 'Checking Account',
     'money-market': 'Money Market Account',
-    'certificate': 'Share Certificate (CD)'
+    'certificate': 'Share Certificate (CD)',
+    // Membership
+    'membership': 'Membership'
 };
 
 const PRODUCT_TYPES: ProductType[] = [
@@ -39,7 +41,9 @@ const PRODUCT_TYPES: ProductType[] = [
     'savings',
     'checking',
     'money-market',
-    'certificate'
+    'certificate',
+    // Membership
+    'membership'
 ];
 
 interface ProductFormData {

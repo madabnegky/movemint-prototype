@@ -49,6 +49,7 @@ const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
     "checking": "Checking Account",
     "money-market": "Money Market Account",
     "certificate": "Share Certificate (CD)",
+    "membership": "Membership",
 };
 
 // Add Product Modal

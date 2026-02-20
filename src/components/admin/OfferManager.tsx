@@ -57,6 +57,7 @@ const VARIANT_CONFIG: Record<OfferVariant, { label: string; color: string }> = {
     'auto-refi': { label: "Auto Refi", color: "bg-teal-50 text-teal-700 border-teal-200" },
     'credit-limit': { label: "Credit Limit", color: "bg-blue-50 text-blue-700 border-blue-200" },
     'protection': { label: "Protection", color: "bg-orange-50 text-orange-700 border-orange-200" },
+    'new-member': { label: "New Member", color: "bg-amber-50 text-amber-700 border-amber-200" },
 };
 
 const PRODUCT_TYPES: { value: ProductType; label: string }[] = [

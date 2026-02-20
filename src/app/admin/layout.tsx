@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
@@ -23,6 +23,7 @@ const NAV_ITEMS: NavItem[] = [
         icon: Eye,
         children: [
             { name: "Storefront", href: "/storefront", icon: ShoppingBag },
+            { name: "Stranger Storefront", href: "/stranger-storefront", icon: Globe },
             { name: "Home Banking", href: "/home-banking", icon: Home },
             { name: "Demo Scenarios", href: "/admin/scenarios", icon: Layers },
             { name: "Offer Editor", href: "/admin/product-config", icon: Play },
@@ -34,6 +35,7 @@ const NAV_ITEMS: NavItem[] = [
         icon: Palette,
         children: [
             { name: "Appearance", href: "/admin/storefront-settings", icon: Palette },
+            { name: "Stranger Storefront", href: "/admin/stranger-storefront", icon: Globe },
             { name: "Feature Flags", href: "/admin/feature-flags", icon: ToggleLeft },
         ]
     },

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Store, Rocket, Building2 } from "lucide-react";
+import { LayoutDashboard, Store, Rocket, Building2, Globe } from "lucide-react";
 
 export default function PrototypeLaunchpad() {
   return (
@@ -11,7 +11,7 @@ export default function PrototypeLaunchpad() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl w-full">
         <Link href="/admin" className="group relative bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
           <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-colors">
             <LayoutDashboard className="w-7 h-7" />
@@ -49,6 +49,16 @@ export default function PrototypeLaunchpad() {
           <h2 className="text-xl font-bold text-slate-900 mb-2">Partner Previews</h2>
           <p className="text-slate-500 leading-relaxed text-sm">
             See the DSF widget in Q2, Alkami, NCR, and other platforms.
+          </p>
+        </Link>
+
+        <Link href="/stranger-storefront" className="group relative bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div className="w-14 h-14 bg-cyan-50 text-cyan-600 rounded-xl flex items-center justify-center mb-6 border border-cyan-100 group-hover:bg-cyan-600 group-hover:text-white transition-colors">
+            <Globe className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Stranger Storefront</h2>
+          <p className="text-slate-500 leading-relaxed text-sm">
+            Public-facing offers for non-members visiting the credit union website.
           </p>
         </Link>
       </div>
