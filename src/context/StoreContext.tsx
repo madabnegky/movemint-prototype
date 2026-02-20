@@ -369,6 +369,7 @@ interface StoreContextType {
     previewMode: PreviewMode;
     strangerOffers: StrangerOffer[];
     strangerWelcomeMessage: string;
+    strangerMembershipSubmitted: boolean;
     addOffer: (offer: Offer) => void;
     updateOffer: (offer: Offer) => void;
     deleteOffer: (id: string) => void;
@@ -386,6 +387,7 @@ interface StoreContextType {
     setPreviewMode: (mode: PreviewMode) => void;
     updateStrangerOffers: (offers: StrangerOffer[]) => void;
     updateStrangerWelcomeMessage: (message: string) => void;
+    setStrangerMembershipSubmitted: (submitted: boolean) => void;
 }
 
 // --- Defaults ---
@@ -1266,6 +1268,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const [previewMode, setPreviewMode] = useState<PreviewMode>('demo');
     const [strangerOffers, setStrangerOffers] = useState<StrangerOffer[]>([]);
     const [strangerWelcomeMessage, setStrangerWelcomeMessage] = useState("Explore our offerings and find the right financial products for you.");
+    const [strangerMembershipSubmitted, setStrangerMembershipSubmitted] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
 
     // Load from LocalStorage on mount
@@ -1330,6 +1333,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             setStrangerWelcomeMessage(JSON.parse(savedStrangerWelcome));
         }
 
+        const savedMembershipSubmitted = localStorage.getItem("movemint_stranger_membership_submitted");
+        if (savedMembershipSubmitted) {
+            setStrangerMembershipSubmitted(JSON.parse(savedMembershipSubmitted));
+        }
+
         setIsInitialized(true);
     }, []);
 
@@ -1344,7 +1352,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("movemint_products", JSON.stringify(products));
         localStorage.setItem("movemint_stranger_offers", JSON.stringify(strangerOffers));
         localStorage.setItem("movemint_stranger_welcome_message", JSON.stringify(strangerWelcomeMessage));
-    }, [offers, sections, storefrontConfig, featureFlags, campaigns, products, strangerOffers, strangerWelcomeMessage, isInitialized]);
+        localStorage.setItem("movemint_stranger_membership_submitted", JSON.stringify(strangerMembershipSubmitted));
+    }, [offers, sections, storefrontConfig, featureFlags, campaigns, products, strangerOffers, strangerWelcomeMessage, strangerMembershipSubmitted, isInitialized]);
 
     // Offer Actions
     const addOffer = (offer: Offer) => {
@@ -1426,6 +1435,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             previewMode,
             strangerOffers,
             strangerWelcomeMessage,
+            strangerMembershipSubmitted,
             addOffer,
             updateOffer,
             deleteOffer,
@@ -1442,7 +1452,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             setSelectedProfileId,
             setPreviewMode,
             updateStrangerOffers,
-            updateStrangerWelcomeMessage
+            updateStrangerWelcomeMessage,
+            setStrangerMembershipSubmitted
         }}>
             {children}
         </StoreContext.Provider>

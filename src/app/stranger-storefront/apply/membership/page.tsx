@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
     ChevronLeft,
     ChevronDown,
@@ -25,9 +26,9 @@ import {
     MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/context/StoreContext";
 
 type MembershipStep =
-    | "landing"
     | "eligibility"
     | "identity"
     | "details"
@@ -102,7 +103,21 @@ const US_STATES = [
 ];
 
 export default function MembershipApplicationPage() {
-    const [currentStep, setCurrentStep] = useState<MembershipStep>("landing");
+    const searchParams = useSearchParams();
+    const { setStrangerMembershipSubmitted } = useStore();
+
+    // Read prefill data from query params (passed from offer redemption flow)
+    const prefillFirstName = searchParams.get('firstName') || '';
+    const prefillLastName = searchParams.get('lastName') || '';
+    const prefillPhone = searchParams.get('phone') || '';
+    const prefillEmail = searchParams.get('email') || '';
+    const fromOffer = searchParams.get('fromOffer') || '';
+    const fromOfferTitle = searchParams.get('offerTitle') || '';
+
+    // If coming from an offer redemption, show context banner
+    const hasPrefill = !!fromOffer;
+
+    const [currentStep, setCurrentStep] = useState<MembershipStep>("eligibility");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [data, setData] = useState<ApplicationData>({
         eligibilityReason: "",
@@ -110,12 +125,12 @@ export default function MembershipApplicationPage() {
         isUSCitizen: null,
         subjectToBackupWithholding: null,
         idVerificationMethod: "",
-        firstName: "",
+        firstName: prefillFirstName,
         middleName: "",
-        lastName: "",
+        lastName: prefillLastName,
         suffix: "",
-        email: "",
-        phone: "",
+        email: prefillEmail,
+        phone: prefillPhone,
         ssn: "",
         dateOfBirth: "",
         address: "",
@@ -146,10 +161,6 @@ export default function MembershipApplicationPage() {
     const stepIndex = STEPS.findIndex((s) => s.key === currentStep);
 
     const goNext = () => {
-        if (currentStep === "landing") {
-            setCurrentStep("eligibility");
-            return;
-        }
         const idx = STEPS.findIndex((s) => s.key === currentStep);
         if (idx < STEPS.length - 1) {
             setCurrentStep(STEPS[idx + 1].key);
@@ -159,10 +170,6 @@ export default function MembershipApplicationPage() {
     };
 
     const goBack = () => {
-        if (currentStep === "eligibility") {
-            setCurrentStep("landing");
-            return;
-        }
         if (currentStep === "confirmation") {
             return;
         }
@@ -176,6 +183,7 @@ export default function MembershipApplicationPage() {
         setIsSubmitting(true);
         setTimeout(() => {
             setIsSubmitting(false);
+            setStrangerMembershipSubmitted(true);
             setCurrentStep("confirmation");
         }, 1500);
     };
@@ -202,75 +210,6 @@ export default function MembershipApplicationPage() {
     };
 
     const confirmationNumber = `CU-MEM-${Date.now().toString().slice(-6)}`;
-
-    // ── Landing Page ──
-    if (currentStep === "landing") {
-        return (
-            <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30]">
-                <Nav />
-                <main className="max-w-[600px] mx-auto px-6 py-12">
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
-                        {/* Hero */}
-                        <div className="relative w-full aspect-[2.5/1]">
-                            <img
-                                src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80"
-                                alt="Open a Membership"
-                                className="w-full h-full object-cover object-center"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                            <div className="absolute bottom-4 left-6 right-6">
-                                <h1 className="text-2xl font-bold text-white">Open a Membership</h1>
-                                <p className="text-white/80 text-sm mt-1">Join our credit union family today</p>
-                            </div>
-                        </div>
-
-                        <div className="p-6 lg:p-8">
-                            <p className="text-[14px] text-[#677178] mb-8 leading-relaxed">
-                                Become a member and unlock exclusive rates, lower fees, and personalized financial guidance.
-                                Choose an option below to get started.
-                            </p>
-
-                            <div className="space-y-3">
-                                <button
-                                    onClick={goNext}
-                                    className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[#143C67] bg-[#143C67]/5 hover:bg-[#143C67]/10 transition-colors text-left"
-                                >
-                                    <div className="w-10 h-10 rounded-full bg-[#143C67] flex items-center justify-center shrink-0">
-                                        <Users className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div>
-                                        <div className="text-[15px] font-semibold text-[#143C67]">New Member</div>
-                                        <div className="text-[12px] text-[#677178]">I&apos;d like to join the credit union</div>
-                                    </div>
-                                </button>
-
-                                <button
-                                    disabled
-                                    className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 bg-gray-50 text-left opacity-60 cursor-not-allowed"
-                                >
-                                    <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center shrink-0">
-                                        <Building2 className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div>
-                                        <div className="text-[15px] font-semibold text-[#374151]">Existing Member</div>
-                                        <div className="text-[12px] text-[#677178]">I&apos;m already a member and want to add products</div>
-                                    </div>
-                                </button>
-                            </div>
-
-                            <div className="mt-6 flex items-center gap-2 text-[12px] text-[#677178]">
-                                <Lock className="w-3.5 h-3.5" />
-                                <span>Your information is encrypted and secure</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <Disclaimer />
-                </main>
-                <ProtoNav />
-            </div>
-        );
-    }
 
     // ── Confirmation Page ──
     if (currentStep === "confirmation") {
@@ -492,6 +431,21 @@ export default function MembershipApplicationPage() {
 
                 {/* Main Content */}
                 <div className="flex-1 min-w-0 lg:mt-0 mt-16">
+                    {/* Context banner when coming from an offer redemption */}
+                    {hasPrefill && currentStep === "eligibility" && (
+                        <div className="mb-4 bg-[#F0F7FF] border border-[#BFDBFE] rounded-xl p-4 flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-[#143C67] shrink-0 mt-0.5" />
+                            <div>
+                                <p className="text-[13px] font-medium text-[#1e3a5f]">
+                                    Your {fromOfferTitle} application has been submitted!
+                                </p>
+                                <p className="text-[12px] text-[#3b6a9a] mt-0.5">
+                                    Complete this membership application to finalize your offer. We&apos;ve pre-filled your details from the previous application.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* ── Step: Eligibility ── */}
                     {currentStep === "eligibility" && (
                         <StepCard

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, CheckCircle2, Info, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Info, X, LogIn, UserPlus } from "lucide-react";
 import { OfferCard } from "@/components/storefront/OfferCard";
 import { PrequalificationCard } from "@/components/storefront/PrequalificationCard";
 import { useStore } from "@/context/StoreContext";
@@ -11,6 +11,7 @@ import type { Offer } from "@/context/StoreContext";
 
 export default function StrangerStorefrontPage() {
     const { offers, strangerOffers, strangerWelcomeMessage, storefrontConfig, featureFlags } = useStore();
+    const [hasEnteredAsGuest, setHasEnteredAsGuest] = useState(false);
     const [activeCategory, setActiveCategory] = useState("All");
 
     // Prequalification state
@@ -92,6 +93,91 @@ export default function StrangerStorefrontPage() {
 
     // Featured hero (inline, simplified version — no separate HeroCarousel component since that reads from useStorefront)
     const heroOffer = featuredOffers[0];
+
+    // ── Entry Gate ──
+    if (!hasEnteredAsGuest) {
+        return (
+            <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30] flex flex-col">
+                {/* Navigation */}
+                <nav className="bg-white px-6 lg:px-8 h-14 flex items-center justify-between border-b border-gray-200">
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="w-7 h-7 bg-[#143C67] rounded flex items-center justify-center">
+                            <div className="grid grid-cols-2 gap-[2px] w-3.5 h-3.5">
+                                <div className="bg-white rounded-[1px]"></div>
+                                <div className="bg-white rounded-[1px]"></div>
+                                <div className="bg-white rounded-[1px]"></div>
+                                <div className="bg-white/50 rounded-[1px]"></div>
+                            </div>
+                        </div>
+                        <span className="text-[15px] font-semibold text-[#143C67]">Credit Union</span>
+                    </Link>
+                </nav>
+
+                <div className="flex-1 flex items-center justify-center px-6 py-12">
+                    <div className="max-w-[480px] w-full">
+                        <div className="text-center mb-8">
+                            <div className="w-14 h-14 bg-[#143C67] rounded-xl flex items-center justify-center mx-auto mb-4">
+                                <div className="grid grid-cols-2 gap-[2px] w-6 h-6">
+                                    <div className="bg-white rounded-[1px]"></div>
+                                    <div className="bg-white rounded-[1px]"></div>
+                                    <div className="bg-white rounded-[1px]"></div>
+                                    <div className="bg-white/50 rounded-[1px]"></div>
+                                </div>
+                            </div>
+                            <h1 className="text-[26px] font-semibold text-[#262C30] mb-2">
+                                Welcome to Credit Union
+                            </h1>
+                            <p className="text-[14px] text-[#677178] leading-relaxed max-w-sm mx-auto">
+                                Already a member? Log in to access your personalized offers and account. Or continue as a guest to explore what we have to offer.
+                            </p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <Link
+                                href="/storefront"
+                                className="w-full flex items-center gap-4 p-5 rounded-xl border-2 border-[#143C67] bg-[#143C67] hover:bg-[#0f2d4d] transition-colors text-left"
+                            >
+                                <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                                    <LogIn className="w-5 h-5 text-white" />
+                                </div>
+                                <div>
+                                    <div className="text-[15px] font-semibold text-white">Log In to Home Banking</div>
+                                    <div className="text-[12px] text-white/70">Access your accounts, personalized offers, and more</div>
+                                </div>
+                            </Link>
+
+                            <button
+                                onClick={() => setHasEnteredAsGuest(true)}
+                                className="w-full flex items-center gap-4 p-5 rounded-xl border-2 border-gray-300 bg-white hover:border-[#143C67] hover:bg-[#143C67]/5 transition-colors text-left"
+                            >
+                                <div className="w-11 h-11 rounded-full bg-[#E8EBED] flex items-center justify-center shrink-0">
+                                    <UserPlus className="w-5 h-5 text-[#143C67]" />
+                                </div>
+                                <div>
+                                    <div className="text-[15px] font-semibold text-[#262C30]">Continue as Guest</div>
+                                    <div className="text-[12px] text-[#677178]">Browse our products, rates, and special offers</div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <p className="text-center text-[11px] text-[#677178] mt-6">
+                            Not a member yet? Continue as a guest to explore our offerings and apply today.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Prototype Navigation */}
+                <div className="fixed bottom-4 right-4 z-50 flex gap-2">
+                    <Link
+                        href="/"
+                        className="px-3 py-1.5 bg-[#262C30] text-white text-[11px] font-medium rounded-full shadow-lg hover:bg-black transition-colors"
+                    >
+                        Exit Prototype
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30]">
@@ -198,7 +284,7 @@ export default function StrangerStorefrontPage() {
                                     )}
                                     <div className="flex flex-col gap-3 items-center min-[804px]:items-stretch max-w-[280px]">
                                         <Link
-                                            href={`/storefront/offer/${currentPrequalOffer.id}`}
+                                            href={`/stranger-storefront/offer/${currentPrequalOffer.id}`}
                                             className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-[#B8C4E0] text-[#1e293b] text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-[#a3b1d1] transition-colors"
                                         >
                                             REVIEW OFFER
@@ -278,7 +364,7 @@ export default function StrangerStorefrontPage() {
                                     )}
                                     <div className="flex flex-col gap-3 items-center min-[804px]:items-stretch max-w-[280px]">
                                         <Link
-                                            href={heroOffer.variant === 'new-member' ? '/stranger-storefront/apply/membership' : `/storefront/offer/${heroOffer.id}`}
+                                            href={heroOffer.variant === 'new-member' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${heroOffer.id}`}
                                             className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-[#B8C4E0] text-[#1e293b] text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-[#a3b1d1] transition-colors"
                                         >
                                             {heroOffer.variant === 'new-member' ? 'JOIN NOW' : 'LEARN MORE'}
@@ -362,7 +448,7 @@ export default function StrangerStorefrontPage() {
                                         attributes={offer.attributes}
                                         imageUrl={offer.imageUrl}
                                         ctaText={offer.ctaText || "Learn More"}
-                                        ctaLink={offer.variant === 'new-member' ? '/stranger-storefront/apply/membership' : offer.ctaLink}
+                                        ctaLink={offer.variant === 'new-member' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${offer.id}`}
                                     />
                                 ))}
                             </div>
