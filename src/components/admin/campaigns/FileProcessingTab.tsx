@@ -223,11 +223,40 @@ function generateRevioScores(totalMembers: number): RevioScoreBucket[] {
     });
 }
 
+// Generate a realistic distribution skewed slightly toward higher propensity (Vertice AI model)
+function generateVerticeScores(totalMembers: number): RevioScoreBucket[] {
+    const buckets = [
+        { label: "0–19", min: 0, max: 19, weight: 0.08 },
+        { label: "20–39", min: 20, max: 39, weight: 0.12 },
+        { label: "40–59", min: 40, max: 59, weight: 0.25 },
+        { label: "60–79", min: 60, max: 79, weight: 0.35 },
+        { label: "80–100", min: 80, max: 100, weight: 0.20 },
+    ];
+
+    const jittered = buckets.map((b) => ({
+        ...b,
+        weight: b.weight * (0.85 + Math.random() * 0.3),
+    }));
+
+    const totalWeight = jittered.reduce((sum, b) => sum + b.weight, 0);
+
+    let remaining = totalMembers;
+    return jittered.map((b, i) => {
+        const isLast = i === jittered.length - 1;
+        const count = isLast ? remaining : Math.round(totalMembers * (b.weight / totalWeight));
+        remaining -= count;
+        return { label: b.label, min: b.min, max: b.max, count };
+    });
+}
+
 export default function FileProcessingTab({ campaign, onUpdate }: FileProcessingTabProps) {
     const { featureFlags } = useStore();
     const [isUploading, setIsUploading] = useState<"customer" | "enhanced" | null>(null);
     const [optimizationExpanded, setOptimizationExpanded] = useState(false);
-    const [verticeThreshold, setVerticeThreshold] = useState(50);
+    // Vertice AI state
+    const [verticeStatus, setVerticeStatus] = useState<"idle" | "loading" | "complete">("idle");
+    const [verticeScoreDistribution, setVerticeScoreDistribution] = useState<RevioScoreBucket[]>([]);
+    const [verticeThreshold, setVerticeThreshold] = useState(0);
 
     // Revio state
     const [revioStatus, setRevioStatus] = useState<"idle" | "loading" | "complete">("idle");
@@ -245,24 +274,24 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
     const revioMembersRemaining = totalMembers - revioMembersExcluded;
     const maxBucketCount = Math.max(...revioScoreDistribution.map((b) => b.count), 0);
 
+    // Vertice AI derived calculations
+    const verticeMembersExcluded = verticeScoreDistribution
+        .filter((bucket) => bucket.max < verticeThreshold)
+        .reduce((sum, bucket) => sum + bucket.count, 0);
+    const verticeMembersRemaining = totalMembers - verticeMembersExcluded;
+    const maxVerticeCount = Math.max(...verticeScoreDistribution.map((b) => b.count), 0);
+
     // Combined optimization for export
     const hasRevioOptimization = revioStatus === "complete" && revioThreshold > 0;
-    const hasVerticeOptimization = featureFlags.admin_optimizationVertice && verticeThreshold > 0;
+    const hasVerticeOptimization = verticeStatus === "complete" && verticeThreshold > 0;
 
     let exportRecordCount = totalMembers;
     if (hasRevioOptimization) {
         exportRecordCount -= revioMembersExcluded;
     }
     if (hasVerticeOptimization) {
-        const verticeExclusionsOnRemaining = Math.floor(exportRecordCount * (verticeThreshold / 100) * 0.8);
-        exportRecordCount -= verticeExclusionsOnRemaining;
+        exportRecordCount -= verticeMembersExcluded;
     }
-
-    // Calculate Vertice optimization (threshold-based)
-    const verticeExcludedMembers = Math.floor(totalMembers * (verticeThreshold / 100) * 0.8);
-    const verticeRemainingMembers = totalMembers - verticeExcludedMembers;
-    const verticeCostPerInquiry = 0.85;
-    const verticeSavings = verticeExcludedMembers * verticeCostPerInquiry;
 
     // Simulate file upload
     const handleCustomerFileUpload = (file: File) => {
@@ -336,11 +365,14 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
         });
     };
 
-    // Reset Revio state when customer file changes
+    // Reset Revio and Vertice state when customer file changes
     useEffect(() => {
         setRevioStatus("idle");
         setRevioScoreDistribution([]);
         setRevioThreshold(0);
+        setVerticeStatus("idle");
+        setVerticeScoreDistribution([]);
+        setVerticeThreshold(0);
     }, [campaign.customerFile?.id]);
 
     const handleGetRevioScores = () => {
@@ -352,6 +384,18 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
             const scores = generateRevioScores(totalMembers);
             setRevioScoreDistribution(scores);
             setRevioStatus("complete");
+        }, delay);
+    };
+
+    const handleGetVerticeScores = () => {
+        setVerticeStatus("loading");
+        setVerticeThreshold(0);
+
+        const delay = 2000 + Math.random() * 1000;
+        setTimeout(() => {
+            const scores = generateVerticeScores(totalMembers);
+            setVerticeScoreDistribution(scores);
+            setVerticeStatus("complete");
         }, delay);
     };
 
@@ -463,56 +507,137 @@ export default function FileProcessingTab({ campaign, onUpdate }: FileProcessing
                             {/* Vertice AI Propensity Scores (Sub-feature flag) */}
                             {featureFlags.admin_optimizationVertice && (
                                 <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                                    {/* Header */}
                                     <div className="mb-4">
-                                        <h3 className="font-semibold text-slate-900">Vertice AI Propensity Scores</h3>
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-semibold text-slate-900">Vertice AI Propensity Scores</h3>
+                                            {verticeStatus === "complete" && (
+                                                <button
+                                                    onClick={handleGetVerticeScores}
+                                                    disabled={isLiveOrCompleted}
+                                                    className="text-xs text-slate-500 hover:text-slate-700 underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                >
+                                                    Re-fetch scores
+                                                </button>
+                                            )}
+                                        </div>
                                         <p className="text-sm text-slate-500 mt-0.5">
-                                            Exclude members with low propensity scores to reduce bureau costs.
+                                            {verticeStatus === "complete"
+                                                ? "Propensity scores retrieved. Set a minimum threshold to exclude low-propensity members."
+                                                : "Send your customer file to Vertice AI for propensity scoring."}
                                         </p>
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-slate-600">Minimum propensity score threshold</span>
-                                            <span className="font-medium text-slate-900">{verticeThreshold}%</span>
-                                        </div>
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="80"
-                                            value={verticeThreshold}
-                                            onChange={(e) => setVerticeThreshold(Number(e.target.value))}
-                                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
-                                        />
-                                        <div className="flex items-center justify-between text-xs text-slate-500">
-                                            <span>Include all members</span>
-                                            <span>High-propensity only (80%+)</span>
-                                        </div>
+                                    {/* Idle: Get Propensity Scores button */}
+                                    {verticeStatus === "idle" && (
+                                        <button
+                                            onClick={handleGetVerticeScores}
+                                            disabled={isLiveOrCompleted}
+                                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            Get Propensity Scores
+                                        </button>
+                                    )}
 
-                                        {verticeThreshold > 0 && (
-                                            <div className="mt-4 p-4 bg-white rounded-lg border border-slate-200">
-                                                <div className="grid grid-cols-3 gap-4">
-                                                    <div>
-                                                        <p className="text-xs text-slate-500 mb-1">Members excluded</p>
-                                                        <p className="text-lg font-bold text-slate-900">
-                                                            {verticeExcludedMembers.toLocaleString()}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs text-slate-500 mb-1">Bureau file size</p>
-                                                        <p className="text-lg font-bold text-slate-900">
-                                                            {verticeRemainingMembers.toLocaleString()}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs text-slate-500 mb-1">Est. bureau savings</p>
-                                                        <p className="text-lg font-bold text-slate-900">
-                                                            ${verticeSavings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                        </p>
-                                                    </div>
+                                    {/* Loading: Spinner */}
+                                    {verticeStatus === "loading" && (
+                                        <div className="flex flex-col items-center py-6">
+                                            <Loader2 className="w-8 h-8 text-slate-500 animate-spin mb-3" />
+                                            <p className="text-sm font-medium text-slate-700">Retrieving propensity scores from Vertice AI...</p>
+                                            <p className="text-xs text-slate-500 mt-1">This usually takes a few moments.</p>
+                                        </div>
+                                    )}
+
+                                    {/* Complete: Distribution + Threshold Slider */}
+                                    {verticeStatus === "complete" && (
+                                        <div className="space-y-4">
+                                            {/* Score Distribution */}
+                                            <div>
+                                                <h4 className="text-xs font-medium text-slate-700 uppercase tracking-wider mb-3">Score Distribution</h4>
+                                                <div className="space-y-2">
+                                                    {verticeScoreDistribution.map((bucket) => {
+                                                        const widthPercent = maxVerticeCount > 0 ? (bucket.count / maxVerticeCount) * 100 : 0;
+                                                        const isExcluded = bucket.max < verticeThreshold;
+                                                        return (
+                                                            <div key={bucket.label} className="flex items-center gap-3">
+                                                                <span className={cn(
+                                                                    "text-xs font-mono w-14 text-right shrink-0",
+                                                                    isExcluded ? "text-slate-400" : "text-slate-600"
+                                                                )}>
+                                                                    {bucket.label}
+                                                                </span>
+                                                                <div className="flex-1 h-6 bg-slate-100 rounded overflow-hidden">
+                                                                    <div
+                                                                        className={cn(
+                                                                            "h-full rounded transition-all",
+                                                                            isExcluded ? "bg-slate-300" : "bg-slate-700"
+                                                                        )}
+                                                                        style={{ width: `${widthPercent}%` }}
+                                                                    />
+                                                                </div>
+                                                                <span className={cn(
+                                                                    "text-xs w-16 text-right shrink-0",
+                                                                    isExcluded ? "text-slate-400 line-through" : "text-slate-700 font-medium"
+                                                                )}>
+                                                                    {bucket.count.toLocaleString()}
+                                                                </span>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
-                                        )}
-                                    </div>
+
+                                            {/* Threshold Slider */}
+                                            <div className="space-y-3 pt-2">
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-slate-600">Remove members scoring below</span>
+                                                    <span className="font-medium text-slate-900">
+                                                        {verticeThreshold === 0 ? "None" : verticeThreshold}
+                                                    </span>
+                                                </div>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="80"
+                                                    step="20"
+                                                    value={verticeThreshold}
+                                                    onChange={(e) => setVerticeThreshold(Number(e.target.value))}
+                                                    disabled={isLiveOrCompleted}
+                                                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                />
+                                                <div className="flex items-center justify-between text-xs text-slate-500">
+                                                    <span>Include all</span>
+                                                    <span>High-propensity only (80+)</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Stats Card */}
+                                            {verticeThreshold > 0 && (
+                                                <div className="p-4 bg-white rounded-lg border border-slate-200">
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div>
+                                                            <p className="text-xs text-slate-500 mb-1">Members excluded</p>
+                                                            <p className="text-lg font-bold text-slate-900">
+                                                                {verticeMembersExcluded.toLocaleString()}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-slate-500 mb-1">Members remaining</p>
+                                                            <p className="text-lg font-bold text-slate-900">
+                                                                {verticeMembersRemaining.toLocaleString()}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-slate-500 mb-1">Est. ROI improvement</p>
+                                                            <p className="text-lg font-bold text-slate-900">
+                                                                +{Math.round(verticeThreshold * 0.6)}%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

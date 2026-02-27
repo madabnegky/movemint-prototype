@@ -43,13 +43,13 @@ export default function StrangerApplyPage() {
     const strangerConfig = strangerOffers.find(so => so.offerId === offerId);
     const displayVariant: OfferVariant = strangerConfig?.variant || offer?.variant || 'ita';
 
-    // Redirect new-member offers to the dedicated membership application
-    const isNewMember = displayVariant === 'new-member';
+    // Redirect membership offers to the dedicated membership application
+    const isMembershipProduct = offer?.productType === 'membership' || displayVariant === 'new-member';
     useEffect(() => {
-        if (isNewMember) {
+        if (isMembershipProduct) {
             router.replace('/stranger-storefront/apply/membership');
         }
-    }, [isNewMember, router]);
+    }, [isMembershipProduct, router]);
 
     const [currentStep, setCurrentStep] = useState<ApplyStep>('details');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,8 +74,8 @@ export default function StrangerApplyPage() {
         agreedToESign: false,
     });
 
-    // While redirecting new-member offers, show nothing
-    if (isNewMember) {
+    // While redirecting membership offers, show nothing
+    if (isMembershipProduct) {
         return null;
     }
 

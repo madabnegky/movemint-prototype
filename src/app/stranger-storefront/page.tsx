@@ -364,10 +364,10 @@ export default function StrangerStorefrontPage() {
                                     )}
                                     <div className="flex flex-col gap-3 items-center min-[804px]:items-stretch max-w-[280px]">
                                         <Link
-                                            href={heroOffer.variant === 'new-member' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${heroOffer.id}`}
+                                            href={heroOffer.productType === 'membership' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${heroOffer.id}`}
                                             className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-[#B8C4E0] text-[#1e293b] text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-[#a3b1d1] transition-colors"
                                         >
-                                            {heroOffer.variant === 'new-member' ? 'JOIN NOW' : 'LEARN MORE'}
+                                            {heroOffer.productType === 'membership' ? 'JOIN NOW' : 'LEARN MORE'}
                                         </Link>
                                     </div>
                                 </div>
@@ -448,7 +448,7 @@ export default function StrangerStorefrontPage() {
                                         attributes={offer.attributes}
                                         imageUrl={offer.imageUrl}
                                         ctaText={offer.ctaText || "Learn More"}
-                                        ctaLink={offer.variant === 'new-member' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${offer.id}`}
+                                        ctaLink={offer.productType === 'membership' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${offer.id}`}
                                     />
                                 ))}
                             </div>

@@ -273,13 +273,13 @@ export type LoanClass = 'vehicle_loan' | 'credit_card' | 'personal_loan' | 'home
 
 export interface CustomReconciliationRuleCondition {
     id: string;
-    loanClass: LoanClass | 'all'; // "all" or specific loan class
+    productId: string; // "all" or specific campaign product id
 }
 
 export interface CustomReconciliationRule {
     id: string;
     triggerLoanClass: LoanClass | 'any'; // "any" or specific loan class
-    affectedLoanClasses: CustomReconciliationRuleCondition[];
+    affectedProducts: CustomReconciliationRuleCondition[];
 }
 
 export interface EnhancedCustomerFile {

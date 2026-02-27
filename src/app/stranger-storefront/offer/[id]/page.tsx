@@ -211,10 +211,10 @@ export default function StrangerOfferDetailPage() {
 
                         <div className="flex flex-col sm:flex-row gap-3">
                             <Link
-                                href={displayVariant === 'new-member' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${offer.id}/apply`}
+                                href={offer.productType === 'membership' ? '/stranger-storefront/apply/membership' : `/stranger-storefront/offer/${offer.id}/apply`}
                                 className="inline-flex items-center justify-center px-8 py-3 bg-[#262C30] text-white text-[13px] font-bold tracking-wider uppercase rounded-full hover:bg-black transition-colors"
                             >
-                                {displayVariant === 'new-member' ? 'Start Membership Application' : 'Continue'}
+                                {offer.productType === 'membership' ? 'Start Membership Application' : 'Continue'}
                             </Link>
                             <Link
                                 href="/stranger-storefront"

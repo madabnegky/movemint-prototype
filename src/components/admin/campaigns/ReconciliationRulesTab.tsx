@@ -48,7 +48,7 @@ const BASE_OPTIONS: ReconciliationOption[] = [
 const FEATURE_FLAGGED_OPTIONS: ReconciliationOption[] = [
     {
         value: "custom",
-        description: "Configure custom rules by loan class",
+        description: "Configure custom rules by loan class to specific product",
         featureFlagKey: "campaigns_reconciliationCustomRules",
     },
     {
@@ -81,11 +81,11 @@ function getCampaignProducts(campaign: Campaign) {
 function validateCustomRule(rule: CustomReconciliationRule): string | null {
     // Check for any/all combination (not allowed)
     if (rule.triggerLoanClass === "any") {
-        const hasAllClasses = rule.affectedLoanClasses.some(
-            (c) => c.loanClass === "all"
+        const hasAllProducts = rule.affectedProducts.some(
+            (c) => c.productId === "all"
         );
-        if (hasAllClasses) {
-            return "Cannot use 'Any loan class' with 'All loan classes'";
+        if (hasAllProducts) {
+            return "Cannot use 'Any loan class' with 'All products'";
         }
     }
 
@@ -150,10 +150,10 @@ export default function ReconciliationRulesTab({
         const newRule: CustomReconciliationRule = {
             id: `rule-${Date.now()}`,
             triggerLoanClass: "any",
-            affectedLoanClasses: [
+            affectedProducts: [
                 {
                     id: `cond-${Date.now()}`,
-                    loanClass: "all",
+                    productId: "all",
                 },
             ],
         };
@@ -172,18 +172,18 @@ export default function ReconciliationRulesTab({
         );
     };
 
-    const updateAffectedLoanClass = (
+    const updateAffectedCustomProduct = (
         ruleId: string,
         conditionId: string,
-        loanClass: LoanClass | "all"
+        productId: string
     ) => {
         updateCustomRules(
             customRules.map((r) =>
                 r.id === ruleId
                     ? {
                           ...r,
-                          affectedLoanClasses: r.affectedLoanClasses.map((c) =>
-                              c.id === conditionId ? { ...c, loanClass } : c
+                          affectedProducts: r.affectedProducts.map((c) =>
+                              c.id === conditionId ? { ...c, productId } : c
                           ),
                       }
                     : r
@@ -191,17 +191,17 @@ export default function ReconciliationRulesTab({
         );
     };
 
-    const addAffectedLoanClass = (ruleId: string) => {
+    const addAffectedCustomProduct = (ruleId: string) => {
         updateCustomRules(
             customRules.map((r) =>
                 r.id === ruleId
                     ? {
                           ...r,
-                          affectedLoanClasses: [
-                              ...r.affectedLoanClasses,
+                          affectedProducts: [
+                              ...r.affectedProducts,
                               {
                                   id: `cond-${Date.now()}`,
-                                  loanClass: "all" as const,
+                                  productId: "all",
                               },
                           ],
                       }
@@ -210,13 +210,13 @@ export default function ReconciliationRulesTab({
         );
     };
 
-    const removeAffectedLoanClass = (ruleId: string, conditionId: string) => {
+    const removeAffectedCustomProduct = (ruleId: string, conditionId: string) => {
         updateCustomRules(
             customRules.map((r) =>
                 r.id === ruleId
                     ? {
                           ...r,
-                          affectedLoanClasses: r.affectedLoanClasses.filter(
+                          affectedProducts: r.affectedProducts.filter(
                               (c) => c.id !== conditionId
                           ),
                       }
@@ -384,7 +384,7 @@ export default function ReconciliationRulesTab({
                                 Custom Rules
                             </h4>
                             <p className="text-sm text-slate-500 mt-1">
-                                Define which loan classes should change to Invitations to Apply
+                                Define which products should change to Invitations to Apply
                                 when a specific loan class is redeemed.
                             </p>
                         </div>
@@ -463,16 +463,16 @@ export default function ReconciliationRulesTab({
                                             </div>
                                         </div>
 
-                                        {/* Affected Loan Classes */}
-                                        {rule.affectedLoanClasses.map((cond, condIndex) => (
+                                        {/* Affected Products */}
+                                        {rule.affectedProducts.map((cond, condIndex) => (
                                             <div key={cond.id} className="mb-4">
                                                 <div className="flex items-center gap-1 mb-2">
                                                     <span className="text-sm font-medium text-slate-700">
-                                                        Affected Loan Type {condIndex + 1}
+                                                        Affected Product {condIndex + 1}
                                                     </span>
                                                     <button
                                                         className="text-slate-400 hover:text-slate-600"
-                                                        title="Loan classes that will change to Invite to Apply"
+                                                        title="Products that will change to Invite to Apply"
                                                     >
                                                         <Info className="w-4 h-4" />
                                                     </button>
@@ -482,31 +482,31 @@ export default function ReconciliationRulesTab({
                                                         Then
                                                     </span>
                                                     <select
-                                                        value={cond.loanClass}
+                                                        value={cond.productId}
                                                         onChange={(e) =>
-                                                            updateAffectedLoanClass(
+                                                            updateAffectedCustomProduct(
                                                                 rule.id,
                                                                 cond.id,
-                                                                e.target.value as LoanClass | "all"
+                                                                e.target.value
                                                             )
                                                         }
                                                         disabled={isLive}
                                                         className="flex-1 px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-950 disabled:bg-slate-100 disabled:cursor-not-allowed"
                                                     >
-                                                        <option value="all">All loan classes</option>
-                                                        {LOAN_CLASSES.map((lc) => (
-                                                            <option key={lc.value} value={lc.value}>
-                                                                {lc.label}
+                                                        <option value="all">All products</option>
+                                                        {campaignProducts.map((product) => (
+                                                            <option key={product.id} value={product.id}>
+                                                                {product.name}
                                                             </option>
                                                         ))}
                                                     </select>
                                                     <span className="text-sm text-slate-600">
                                                         change(s) to apply now.
                                                     </span>
-                                                    {rule.affectedLoanClasses.length > 1 && (
+                                                    {rule.affectedProducts.length > 1 && (
                                                         <button
                                                             onClick={() =>
-                                                                removeAffectedLoanClass(
+                                                                removeAffectedCustomProduct(
                                                                     rule.id,
                                                                     cond.id
                                                                 )
@@ -522,13 +522,13 @@ export default function ReconciliationRulesTab({
                                             </div>
                                         ))}
 
-                                        {/* Add Another Affected Loan Class */}
+                                        {/* Add Another Affected Product */}
                                         <button
-                                            onClick={() => addAffectedLoanClass(rule.id)}
+                                            onClick={() => addAffectedCustomProduct(rule.id)}
                                             disabled={isLive}
                                             className="px-4 py-2 text-sm font-medium text-slate-600 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                         >
-                                            + ADD ANOTHER LOAN TYPE
+                                            + ADD ANOTHER PRODUCT
                                         </button>
                                     </div>
                                 );
