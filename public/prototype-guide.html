@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movemint DSF Product Config Prototype Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #262C30;
+            background-color: #E8EBED;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #143C67 0%, #1e5a9a 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero .url {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-top: 16px;
+            font-family: monospace;
+        }
+
+        .hero .url a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .hero .url a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .notice {
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .notice h3 {
+            color: #92400E;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .notice ul {
+            list-style: none;
+            color: #78350F;
+        }
+
+        .notice li {
+            padding: 4px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .notice li::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #F59E0B;
+        }
+
+        .notice strong {
+            color: #92400E;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #E5E7EB;
+        }
+
+        h2 {
+            color: #143C67;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #E8EBED;
+        }
+
+        h3 {
+            color: #262C30;
+            font-size: 1.15rem;
+            margin: 20px 0 12px;
+        }
+
+        h4 {
+            color: #374151;
+            font-size: 1rem;
+            margin: 16px 0 8px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: #4B5563;
+        }
+
+        .feature-flag {
+            display: inline-block;
+            background: #E0E7FF;
+            color: #3730A3;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        th {
+            background: #F9FAFB;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: #4B5563;
+        }
+
+        tr:hover td {
+            background: #F9FAFB;
+        }
+
+        code {
+            background: #F3F4F6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #DC2626;
+        }
+
+        pre {
+            background: #1F2937;
+            color: #E5E7EB;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 12px 0;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: #7CEB87;
+            color: #1a472a;
+        }
+
+        .badge-teal {
+            background: #5EEAD4;
+            color: #134E4A;
+        }
+
+        .badge-orange {
+            background: #FFEDD5;
+            color: #9A3412;
+        }
+
+        .badge-purple {
+            background: #E9D5FF;
+            color: #6B21A8;
+        }
+
+        .badge-gray {
+            background: #E5E7EB;
+            color: #6B7280;
+        }
+
+        .badge-blue {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        ol, ul {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #4B5563;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .mini-card {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .mini-card h4 {
+            margin: 0 0 8px;
+            color: #143C67;
+        }
+
+        .mini-card p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .path {
+            display: inline-block;
+            background: #143C67;
+            color: white;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step;
+            padding-left: 40px;
+            position: relative;
+            margin: 12px 0;
+        }
+
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #143C67;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .localStorage-list {
+            background: #1F2937;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .localStorage-list li {
+            color: #10B981;
+            margin: 6px 0;
+        }
+
+        .localStorage-list span {
+            color: #9CA3AF;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tech-badge {
+            background: #143C67;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #143C67;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #0f2d4d;
+        }
+
+        .nav-link.secondary {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .nav-link.secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .toggle-box {
+            display: inline-flex;
+            background: #F1F5F9;
+            border-radius: 8px;
+            padding: 4px;
+            margin: 12px 0;
+        }
+
+        .toggle-box span {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toggle-box .active {
+            background: white;
+            color: #143C67;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .toggle-box .inactive {
+            color: #64748B;
+        }
+
+        .highlight-box {
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+
+        .highlight-box.indigo {
+            background: #EEF2FF;
+            border-color: #C7D2FE;
+        }
+
+        .highlight-box.green {
+            background: #ECFDF5;
+            border-color: #A7F3D0;
+        }
+
+        .highlight-box.amber {
+            background: #FFFBEB;
+            border-color: #FCD34D;
+        }
+
+        .scenario-box {
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .scenario-box h4 {
+            color: #0F172A;
+            font-size: 1.1rem;
+            margin: 0 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scenario-box .scenario-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .scenario-box.success .scenario-icon {
+            background: #DCFCE7;
+        }
+
+        .scenario-box.warning .scenario-icon {
+            background: #FEF3C7;
+        }
+
+        .scenario-box.info .scenario-icon {
+            background: #DBEAFE;
+        }
+
+        .expect-list {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+        }
+
+        .expect-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 8px 0;
+            padding-left: 0;
+        }
+
+        .expect-list li::before {
+            content: "→";
+            color: #6366F1;
+            font-weight: bold;
+        }
+
+        .callout {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .callout.tip {
+            background: #F0FDF4;
+            border: 1px solid #86EFAC;
+        }
+
+        .callout.tip .callout-icon {
+            color: #16A34A;
+        }
+
+        .callout.warning {
+            background: #FFFBEB;
+            border: 1px solid #FCD34D;
+        }
+
+        .callout.warning .callout-icon {
+            color: #D97706;
+        }
+
+        .callout.info {
+            background: #EFF6FF;
+            border: 1px solid #93C5FD;
+        }
+
+        .callout.info .callout-icon {
+            color: #2563EB;
+        }
+
+        .callout-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .callout-content {
+            flex: 1;
+        }
+
+        .callout-content strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 12px 0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #143C67;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .profile-info h4 {
+            margin: 0;
+            color: #0F172A;
+        }
+
+        .profile-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #64748B;
+        }
+
+        .profile-attrs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .profile-attr {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .profile-attr .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #64748B;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-attr .value {
+            font-weight: 600;
+            color: #0F172A;
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            .profile-attrs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Movemint DSF Product Config Prototype</h1>
+        <p>Digital Storefront Demonstration Platform</p>
+        <div class="url">
+            <a href="https://unarticulatory-abril-vineless.ngrok-free.dev/" target="_blank">
+                https://unarticulatory-abril-vineless.ngrok-free.dev/
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Important Notice -->
+        <div class="notice">
+            <h3>Important Notes</h3>
+            <ul>
+                <li><strong>No backend or database</strong> - All data is stored in your browser's local storage</li>
+                <li><strong>Session-specific</strong> - Your configurations persist only in YOUR browser</li>
+                <li><strong>Reset anytime</strong> - Clear browser data or use "Reset to Defaults" to start fresh</li>
+                <li><strong>Safe to experiment</strong> - Nothing you do here affects any real systems</li>
+            </ul>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="card">
+            <h2>Getting Started: Your First 5 Minutes</h2>
+            <p>Follow these steps to get oriented with the prototype:</p>
+
+            <ol class="step-list">
+                <li>
+                    <strong>Open the Storefront</strong><br>
+                    Click <a href="/storefront" class="nav-link" style="display: inline; padding: 4px 12px; font-size: 0.85rem;">Storefront</a> from the launchpad. This is the consumer-facing marketplace where members see their personalized offers.
+                </li>
+                <li>
+                    <strong>Look at the Preview Controls</strong><br>
+                    At the top of the page, you'll see two controls:
+                    <ul style="margin-top: 8px;">
+                        <li><strong>Demo/Live Toggle</strong> - Switches between demo mode (static offers) and live mode (rule-based offers)</li>
+                        <li><strong>Preview As Dropdown</strong> - Lets you simulate different member profiles</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Try Live Mode</strong><br>
+                    Click <strong>"Live"</strong> in the toggle, then select <strong>"High Credit Member (720+)"</strong> from the Preview As dropdown. Watch the offers change based on campaign rules!
+                </li>
+                <li>
+                    <strong>Switch Profiles</strong><br>
+                    Now select <strong>"Low Credit Member (&lt;650)"</strong>. Notice how fewer offers appear and some that were "Preapproved" are now "Apply Now" (or hidden entirely).
+                </li>
+                <li>
+                    <strong>Explore the Admin</strong><br>
+                    Go to <a href="/admin/campaigns" class="nav-link" style="display: inline; padding: 4px 12px; font-size: 0.85rem;">Admin > Campaigns</a> to see how campaigns and rules are configured.
+                </li>
+            </ol>
+
+            <div class="callout tip">
+                <span class="callout-icon">💡</span>
+                <div class="callout-content">
+                    <strong>Pro Tip</strong>
+                    Keep two browser tabs open - one on the Storefront and one on Admin > Campaigns. Make changes in Admin, then refresh Storefront to see the results immediately.
+                </div>
+            </div>
+        </div>
+
+        <!-- Understanding Member Profiles -->
+        <div class="card">
+            <h2>Understanding Member Profiles</h2>
+            <p>The prototype includes 5 built-in member profiles that simulate different types of credit union members. Each profile has specific attributes that campaign rules evaluate against.</p>
+
+            <!-- High Credit Member -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">750</div>
+                    <div class="profile-info">
+                        <h4>High Credit Member (720+)</h4>
+                        <p>Your best customers - qualifies for top rates and highest preapproval limits</p>
+                    </div>
+                </div>
+                <div class="profile-attrs">
+                    <div class="profile-attr">
+                        <div class="label">Credit Score</div>
+                        <div class="value">750</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Tenure</div>
+                        <div class="value">8 years</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Balance</div>
+                        <div class="value">$25,000</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Mortgage</div>
+                        <div class="value">Yes</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Auto Loan</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Direct Deposit</div>
+                        <div class="value">Yes</div>
+                    </div>
+                </div>
+                <div class="expect-list">
+                    <strong>What to expect in Live mode:</strong>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>Most products visible and preapproved</li>
+                        <li>Highest preapproval limits (e.g., $50,000 for auto loans)</li>
+                        <li>Good candidate for HELOC, home equity products</li>
+                        <li>May see auto loan offers but NOT auto refi (no existing auto loan)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mid Credit Member -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">680</div>
+                    <div class="profile-info">
+                        <h4>Mid Credit Member (650-719)</h4>
+                        <p>Solid member - qualifies for most products, may see lower limits</p>
+                    </div>
+                </div>
+                <div class="profile-attrs">
+                    <div class="profile-attr">
+                        <div class="label">Credit Score</div>
+                        <div class="value">680</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Tenure</div>
+                        <div class="value">3 years</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Balance</div>
+                        <div class="value">$5,000</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Mortgage</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Auto Loan</div>
+                        <div class="value">Yes</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Direct Deposit</div>
+                        <div class="value">Yes</div>
+                    </div>
+                </div>
+                <div class="expect-list">
+                    <strong>What to expect in Live mode:</strong>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>Most products visible</li>
+                        <li>Mix of preapproved and ITA offers</li>
+                        <li>Lower preapproval limits than high credit member</li>
+                        <li>Good candidate for auto refinance (has existing auto loan)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Auto Loan Holder -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">710</div>
+                    <div class="profile-info">
+                        <h4>Auto Loan Holder</h4>
+                        <p>Existing borrower - prime candidate for refinance offers</p>
+                    </div>
+                </div>
+                <div class="profile-attrs">
+                    <div class="profile-attr">
+                        <div class="label">Credit Score</div>
+                        <div class="value">710</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Tenure</div>
+                        <div class="value">5 years</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Balance</div>
+                        <div class="value">$8,000</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Mortgage</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Auto Loan</div>
+                        <div class="value">Yes</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Direct Deposit</div>
+                        <div class="value">Yes</div>
+                    </div>
+                </div>
+                <div class="expect-list">
+                    <strong>What to expect in Live mode:</strong>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>Should see Auto Refinance offers (has auto loan = true)</li>
+                        <li>Good preapproval limits due to credit score</li>
+                        <li>Use this profile to test "Has Auto Loan" rules</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- New Member -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">700</div>
+                    <div class="profile-info">
+                        <h4>New Member</h4>
+                        <p>Recently joined - limited relationship history</p>
+                    </div>
+                </div>
+                <div class="profile-attrs">
+                    <div class="profile-attr">
+                        <div class="label">Credit Score</div>
+                        <div class="value">700</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Tenure</div>
+                        <div class="value">0 years</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Balance</div>
+                        <div class="value">$500</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Mortgage</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Auto Loan</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Direct Deposit</div>
+                        <div class="value">No</div>
+                    </div>
+                </div>
+                <div class="expect-list">
+                    <strong>What to expect in Live mode:</strong>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>Credit score is decent, but no relationship depth</li>
+                        <li>May be excluded from tenure-based rules</li>
+                        <li>Good profile to test "Member Since" rules</li>
+                        <li>Use to demonstrate cross-sell to new members</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Low Credit Member -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">620</div>
+                    <div class="profile-info">
+                        <h4>Low Credit Member (&lt;650)</h4>
+                        <p>Below-average credit - limited preapproval eligibility</p>
+                    </div>
+                </div>
+                <div class="profile-attrs">
+                    <div class="profile-attr">
+                        <div class="label">Credit Score</div>
+                        <div class="value">620</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Tenure</div>
+                        <div class="value">2 years</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Balance</div>
+                        <div class="value">$1,500</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Mortgage</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Has Auto Loan</div>
+                        <div class="value">No</div>
+                    </div>
+                    <div class="profile-attr">
+                        <div class="label">Direct Deposit</div>
+                        <div class="value">Yes</div>
+                    </div>
+                </div>
+                <div class="expect-list">
+                    <strong>What to expect in Live mode:</strong>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>Fewer offers visible overall</li>
+                        <li>Most offers as ITA (Invite to Apply), not preapproved</li>
+                        <li>May not qualify for products with credit score minimums</li>
+                        <li>Good candidate for Credit Mountain (credit coaching)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testing Scenarios -->
+        <div class="card">
+            <h2>Testing Scenarios: Step-by-Step</h2>
+            <p>Use these scenarios to demonstrate how the rule engine works and how different member attributes affect offer eligibility.</p>
+
+            <!-- Scenario 1 -->
+            <div class="scenario-box success">
+                <h4><span class="scenario-icon">🎯</span> Scenario 1: Credit Score Impact on Preapproval</h4>
+                <p><strong>Goal:</strong> Show how credit score affects whether a member gets preapproved vs. invited to apply.</p>
+
+                <ol class="step-list">
+                    <li>Go to <strong>Storefront</strong> and switch to <strong>Live</strong> mode</li>
+                    <li>Select <strong>High Credit Member (750)</strong> - look for the New Auto Loan offer</li>
+                    <li>Note: Should show as <span class="badge badge-teal">Preapproved</span> with a high limit (e.g., $50,000)</li>
+                    <li>Now switch to <strong>Mid Credit Member (680)</strong></li>
+                    <li>Note: Same product might show with a lower preapproval limit (e.g., $35,000)</li>
+                    <li>Finally, switch to <strong>Low Credit Member (620)</strong></li>
+                    <li>Note: Product may show as <span class="badge badge-orange">Apply Now</span> (ITA) or not appear at all</li>
+                </ol>
+
+                <div class="callout info">
+                    <span class="callout-icon">ℹ️</span>
+                    <div class="callout-content">
+                        <strong>What's happening behind the scenes?</strong>
+                        The campaign has multiple preapproval rules with different credit score thresholds. The system evaluates each rule and uses the highest matching preapproval limit.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario 2 -->
+            <div class="scenario-box info">
+                <h4><span class="scenario-icon">🚗</span> Scenario 2: Auto Refinance Targeting</h4>
+                <p><strong>Goal:</strong> Show how the "Has Auto Loan" attribute targets members for refinance offers.</p>
+
+                <ol class="step-list">
+                    <li>Go to <strong>Storefront</strong> in <strong>Live</strong> mode</li>
+                    <li>Select <strong>High Credit Member (750)</strong></li>
+                    <li>Look for Auto Refinance - it should NOT appear (Has Auto Loan = No)</li>
+                    <li>Now switch to <strong>Auto Loan Holder (710)</strong></li>
+                    <li>The Auto Refinance offer should now appear (Has Auto Loan = Yes)</li>
+                    <li>Also try <strong>Mid Credit Member (680)</strong> who also has an auto loan</li>
+                </ol>
+
+                <div class="callout tip">
+                    <span class="callout-icon">💡</span>
+                    <div class="callout-content">
+                        <strong>Why this matters</strong>
+                        You only want to show refinance offers to members who actually have a loan to refinance. Product rules with "Has Auto Loan is true" ensure you don't show irrelevant offers.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario 3 -->
+            <div class="scenario-box warning">
+                <h4><span class="scenario-icon">🏔️</span> Scenario 3: Credit Mountain for Low-Credit Members</h4>
+                <p><strong>Goal:</strong> Show how Credit Mountain provides a fallback experience when members don't qualify for preapprovals.</p>
+
+                <ol class="step-list">
+                    <li>First, enable the feature: Go to <strong>Admin > Feature Flags</strong></li>
+                    <li>Turn ON <code>storefront_creditMountain</code></li>
+                    <li>Go to <strong>Storefront</strong> in <strong>Live</strong> mode</li>
+                    <li>Select <strong>Low Credit Member (620)</strong></li>
+                    <li>If no preapproved offers match, the Credit Mountain AI Coach card should appear</li>
+                    <li>This gives the member a path forward instead of an empty "no offers" state</li>
+                </ol>
+            </div>
+
+            <!-- Scenario 4 -->
+            <div class="scenario-box success">
+                <h4><span class="scenario-icon">⚙️</span> Scenario 4: Building Your Own Rule</h4>
+                <p><strong>Goal:</strong> Create a custom rule and watch it affect offer visibility in real-time.</p>
+
+                <ol class="step-list">
+                    <li>Go to <strong>Admin > Campaigns</strong></li>
+                    <li>Click on <strong>"Always-On Member Offers"</strong> (perpetual campaign)</li>
+                    <li>Go to the <strong>Products</strong> tab</li>
+                    <li>Click <strong>Edit</strong> on any product (e.g., "New Auto Loan")</li>
+                    <li>Scroll to <strong>Product Rules</strong> - add a new rule:<br>
+                        <code>Account Balance</code> <code>greater_than_or_equal</code> <code>10000</code>
+                    </li>
+                    <li>Click <strong>Save Changes</strong></li>
+                    <li>Go back to <strong>Storefront</strong> in Live mode</li>
+                    <li>Select <strong>High Credit Member</strong> (balance: $25,000) - offer visible</li>
+                    <li>Select <strong>Mid Credit Member</strong> (balance: $5,000) - offer NOT visible</li>
+                </ol>
+
+                <div class="callout warning">
+                    <span class="callout-icon">⚠️</span>
+                    <div class="callout-content">
+                        <strong>Remember to undo your changes</strong>
+                        If you're demoing for others, you may want to remove this test rule afterward so it doesn't affect future demos.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario 5 -->
+            <div class="scenario-box info">
+                <h4><span class="scenario-icon">📊</span> Scenario 5: Demo Mode vs. Live Mode Comparison</h4>
+                <p><strong>Goal:</strong> Show the difference between static demo offers and rule-evaluated live offers.</p>
+
+                <ol class="step-list">
+                    <li>Go to <strong>Storefront</strong></li>
+                    <li>Make sure you're in <strong>Demo</strong> mode (the default)</li>
+                    <li>Note: You see preset demo offers regardless of any profile selection</li>
+                    <li>Count the offers and note which ones are "Preapproved"</li>
+                    <li>Now switch to <strong>Live</strong> mode and select <strong>High Credit Member</strong></li>
+                    <li>Notice: Offers may be different! They're now generated from campaign rules</li>
+                    <li>The status indicator shows "Evaluating X live campaigns"</li>
+                </ol>
+
+                <div class="highlight-box">
+                    <strong>When to use each mode:</strong>
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>Demo Mode:</strong> Quick UI demos, showing design/layout, when you don't want to explain rules</li>
+                        <li><strong>Live Mode:</strong> Demonstrating personalization, showing how rules work, testing campaign configurations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Set Up a Campaign -->
+        <div class="card">
+            <h2>How to Set Up a Campaign from Scratch</h2>
+            <p>Follow this guide to create and configure a new campaign with products and rules.</p>
+
+            <h3>Step 1: Create the Campaign</h3>
+            <ol class="step-list">
+                <li>Go to <strong>Admin > Campaigns</strong></li>
+                <li>Click <strong>+ New Campaign</strong></li>
+                <li>Fill in the basics:
+                    <ul style="margin-top: 8px;">
+                        <li><strong>Name:</strong> e.g., "Q1 2025 Credit Card Push"</li>
+                        <li><strong>Type:</strong> Choose Perpetual (for always-on) or Targeted (for file-based)</li>
+                        <li><strong>Status:</strong> Set to "Live" when ready to test</li>
+                    </ul>
+                </li>
+                <li>Click <strong>Create Campaign</strong></li>
+            </ol>
+
+            <h3>Step 2: Add Products to the Campaign</h3>
+            <ol class="step-list">
+                <li>Click into your new campaign</li>
+                <li>Go to the <strong>Products</strong> tab</li>
+                <li>Click <strong>+ Add Product</strong> in the Featured Offers section or a category section</li>
+                <li>Select a product from your product catalog (e.g., "Platinum Rewards Visa")</li>
+                <li>The product is now part of your campaign</li>
+            </ol>
+
+            <h3>Step 3: Configure Rules</h3>
+            <ol class="step-list">
+                <li>Click <strong>Edit</strong> on the product you just added</li>
+                <li>You'll see the Product Rules Editor</li>
+                <li>
+                    <strong>Product Rules</strong> (who sees the offer):<br>
+                    Add a rule like: <code>Credit Score >= 600</code><br>
+                    Members below 600 won't see this product at all
+                </li>
+                <li>
+                    <strong>Preapproval Rules</strong> (who gets preapproved):<br>
+                    Add a rule like: <code>Credit Score >= 700</code> with Limit: <code>$15,000</code><br>
+                    Members 700+ see "Preapproved up to $15,000"<br>
+                    Members 600-699 see "Apply Now" (ITA)
+                </li>
+                <li>Click <strong>Save Changes</strong></li>
+            </ol>
+
+            <h3>Step 4: Test Your Campaign</h3>
+            <ol class="step-list">
+                <li>Go to <strong>Storefront</strong></li>
+                <li>Switch to <strong>Live</strong> mode</li>
+                <li>Select different member profiles to verify your rules work correctly</li>
+                <li>Check that:
+                    <ul style="margin-top: 8px;">
+                        <li>High credit members see preapproved offers</li>
+                        <li>Mid credit members see ITA offers</li>
+                        <li>Low credit members don't see offers they shouldn't qualify for</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="callout tip">
+                <span class="callout-icon">💡</span>
+                <div class="callout-content">
+                    <strong>Quick Test Tip</strong>
+                    Keep the Storefront open in one tab and Admin in another. After saving rule changes in Admin, just refresh the Storefront to see the effects immediately.
+                </div>
+            </div>
+        </div>
+
+        <!-- Rule Logic Deep Dive -->
+        <div class="card">
+            <h2>Understanding Rule Logic</h2>
+            <p>Rules are the heart of personalization. Here's how they work:</p>
+
+            <h3>Product Rules vs. Preapproval Rules</h3>
+            <div class="grid-2">
+                <div class="mini-card">
+                    <h4>Product Rules</h4>
+                    <p><strong>Question:</strong> "Should this member see this product at all?"</p>
+                    <p><strong>If matches:</strong> Product shows as Invite to Apply (ITA)</p>
+                    <p><strong>If no match:</strong> Product is hidden</p>
+                </div>
+                <div class="mini-card">
+                    <h4>Preapproval Rules</h4>
+                    <p><strong>Question:</strong> "Should this member be preapproved?"</p>
+                    <p><strong>If matches:</strong> Product shows as Preapproved (with limit if set)</p>
+                    <p><strong>If no match:</strong> Falls back to ITA (if product rules matched)</p>
+                </div>
+            </div>
+
+            <h3>How Clauses Work Together</h3>
+            <div class="highlight-box">
+                <strong>Within a single rule:</strong> All clauses are <strong>ANDed</strong> together<br>
+                <code>Credit Score >= 680 AND Has Auto Loan = true</code> = Member must meet BOTH conditions
+            </div>
+            <div class="highlight-box amber">
+                <strong>Between multiple rules:</strong> Rules are <strong>ORed</strong> together<br>
+                Rule 1: <code>Credit Score >= 750</code><br>
+                Rule 2: <code>Member Since >= 5 years</code><br>
+                = Member needs to meet EITHER Rule 1 OR Rule 2
+            </div>
+
+            <h3>Example: Complex Rule Setup</h3>
+            <pre><code>Product: Premium Auto Loan
+
+Product Rules (who sees it):
+  Rule 1: Credit Score >= 650
+  Rule 2: Member Since >= 3 AND Account Balance >= 5000
+
+  → Member sees product if they have 650+ credit
+    OR if they've been a member 3+ years with $5k+ balance
+
+Preapproval Rules (who gets preapproved):
+  Rule 1: Credit Score >= 720  →  Limit: $50,000
+  Rule 2: Credit Score >= 680  →  Limit: $35,000
+
+  → 720+ gets preapproved at $50k
+  → 680-719 gets preapproved at $35k
+  → Below 680 but meets product rules = ITA</code></pre>
+        </div>
+
+        <!-- Feature Flags -->
+        <div class="card">
+            <h2>Feature Flags Reference</h2>
+            <p>Toggle features on/off via <strong>Admin > Feature Flags</strong>:</p>
+
+            <h4>Storefront Features</h4>
+            <table>
+                <thead>
+                    <tr><th>Flag</th><th>What it does</th><th>When to enable</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>storefront_creditMountain</code></td>
+                        <td>Shows AI credit coach when member has no preapprovals</td>
+                        <td>When demoing Credit Mountain partnership</td>
+                    </tr>
+                    <tr>
+                        <td><code>consumer_prequalification</code></td>
+                        <td>Shows "Get prequalified" card for soft credit pull</td>
+                        <td>When demoing consumer-initiated prequalification</td>
+                    </tr>
+                    <tr>
+                        <td><code>storefront_showBadges</code></td>
+                        <td>Shows "Preapproved", "Apply Now" badges on cards</td>
+                        <td>Usually keep ON for clarity</td>
+                    </tr>
+                    <tr>
+                        <td><code>storefront_animatedCards</code></td>
+                        <td>Hover animations on offer cards</td>
+                        <td>For polished demos</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Campaign Features</h4>
+            <table>
+                <thead>
+                    <tr><th>Flag</th><th>What it does</th><th>When to enable</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>campaigns_perpetualType</code></td>
+                        <td>Enables perpetual (always-on) campaign type</td>
+                        <td>Usually keep ON - this is the main campaign type</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Common Questions -->
+        <div class="card">
+            <h2>Common Questions</h2>
+
+            <h4>Q: Why don't I see any offers in Live mode?</h4>
+            <p><strong>A:</strong> You need to select a member profile. In Live mode, the system evaluates rules against a specific member's attributes. Use the "Preview As" dropdown to select a profile.</p>
+
+            <h4>Q: I changed a rule but the Storefront didn't update?</h4>
+            <p><strong>A:</strong> Make sure you:</p>
+            <ol>
+                <li>Clicked "Save Changes" in the rule editor</li>
+                <li>The campaign status is "Live" (not Draft or Pending)</li>
+                <li>Refreshed the Storefront page</li>
+                <li>Are in "Live" mode (not Demo mode)</li>
+            </ol>
+
+            <h4>Q: What's the difference between a Product and a Campaign Product?</h4>
+            <p><strong>A:</strong> <strong>Products</strong> (in Admin > Products) are your catalog - the master list of all loan/deposit products. <strong>Campaign Products</strong> are instances of those products added to a specific campaign, where you configure rules for that campaign.</p>
+
+            <h4>Q: Can a product be in multiple campaigns?</h4>
+            <p><strong>A:</strong> Yes! The same product can be in multiple campaigns with different rules. In Live mode, the system aggregates offers from ALL live campaigns and de-duplicates, keeping the best offer for each product.</p>
+
+            <h4>Q: How do I reset everything to start fresh?</h4>
+            <p><strong>A:</strong> Open your browser's developer tools (F12), go to Application > Local Storage, and delete all keys starting with <code>movemint_</code>. Then refresh the page.</p>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="card">
+            <h2>Quick Reference: Page URLs</h2>
+            <table>
+                <thead>
+                    <tr><th>Page</th><th>URL</th><th>Use for</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Launchpad</td>
+                        <td><span class="path">/</span></td>
+                        <td>Starting point, navigation to all areas</td>
+                    </tr>
+                    <tr>
+                        <td>Storefront</td>
+                        <td><span class="path">/storefront</span></td>
+                        <td>Consumer offer marketplace demo</td>
+                    </tr>
+                    <tr>
+                        <td>Landing Page</td>
+                        <td><span class="path">/landing</span></td>
+                        <td>Public marketing page demo</td>
+                    </tr>
+                    <tr>
+                        <td>Home Banking</td>
+                        <td><span class="path">/home-banking</span></td>
+                        <td>Partner widget demos (Q2, Alkami)</td>
+                    </tr>
+                    <tr>
+                        <td>Products</td>
+                        <td><span class="path">/admin/products</span></td>
+                        <td>Manage product catalog</td>
+                    </tr>
+                    <tr>
+                        <td>Campaigns</td>
+                        <td><span class="path">/admin/campaigns</span></td>
+                        <td>Campaign management</td>
+                    </tr>
+                    <tr>
+                        <td>Feature Flags</td>
+                        <td><span class="path">/admin/feature-flags</span></td>
+                        <td>Toggle features on/off</td>
+                    </tr>
+                    <tr>
+                        <td>This Guide</td>
+                        <td><span class="path">/prototype-guide.html</span></td>
+                        <td>You're here!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Technical Notes -->
+        <div class="card">
+            <h2>Technical Notes</h2>
+            <div class="tech-badges">
+                <span class="tech-badge">Next.js 14</span>
+                <span class="tech-badge">Tailwind CSS</span>
+                <span class="tech-badge">Lucide React</span>
+                <span class="tech-badge">React Context</span>
+            </div>
+            <ul style="margin-top: 16px;">
+                <li>No authentication required</li>
+                <li>All data stored in browser localStorage</li>
+                <li>Responsive design (works on mobile)</li>
+                <li>No backend - everything runs client-side</li>
+            </ul>
+
+            <h4>localStorage Keys</h4>
+            <ul class="localStorage-list">
+                <li>movemint_offers <span>- Demo offer configurations</span></li>
+                <li>movemint_products <span>- Product catalog</span></li>
+                <li>movemint_campaigns <span>- Campaign configurations</span></li>
+                <li>movemint_feature_flags <span>- Feature toggle states</span></li>
+                <li>movemint_storefront_config <span>- Storefront settings</span></li>
+                <li>movemint_sections <span>- Category sections</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>This is a prototype for demonstration purposes.</p>
+        <p>For questions about the actual DSF product, contact the Movemint team.</p>
+    </footer>
+</body>
+</html>

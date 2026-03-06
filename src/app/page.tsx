@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Store, Rocket, Building2, Globe } from "lucide-react";
+import { LayoutDashboard, Store, Rocket, Building2, Globe, Landmark } from "lucide-react";
 
 export default function PrototypeLaunchpad() {
   return (
@@ -59,6 +59,16 @@ export default function PrototypeLaunchpad() {
           <h2 className="text-xl font-bold text-slate-900 mb-2">Stranger Storefront</h2>
           <p className="text-slate-500 leading-relaxed text-sm">
             Public-facing offers for non-members visiting the credit union website.
+          </p>
+        </Link>
+
+        <Link href="/demopolis" className="group relative bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-6 border border-rose-100 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+            <Landmark className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Demopolis Ecosystem</h2>
+          <p className="text-slate-500 leading-relaxed text-sm">
+            Digital banking ecosystem combining multiple fintech ventures into a Tyfone shell.
           </p>
         </Link>
       </div>

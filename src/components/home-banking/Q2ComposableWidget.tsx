@@ -131,7 +131,7 @@ export function Q2ComposableWidget() {
         if (!amount || amount <= 0) return 0;
         const monthlyRate = apr / 100 / 12;
         const payment = (amount * monthlyRate * Math.pow(1 + monthlyRate, termMonths)) /
-                       (Math.pow(1 + monthlyRate, termMonths) - 1);
+            (Math.pow(1 + monthlyRate, termMonths) - 1);
         return payment;
     };
 
@@ -400,7 +400,7 @@ export function Q2ComposableWidget() {
                                     <div className="flex gap-6 mb-4">
                                         {currentPage.offer.attributes.slice(0, 2).map((attr, idx) => (
                                             <div key={idx}>
-                                                <div className="text-xs text-gray-500">{attr.label}</div>
+                                                <div className="text-xs text-gray-500 mb-0.5">{attr.label}</div>
                                                 <div className="text-lg font-bold text-gray-900">
                                                     {attr.value}
                                                     {attr.subtext && (
@@ -464,10 +464,10 @@ export function Q2ComposableWidget() {
                                                     </p>
                                                     {offer.attributes?.[0] && (
                                                         <div className="text-xs text-gray-600 mt-1">
-                                                            <span className="font-semibold">{offer.attributes[0].value}</span>
                                                             {offer.attributes[0].label && (
-                                                                <span className="text-gray-400 ml-1">{offer.attributes[0].label}</span>
+                                                                <span className="text-gray-500 mr-1">{offer.attributes[0].label}</span>
                                                             )}
+                                                            <span className="font-semibold text-gray-900">{offer.attributes[0].value}</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -518,10 +518,10 @@ export function Q2ComposableWidget() {
                                                         </p>
                                                         {offer.attributes?.[0] && (
                                                             <div className="text-xs text-gray-700 mt-1">
-                                                                <span className="font-semibold">{offer.attributes[0].value}</span>
                                                                 {offer.attributes[0].label && (
-                                                                    <span className="text-gray-500 ml-1">{offer.attributes[0].label}</span>
+                                                                    <span className="text-gray-500 mr-1">{offer.attributes[0].label}</span>
                                                                 )}
+                                                                <span className="font-semibold">{offer.attributes[0].value}</span>
                                                             </div>
                                                         )}
                                                     </div>
