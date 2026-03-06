@@ -41,7 +41,11 @@ interface CarouselPage {
     offers?: (Offer | GeneratedOffer)[];
 }
 
-export function DemopolisOfferWidget() {
+interface DemopolisOfferWidgetProps {
+    onOfferAccepted?: () => void;
+}
+
+export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetProps) {
     const { updateOffer, featureFlags } = useStore();
     const {
         featuredOffers,
@@ -147,13 +151,14 @@ export function DemopolisOfferWidget() {
         });
     };
 
-    const handleFinish = () => {
-        if (selectedOffer) {
+    const handleFinish = (markRedeemed: boolean = true) => {
+        if (selectedOffer && markRedeemed) {
             updateOffer({
                 ...selectedOffer,
                 isRedeemed: true,
                 redeemedTitle: `You've redeemed this ${selectedOffer.title.toLowerCase()} offer!`
             });
+            onOfferAccepted?.();
         }
         setCurrentView('carousel');
         setSelectedOffer(null);
@@ -672,25 +677,103 @@ export function DemopolisOfferWidget() {
     }
 
     if (currentView === 'confirmation' && selectedOffer) {
+        const confirmationNumber = `CU-${selectedOffer.id.slice(0, 4).toUpperCase()}-${Date.now().toString().slice(-6)}`;
+
+        const getNextSteps = () => {
+            switch (selectedOffer.productType) {
+                case 'auto-loan':
+                case 'auto-refi':
+                    return [
+                        { icon: "fa-calendar-check", text: "A loan specialist will contact you within 1 business day" },
+                        { icon: "fa-file-alt", text: "Gather your vehicle title and registration documents" },
+                        { icon: "fa-phone", text: "Complete final verification over the phone or in-branch" },
+                    ];
+                case 'heloc':
+                case 'home-loan':
+                    return [
+                        { icon: "fa-calendar-check", text: "A home loan specialist will reach out within 2 business days" },
+                        { icon: "fa-file-alt", text: "Prepare recent tax returns and property documents" },
+                        { icon: "fa-phone", text: "Schedule a property appraisal (if required)" },
+                    ];
+                case 'credit-card':
+                case 'credit-limit-increase':
+                    return [
+                        { icon: "fa-envelope", text: "Your new card will arrive within 7-10 business days" },
+                        { icon: "fa-phone", text: "Activate your card when it arrives" },
+                        { icon: "fa-mobile-alt", text: "Download our mobile app to manage your account" },
+                    ];
+                default:
+                    return [
+                        { icon: "fa-calendar-check", text: "We'll be in touch within 1-2 business days" },
+                        { icon: "fa-envelope", text: "Check your email for next steps" },
+                        { icon: "fa-phone", text: "Call us if you have any questions" },
+                    ];
+            }
+        };
+
+        const nextSteps = getNextSteps();
+
         return (
             <>
                 <div className="widget-header">
                     <h2><i className="fas fa-store"></i> Offer Redemption</h2>
                 </div>
-                <div className="solid-card" style={{ padding: "2.5rem 1.5rem", textAlign: "center" }}>
-                    <div style={{ width: "64px", height: "64px", background: "#ECFDF5", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem auto" }}>
+                <div className="solid-card" style={{ padding: "2rem 1.5rem", textAlign: "center" }}>
+                    <div style={{ width: "64px", height: "64px", background: "#ECFDF5", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem auto" }}>
                         <i className="fas fa-check" style={{ fontSize: "2rem", color: "var(--movemint-teal)" }}></i>
                     </div>
 
-                    <h3 style={{ fontSize: "1.75rem", marginBottom: "0.5rem" }}>That Was Easy!</h3>
-                    <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", marginBottom: "2rem" }}>
-                        We're processing your request and will be in touch shortly.<br />
-                        Questions? Please contact us.
+                    <h3 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>Application Submitted!</h3>
+                    <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "1.25rem" }}>
+                        Thank you for your {selectedOffer.title.toLowerCase()} application. We've received your information and will be in touch soon.
                     </p>
 
-                    <button onClick={handleFinish} className="btn btn-storefront" style={{ padding: "0.75rem 2rem" }}>
-                        OKAY
-                    </button>
+                    {/* Confirmation Number */}
+                    <div style={{ background: "#F9FAFB", borderRadius: "var(--radius-sm)", padding: "0.75rem 1rem", marginBottom: "1.25rem", display: "inline-block" }}>
+                        <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem" }}>Confirmation Number</div>
+                        <div style={{ fontSize: "1.1rem", fontFamily: "monospace", fontWeight: 600, color: "var(--text-primary)" }}>{confirmationNumber}</div>
+                    </div>
+
+                    {/* Offer Summary */}
+                    <div style={{ background: "#F0FDF4", border: "1px solid #86EFAC", borderRadius: "var(--radius-sm)", padding: "0.75rem 1rem", marginBottom: "1.25rem", textAlign: "left" }}>
+                        <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#166534", marginBottom: "0.25rem" }}>{selectedOffer.title}</div>
+                        {selectedOffer.attributes && selectedOffer.attributes.length > 0 && (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                                {selectedOffer.attributes.map((attr, idx) => (
+                                    <div key={idx} style={{ fontSize: "0.8rem", color: "#166534" }}>
+                                        <span style={{ color: "#15803D" }}>{attr.label}:</span>{" "}
+                                        <span style={{ fontWeight: 600 }}>{attr.value}</span>
+                                        {attr.subtext && <span style={{ fontSize: "0.7rem" }}> {attr.subtext}</span>}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Next Steps */}
+                    <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "1rem", marginBottom: "1.25rem", textAlign: "left" }}>
+                        <div style={{ fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-primary)", marginBottom: "0.75rem" }}>What Happens Next</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                            {nextSteps.map((step, idx) => (
+                                <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+                                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--bg-app)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                        <i className={`fas ${step.icon}`} style={{ fontSize: "0.8rem", color: "var(--brand-primary)" }}></i>
+                                    </div>
+                                    <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", paddingTop: "0.3rem" }}>{step.text}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div style={{ display: "flex", gap: "0.75rem" }}>
+                        <button onClick={() => handleFinish(true)} className="btn btn-primary" style={{ flex: 1, borderRadius: "999px", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.05em" }}>
+                            Mark Redeemed & Return
+                        </button>
+                        <button onClick={() => handleFinish(false)} className="btn btn-secondary" style={{ flex: 1, borderRadius: "999px", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.05em" }}>
+                            Return
+                        </button>
+                    </div>
                 </div>
             </>
         );

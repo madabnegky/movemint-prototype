@@ -6,9 +6,12 @@ import "./demopolis.css";
 
 export default function DemopolisPage() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
-  const [skipPayStatus, setSkipPayStatus] = useState<"idle" | "processing" | "success">("idle");
-  const [payfiniaStatus, setPayfiniaStatus] = useState<"idle" | "processing" | "success">("idle");
+  const [skipPayStatus, setSkipPayStatus] = useState<"idle" | "processing">("idle");
+  const [payfiniaStatus, setPayfiniaStatus] = useState<"idle" | "processing">("idle");
   const [offerStatus, setOfferStatus] = useState<"idle" | "processing" | "success">("idle");
+  // Persistent flags that survive modal close/reset
+  const [skipPayCompleted, setSkipPayCompleted] = useState(false);
+  const [payfiniaSent, setPayfiniaSent] = useState(false);
 
   const openModal = (id: string) => {
     setActiveModal(id);
@@ -18,7 +21,8 @@ export default function DemopolisPage() {
   const closeModal = () => {
     setActiveModal(null);
     document.body.style.overflow = "";
-    // reset statuses if they were interrupted, or keep 'success'
+    setSkipPayStatus("idle");
+    setPayfiniaStatus("idle");
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -30,7 +34,7 @@ export default function DemopolisPage() {
   const confirmSkipPay = () => {
     setSkipPayStatus("processing");
     setTimeout(() => {
-      setSkipPayStatus("success");
+      setSkipPayCompleted(true);
       closeModal();
       alert("Success! Your April payment has been skipped using Skip-A-Pay.");
     }, 1500);
@@ -39,18 +43,17 @@ export default function DemopolisPage() {
   const sendInstantPayment = () => {
     setPayfiniaStatus("processing");
     setTimeout(() => {
-      setPayfiniaStatus("success");
+      setPayfiniaSent(true);
       closeModal();
       alert("Instant Transfer Complete! Emma's Nuuvia account received the funds via FedNow (Payfinia gateway).");
     }, 1500);
   };
 
-  const acceptOffer = () => {
+  const handleOfferAccepted = () => {
     setOfferStatus("processing");
     setTimeout(() => {
       setOfferStatus("success");
-      alert("Congratulations! Your Movemint pre-approved $35,000 Auto Loan has been originated and funded to your MCU Checking account instantaneously.");
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -75,7 +78,7 @@ export default function DemopolisPage() {
           </div>
           <div className="modal-footer">
             <button className="btn btn-secondary" onClick={closeModal}>Cancel</button>
-            <button className="btn btn-primary" onClick={confirmSkipPay} disabled={skipPayStatus === "processing" || skipPayStatus === "success"}>
+            <button className="btn btn-primary" onClick={confirmSkipPay} disabled={skipPayStatus === "processing"}>
               {skipPayStatus === "processing" ? <><i className="fas fa-spinner fa-spin"></i> Processing...</> : "Confirm & Skip Payment"}
             </button>
           </div>
@@ -105,7 +108,7 @@ export default function DemopolisPage() {
             </div>
           </div>
           <div className="modal-footer">
-            <button className="btn btn-primary btn-block" onClick={sendInstantPayment} disabled={payfiniaStatus === "processing" || payfiniaStatus === "success"}>
+            <button className="btn btn-primary btn-block" onClick={sendInstantPayment} disabled={payfiniaStatus === "processing"}>
               {payfiniaStatus === "processing" ? <><i className="fas fa-spinner fa-spin"></i> Sending via IPX...</> : "Send Instantly"}
             </button>
           </div>
@@ -166,17 +169,17 @@ export default function DemopolisPage() {
                   <span>Send Money</span>
                   <small>Payfinia IPX</small>
                 </button>
-                <button className="btn-action">
+                <button className="btn-action" onClick={() => alert('Remote Deposit Capture launched. Please photograph the front and back of your check.')}>
                   <i className="fas fa-mobile-alt"></i>
                   <span>Deposit Check</span>
                   <small>Remote Capture</small>
                 </button>
-                <button className="btn-action">
+                <button className="btn-action" onClick={() => alert('Quick Pay Initiated')}>
                   <i className="fas fa-bolt"></i>
                   <span>Pay Loan</span>
                   <small>Quick Pay</small>
                 </button>
-                <button className="btn-action">
+                <button className="btn-action" onClick={() => alert('eStatements portal opened. Your most recent statement is available for March 2026.')}>
                   <i className="fas fa-file-signature"></i>
                   <span>Documents</span>
                   <small>eStatements</small>
@@ -220,14 +223,14 @@ export default function DemopolisPage() {
                     <div className="loan-divider"></div>
 
                     <div className="loan-actions">
-                      {skipPayStatus === 'success' ? (
+                      {skipPayCompleted ? (
                         <div className="next-payment">Next Payment<br /><strong>$450.00</strong> on May 1 <span className="badge success" style={{ marginLeft: "0.5rem" }}>Skipped Apr 1</span></div>
                       ) : (
                         <div className="next-payment">Next Payment<br /><strong>$450.00</strong> <span className="due-date">due Apr 1</span></div>
                       )}
                       <div className="btn-group">
                         <button className="btn btn-outline btn-sm" onClick={() => alert('Quick Pay Initiated')}><i className="fas fa-bolt" style={{ color: "var(--brand-primary)" }}></i> Quick Pay</button>
-                        {skipPayStatus !== 'success' && (
+                        {!skipPayCompleted && (
                           <button className="btn btn-primary btn-sm skip-pay-btn" onClick={() => openModal('skip-pay-modal')}>Skip-A-Pay</button>
                         )}
                       </div>
@@ -252,7 +255,7 @@ export default function DemopolisPage() {
                   </div>
                   <div className="youth-balance">
                     <p>Available Limit</p>
-                    <div className="amount" style={{ color: "var(--nuuvia-primary)" }}>{payfiniaStatus === "success" ? "$500.00" : "$450.00"}</div>
+                    <div className="amount" style={{ color: "var(--nuuvia-primary)" }}>{payfiniaSent ? "$500.00" : "$450.00"}</div>
                   </div>
                 </div>
 
@@ -260,10 +263,10 @@ export default function DemopolisPage() {
                   <div className="quest-card">
                     <div className="quest-title">
                       <span>Saving for: Mountain Bike</span>
-                      <span>{payfiniaStatus === "success" ? "95%" : "75%"}</span>
+                      <span>{payfiniaSent ? "95%" : "75%"}</span>
                     </div>
                     <div className="progress-bar">
-                      <div className="progress-fill nuuvia-fill" style={{ width: payfiniaStatus === "success" ? "95%" : "75%" }}></div>
+                      <div className="progress-fill nuuvia-fill" style={{ width: payfiniaSent ? "95%" : "75%" }}></div>
                     </div>
                     <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.5rem" }}><i className="fas fa-check-circle" style={{ color: "var(--nuuvia-primary)" }}></i> Finished Chores: +$20</p>
                   </div>
@@ -280,7 +283,7 @@ export default function DemopolisPage() {
 
             {/* Movemint Storefront (Cunexus) */}
             <section className="widget storefront-widget">
-              <DemopolisOfferWidget />
+              <DemopolisOfferWidget onOfferAccepted={handleOfferAccepted} />
             </section>
 
             {/* Payfinia Instant Payments Feed */}
