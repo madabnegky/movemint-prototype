@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     ChevronLeft,
@@ -103,6 +103,14 @@ const US_STATES = [
 ];
 
 export default function MembershipApplicationPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#E8EBED]" />}>
+            <MembershipApplicationContent />
+        </Suspense>
+    );
+}
+
+function MembershipApplicationContent() {
     const searchParams = useSearchParams();
     const { setStrangerMembershipSubmitted } = useStore();
 
