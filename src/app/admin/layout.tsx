@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
@@ -17,6 +17,7 @@ const NAV_ITEMS: NavItem[] = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Campaigns", href: "/admin/campaigns", icon: Megaphone },
+    { name: "Notifications", href: "/admin/notifications", icon: Bell },
     {
         name: "Preview",
         href: "/admin/preview",
