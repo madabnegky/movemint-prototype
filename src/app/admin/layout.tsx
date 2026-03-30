@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe, Bell } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe, Bell, Calendar, ToggleRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
@@ -28,6 +28,8 @@ const NAV_ITEMS: NavItem[] = [
             { name: "Home Banking", href: "/home-banking", icon: Home },
             { name: "Demo Scenarios", href: "/admin/scenarios", icon: Layers },
             { name: "Offer Editor", href: "/admin/product-config", icon: Play },
+            { name: "Offer Windows", href: "/admin/offer-windows", icon: Calendar },
+            { name: "Always-On Offers", href: "/admin/always-on-offers", icon: ToggleRight },
         ]
     },
     {
