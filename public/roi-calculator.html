@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movemint Lending ROI Calculator</title>
+  <link rel="stylesheet" href="design-tokens.css">
+  <style>
+    /* ── Page Reset & Layout ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-gt-regular);
+      font-size: var(--text-body-14-size);
+      line-height: var(--text-body-14-line-height);
+      color: var(--color-contrast-black);
+      background: #E8EAED;
+      padding: 48px 24px;
+    }
+
+    .calculator {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* ── Page Header ── */
+    .calculator__header {
+      margin-bottom: var(--space-section-gap);
+    }
+
+    .calculator__title {
+      font-family: var(--font-gt-extended-regular);
+      font-size: var(--text-title-32-size);
+      line-height: var(--text-title-32-line-height);
+      letter-spacing: var(--text-title-32-tracking);
+      color: var(--color-contrast-black);
+      font-feature-settings: 'ss03' 1;
+      margin-bottom: 8px;
+    }
+
+    .calculator__subtitle {
+      font-family: var(--font-gt-regular);
+      font-size: var(--text-body-14-size);
+      line-height: var(--text-body-14-line-height);
+      color: var(--color-greyscale-08);
+    }
+
+    /* ── Cards (shared shell) ── */
+    .calc-card {
+      background: var(--color-contrast-white);
+      border: none;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      padding: 24px;
+      margin-bottom: var(--space-card-gap);
+    }
+
+    .calc-card__title {
+      font-family: var(--font-gt-extended-regular);
+      font-size: var(--text-title-20-size);
+      line-height: var(--text-title-20-line-height);
+      letter-spacing: var(--text-title-20-tracking);
+      color: var(--color-contrast-black);
+      font-feature-settings: 'ss03' 1;
+      margin-bottom: 20px;
+    }
+
+    /* ── Input Grid ── */
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-card-gap);
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .input-group label {
+      font-family: var(--font-gt-medium);
+      font-size: var(--text-body-12-size);
+      line-height: var(--text-body-12-line-height);
+      color: var(--color-greyscale-08);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group input {
+      font-family: var(--font-gt-regular);
+      font-size: var(--text-body-14-size);
+      line-height: var(--text-body-14-line-height);
+      color: var(--color-contrast-black);
+      border: 1px solid #D0D5DA;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .input-group input:focus {
+      border-color: var(--color-system-purple);
+    }
+
+    .input-group .input-hint {
+      font-size: 11px;
+      color: #99A4AE;
+      line-height: 14px;
+    }
+
+    /* ── Results Layout ── */
+    .results-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-card-gap);
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .results-row { grid-template-columns: 1fr; }
+    }
+
+    .result-panel {
+      background: var(--color-contrast-white);
+      border: none;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-panel__header {
+      padding: 4px 16px;
+      border-radius: var(--radius-tag-tl) 0 0 0;
+      color: var(--color-contrast-white);
+      font-family: var(--font-gt-extended-medium);
+      font-size: var(--text-tag-size);
+      line-height: var(--text-tag-line-height);
+      letter-spacing: var(--text-tag-tracking);
+      text-transform: uppercase;
+      display: inline-block;
+      align-self: flex-start;
+      border-radius: var(--radius-tag-tl) 0 var(--radius-tag-br) 0;
+    }
+
+    .result-panel__header--campaign { background: var(--color-system-purple); }
+    .result-panel__header--year1    { background: var(--color-system-green); }
+    .result-panel__header--year5    { background: var(--color-contrast-black); }
+
+    .result-panel__body {
+      padding: 20px 24px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .result-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .result-metric__label {
+      font-family: var(--font-gt-regular);
+      font-size: var(--text-body-12-size);
+      line-height: var(--text-body-12-line-height);
+      color: var(--color-greyscale-08);
+    }
+
+    .result-metric__value {
+      font-family: var(--font-gt-extended-medium);
+      font-size: var(--text-title-18-size);
+      line-height: var(--text-title-18-line-height);
+      letter-spacing: var(--text-title-18-tracking);
+      color: var(--color-contrast-black);
+      font-feature-settings: 'ss03' 1;
+    }
+
+    .result-metric--highlight .result-metric__value {
+      font-size: 24px;
+    }
+
+    .result-metric--net-positive .result-metric__value { color: var(--color-system-green); }
+    .result-metric--net-negative .result-metric__value { color: #D14343; }
+
+    /* ── Divider ── */
+    .result-divider {
+      border: none;
+      border-top: 1px solid #E8EAED;
+      margin: 4px 0;
+    }
+
+    /* ── Unit Economics Mini Card ── */
+    .unit-econ {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-card-gap);
+      margin-top: 8px;
+    }
+
+    .unit-econ__item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .unit-econ__label {
+      font-family: var(--font-gt-regular);
+      font-size: var(--text-body-12-size);
+      line-height: var(--text-body-12-line-height);
+      color: var(--color-greyscale-08);
+    }
+
+    .unit-econ__value {
+      font-family: var(--font-gt-extended-medium);
+      font-size: var(--text-body-14-size);
+      line-height: var(--text-body-14-line-height);
+      color: var(--color-contrast-black);
+      font-feature-settings: 'ss03' 1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+
+  <!-- Header -->
+  <div class="calculator__header">
+    <h1 class="calculator__title">Lending ROI Calculator</h1>
+    <p class="calculator__subtitle">Model projected revenue, costs, and net return from targeted lending campaigns.</p>
+  </div>
+
+  <!-- Inputs: Membership & Campaign -->
+  <div class="calc-card">
+    <h2 class="calc-card__title">Membership & Campaign Parameters</h2>
+    <div class="input-grid">
+      <div class="input-group">
+        <label for="total_members">Total Members</label>
+        <input type="text" id="total_members" value="142,578" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="pct_targeted">% Targeted Per Campaign</label>
+        <input type="text" id="pct_targeted" value="30" inputmode="decimal">
+        <span class="input-hint">Percentage of membership</span>
+      </div>
+      <div class="input-group">
+        <label for="campaigns_per_year">Campaigns Per Year</label>
+        <input type="text" id="campaigns_per_year" value="4" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="loan_redemption_rate">Loan Redemption Rate %</label>
+        <input type="text" id="loan_redemption_rate" value="1" inputmode="decimal">
+        <span class="input-hint">% of targeted who originate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inputs: Loan Parameters -->
+  <div class="calc-card">
+    <h2 class="calc-card__title">Loan Parameters</h2>
+    <div class="input-grid">
+      <div class="input-group">
+        <label for="avg_loan_size">Avg Loan Size</label>
+        <input type="text" id="avg_loan_size" value="25,000" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="avg_loan_yield_apr">Avg Yield (APR %)</label>
+        <input type="text" id="avg_loan_yield_apr" value="8" inputmode="decimal">
+      </div>
+      <div class="input-group">
+        <label for="avg_loan_term_months">Loan Term (months)</label>
+        <input type="text" id="avg_loan_term_months" value="60" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="avg_payoff_period_months">Avg Payoff Period (months)</label>
+        <input type="text" id="avg_payoff_period_months" value="36" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="ancillary_income">Ancillary Income / Loan</label>
+        <input type="text" id="ancillary_income" value="500" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+
+  <!-- Inputs: Costs -->
+  <div class="calc-card">
+    <h2 class="calc-card__title">Costs</h2>
+    <div class="input-grid">
+      <div class="input-group">
+        <label for="campaign_marketing_costs">Marketing Cost / Campaign</label>
+        <input type="text" id="campaign_marketing_costs" value="70,000" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="annual_subscription">Annual Subscription</label>
+        <input type="text" id="annual_subscription" value="99,804.60" inputmode="decimal">
+      </div>
+      <div class="input-group">
+        <label for="implementation_fee">Implementation Fee (one-time)</label>
+        <input type="text" id="implementation_fee" value="20,000" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label for="subscription_escalation">Subscription Escalation %</label>
+        <input type="text" id="subscription_escalation" value="4" inputmode="decimal">
+        <span class="input-hint">Annual increase rate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unit Economics -->
+  <div class="calc-card">
+    <h2 class="calc-card__title">Loan-Level Unit Economics</h2>
+    <div class="unit-econ">
+      <div class="unit-econ__item">
+        <span class="unit-econ__label">Monthly Payment (PMT)</span>
+        <span class="unit-econ__value" id="out_monthly_pmt">—</span>
+      </div>
+      <div class="unit-econ__item">
+        <span class="unit-econ__label">Interest Income to Payoff</span>
+        <span class="unit-econ__value" id="out_interest_income">—</span>
+      </div>
+      <div class="unit-econ__item">
+        <span class="unit-econ__label">Total Revenue / Loan</span>
+        <span class="unit-econ__value" id="out_rev_per_loan">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Panels -->
+  <div class="results-row">
+
+    <!-- Per Campaign -->
+    <div class="result-panel">
+      <div class="result-panel__header result-panel__header--campaign">Per Campaign</div>
+      <div class="result-panel__body">
+        <div class="result-metric">
+          <span class="result-metric__label">Members Targeted</span>
+          <span class="result-metric__value" id="out_camp_targeted">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Loans Originated</span>
+          <span class="result-metric__value" id="out_camp_loans">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Total Loan Volume</span>
+          <span class="result-metric__value" id="out_camp_volume">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Gross Revenue</span>
+          <span class="result-metric__value" id="out_camp_gross">—</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-metric">
+          <span class="result-metric__label">Subscription Cost</span>
+          <span class="result-metric__value" id="out_camp_sub">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Campaign Costs</span>
+          <span class="result-metric__value" id="out_camp_mktg">—</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-metric result-metric--highlight" id="wrap_camp_net">
+          <span class="result-metric__label">Net Return</span>
+          <span class="result-metric__value" id="out_camp_net">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Year 1 -->
+    <div class="result-panel">
+      <div class="result-panel__header result-panel__header--year1">Year 1</div>
+      <div class="result-panel__body">
+        <div class="result-metric">
+          <span class="result-metric__label">Members Targeted</span>
+          <span class="result-metric__value" id="out_y1_targeted">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Loans Originated</span>
+          <span class="result-metric__value" id="out_y1_loans">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Total Loan Volume</span>
+          <span class="result-metric__value" id="out_y1_volume">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Gross Revenue</span>
+          <span class="result-metric__value" id="out_y1_gross">—</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-metric">
+          <span class="result-metric__label">Subscription + Implementation</span>
+          <span class="result-metric__value" id="out_y1_sub">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Campaign Costs</span>
+          <span class="result-metric__value" id="out_y1_mktg">—</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-metric result-metric--highlight" id="wrap_y1_net">
+          <span class="result-metric__label">Net Return</span>
+          <span class="result-metric__value" id="out_y1_net">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5-Year Total -->
+    <div class="result-panel">
+      <div class="result-panel__header result-panel__header--year5">5-Year Total</div>
+      <div class="result-panel__body">
+        <div class="result-metric">
+          <span class="result-metric__label">Members Targeted</span>
+          <span class="result-metric__value" id="out_5y_targeted">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Loans Originated</span>
+          <span class="result-metric__value" id="out_5y_loans">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Total Loan Volume</span>
+          <span class="result-metric__value" id="out_5y_volume">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Gross Revenue</span>
+          <span class="result-metric__value" id="out_5y_gross">—</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-metric">
+          <span class="result-metric__label">Subscription (5yr compounded)</span>
+          <span class="result-metric__value" id="out_5y_sub">—</span>
+        </div>
+        <div class="result-metric">
+          <span class="result-metric__label">Campaign Costs</span>
+          <span class="result-metric__value" id="out_5y_mktg">—</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-metric result-metric--highlight" id="wrap_5y_net">
+          <span class="result-metric__label">Net Return</span>
+          <span class="result-metric__value" id="out_5y_net">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ── Helpers ──
+function parseNum(id) {
+  return parseFloat(document.getElementById(id).value.replace(/,/g, '')) || 0;
+}
+
+function fmt$(n) {
+  const neg = n < 0;
+  const abs = Math.abs(n);
+  const str = abs >= 1000
+    ? '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    : '$' + abs.toFixed(2);
+  return neg ? '(' + str + ')' : str;
+}
+
+function fmtInt(n) {
+  return Math.round(n).toLocaleString('en-US');
+}
+
+function setNet(wrapperId, value) {
+  const wrap = document.getElementById(wrapperId);
+  wrap.classList.remove('result-metric--net-positive', 'result-metric--net-negative');
+  wrap.classList.add(value >= 0 ? 'result-metric--net-positive' : 'result-metric--net-negative');
+}
+
+// ── Core Calculation ──
+function calculate() {
+  // 1. Read inputs
+  const totalMembers       = parseNum('total_members');
+  const pctTargeted        = parseNum('pct_targeted') / 100;
+  const campaignsPerYear   = parseNum('campaigns_per_year');
+  const redemptionRate     = parseNum('loan_redemption_rate') / 100;
+  const avgLoanSize        = parseNum('avg_loan_size');
+  const avgYieldAPR        = parseNum('avg_loan_yield_apr') / 100;
+  const loanTermMonths     = parseNum('avg_loan_term_months');
+  const payoffMonths       = parseNum('avg_payoff_period_months');
+  const ancillaryIncome    = parseNum('ancillary_income');
+  const campaignMktgCost   = parseNum('campaign_marketing_costs');
+  const annualSubscription = parseNum('annual_subscription');
+  const implFee            = parseNum('implementation_fee');
+  const subEscalation      = parseNum('subscription_escalation') / 100;
+
+  // 2. Loan-Level Unit Economics
+  const monthlyRate = avgYieldAPR / 12;
+
+  // PMT formula
+  let monthlyPmt = 0;
+  if (monthlyRate > 0 && loanTermMonths > 0) {
+    monthlyPmt = (avgLoanSize * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -loanTermMonths));
+  } else if (loanTermMonths > 0) {
+    monthlyPmt = avgLoanSize / loanTermMonths;
+  }
+
+  // Amortization: sum interest for first payoffMonths
+  let balance = avgLoanSize;
+  let interestToPayoff = 0;
+  const months = Math.min(payoffMonths, loanTermMonths);
+  for (let m = 0; m < months; m++) {
+    const interestPortion = balance * monthlyRate;
+    const principalPortion = monthlyPmt - interestPortion;
+    interestToPayoff += interestPortion;
+    balance -= principalPortion;
+  }
+
+  const totalRevPerLoan = interestToPayoff + ancillaryIncome;
+
+  // Display unit economics
+  document.getElementById('out_monthly_pmt').textContent = fmt$(monthlyPmt);
+  document.getElementById('out_interest_income').textContent = fmt$(interestToPayoff);
+  document.getElementById('out_rev_per_loan').textContent = fmt$(totalRevPerLoan);
+
+  // 3. Per Campaign
+  const membersTargeted = totalMembers * pctTargeted;
+  const loansOriginated = membersTargeted * redemptionRate;
+  const totalLoanVolume = loansOriginated * avgLoanSize;
+  const grossRevenue    = loansOriginated * totalRevPerLoan;
+  const subCostCamp     = campaignsPerYear > 0 ? annualSubscription / campaignsPerYear : 0;
+  const netReturnCamp   = grossRevenue - subCostCamp - campaignMktgCost;
+
+  document.getElementById('out_camp_targeted').textContent = fmtInt(membersTargeted);
+  document.getElementById('out_camp_loans').textContent    = fmtInt(loansOriginated);
+  document.getElementById('out_camp_volume').textContent   = fmt$(totalLoanVolume);
+  document.getElementById('out_camp_gross').textContent    = fmt$(grossRevenue);
+  document.getElementById('out_camp_sub').textContent      = fmt$(subCostCamp);
+  document.getElementById('out_camp_mktg').textContent     = fmt$(campaignMktgCost);
+  document.getElementById('out_camp_net').textContent      = fmt$(netReturnCamp);
+  setNet('wrap_camp_net', netReturnCamp);
+
+  // 4. Year 1
+  const membersY1   = membersTargeted * campaignsPerYear;
+  const loansY1     = loansOriginated * campaignsPerYear;
+  const volumeY1    = totalLoanVolume * campaignsPerYear;
+  const grossY1     = grossRevenue * campaignsPerYear;
+  const subCostY1   = annualSubscription + implFee;
+  const campCostsY1 = campaignMktgCost * campaignsPerYear;
+  const netReturnY1 = grossY1 - subCostY1 - campCostsY1;
+
+  document.getElementById('out_y1_targeted').textContent = fmtInt(membersY1);
+  document.getElementById('out_y1_loans').textContent    = fmtInt(loansY1);
+  document.getElementById('out_y1_volume').textContent   = fmt$(volumeY1);
+  document.getElementById('out_y1_gross').textContent    = fmt$(grossY1);
+  document.getElementById('out_y1_sub').textContent      = fmt$(subCostY1);
+  document.getElementById('out_y1_mktg').textContent     = fmt$(campCostsY1);
+  document.getElementById('out_y1_net').textContent      = fmt$(netReturnY1);
+  setNet('wrap_y1_net', netReturnY1);
+
+  // 5. 5-Year Total
+  const members5y   = membersY1 * 5;
+  const loans5y     = loansY1 * 5;
+  const volume5y    = volumeY1 * 5;
+  const gross5y     = grossY1 * 5;
+  const campCosts5y = campCostsY1 * 5;
+
+  // Subscription schedule with compounding escalation
+  let sub5y = implFee;
+  let yearSub = annualSubscription;
+  for (let y = 0; y < 5; y++) {
+    sub5y += yearSub;
+    yearSub *= (1 + subEscalation);
+  }
+
+  const netReturn5y = gross5y - sub5y - campCosts5y;
+
+  document.getElementById('out_5y_targeted').textContent = fmtInt(members5y);
+  document.getElementById('out_5y_loans').textContent    = fmtInt(loans5y);
+  document.getElementById('out_5y_volume').textContent   = fmt$(volume5y);
+  document.getElementById('out_5y_gross').textContent    = fmt$(gross5y);
+  document.getElementById('out_5y_sub').textContent      = fmt$(sub5y);
+  document.getElementById('out_5y_mktg').textContent     = fmt$(campCosts5y);
+  document.getElementById('out_5y_net').textContent      = fmt$(netReturn5y);
+  setNet('wrap_5y_net', netReturn5y);
+}
+
+// ── Auto-recalculate on any input change ──
+document.querySelectorAll('.input-group input').forEach(function(input) {
+  input.addEventListener('input', calculate);
+});
+
+// Initial calculation
+calculate();
+</script>
+
+</body>
+</html>

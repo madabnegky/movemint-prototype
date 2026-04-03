@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StorefrontCard Component</title>
+  <link rel="stylesheet" href="design-tokens.css">
+</head>
+<body style="background: #E8EAED; padding: 40px; margin: 0;">
+<!--
+  StorefrontCard Component
+  Usage: copy this pattern for each card instance.
+  Link tokens.css before using this component.
+
+  Tag variants:
+    .tag--preapproved  → green  (#269B78)
+    .tag--apply-now    → purple (#8A55FB)
+    .tag--special      → dark   (#262C30)
+-->
+
+<div class="storefront-card" style="max-width: 290px;">
+
+  <!-- Tag Badge (pick one class: tag--preapproved | tag--apply-now | tag--special) -->
+  <div class="storefront-card__tag-row">
+    <span class="storefront-card__tag tag--preapproved">You're Preapproved!</span>
+  </div>
+
+  <!-- Card Contents -->
+  <div class="storefront-card__contents">
+
+    <!-- Header: Product name + hero values -->
+    <div class="storefront-card__header">
+      <p class="storefront-card__product-name">
+        [Product Display Name usually two lines...]
+      </p>
+      <div class="storefront-card__hero-values">
+        <!-- Hero Value: Up To -->
+        <div class="storefront-card__hero-text">
+          <span class="storefront-card__eyebrow">Up to</span>
+          <span class="storefront-card__value">[$##,###]</span>
+        </div>
+        <!-- Hero Value: As Low As -->
+        <div class="storefront-card__hero-text">
+          <span class="storefront-card__eyebrow">As low as</span>
+          <div class="storefront-card__value-row">
+            <span class="storefront-card__value">[#.##%]</span>
+            <span class="storefront-card__value-suffix">APR*†</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Image -->
+    <div class="storefront-card__image-wrap">
+      <img class="storefront-card__image" src="[IMAGE_URL]" alt="[Product image]" />
+    </div>
+
+  </div>
+
+  <!-- Footer CTA -->
+  <div class="storefront-card__footer">
+    <a href="#" class="storefront-card__cta">Learn More</a>
+  </div>
+
+</div>
+
+
+<style>
+/* ── Card Shell ── */
+.storefront-card {
+  background:    var(--color-contrast-white);
+  border:        none;
+  border-radius: var(--radius-card);
+  box-shadow:    var(--shadow-card);
+  display:       flex;
+  flex-direction: column;
+  overflow:      hidden;
+  position:      relative;
+  width:         100%;
+}
+
+/* ── Tag Row ── */
+.storefront-card__tag-row {
+  padding: 0;
+}
+
+.storefront-card__tag {
+  display:        inline-block;
+  padding:        2px 16px;
+  border-radius:  var(--radius-tag-tl) 0 var(--radius-tag-br) 0;
+  font-family:   var(--font-gt-extended-medium);
+  font-size:     var(--text-tag-size);
+  line-height:   var(--text-tag-line-height);
+  letter-spacing: var(--text-tag-tracking);
+  text-transform: uppercase;
+  color:         var(--color-contrast-white);
+}
+
+.tag--preapproved { background: var(--color-system-green);  }
+.tag--apply-now   { background: var(--color-system-purple); }
+.tag--special     { background: var(--color-contrast-black);}
+
+/* ── Contents ── */
+.storefront-card__contents {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-card-inner-gap);
+}
+
+/* ── Header ── */
+.storefront-card__header {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-card-inner-gap);
+  min-height:     var(--card-header-height);
+  padding:        0 var(--space-card-padding-x);
+}
+
+.storefront-card__product-name {
+  font-family:   var(--font-gt-extended-regular);
+  font-size:     var(--text-title-20-size);
+  line-height:   var(--text-title-20-line-height);
+  letter-spacing: var(--text-title-20-tracking);
+  color:         var(--color-contrast-black);
+  margin:        0;
+  font-feature-settings: 'ss03' 1;
+}
+
+/* ── Hero Values Row ── */
+.storefront-card__hero-values {
+  display: flex;
+  gap:     var(--space-card-inner-gap);
+}
+
+.storefront-card__hero-text {
+  display:        flex;
+  flex-direction: column;
+  width:          var(--card-hero-value-width);
+}
+
+.storefront-card__eyebrow {
+  font-family:  var(--font-gt-regular);
+  font-size:    var(--text-body-14-size);
+  line-height:  var(--text-body-14-line-height);
+  color:        var(--color-greyscale-08);
+  white-space:  nowrap;
+}
+
+.storefront-card__value {
+  font-family:   var(--font-gt-extended-medium);
+  font-size:     var(--text-title-18-size);
+  line-height:   var(--text-title-18-line-height);
+  letter-spacing: var(--text-title-18-tracking);
+  color:         var(--color-contrast-black);
+  font-feature-settings: 'ss03' 1;
+}
+
+.storefront-card__value-row {
+  display:     flex;
+  gap:         4px;
+  align-items: flex-end;
+}
+
+.storefront-card__value-suffix {
+  font-family:  var(--font-gt-regular);
+  font-size:    var(--text-body-12-size);
+  line-height:  var(--text-body-12-line-height);
+  color:        var(--color-contrast-black);
+}
+
+/* ── Image ── */
+.storefront-card__image-wrap {
+  padding: 0 var(--space-card-padding-x);
+}
+
+.storefront-card__image {
+  width:         100%;
+  height:        var(--card-image-height);
+  object-fit:    cover;
+  border-radius: var(--radius-card-image);
+  display:       block;
+}
+
+/* ── Footer ── */
+.storefront-card__footer {
+  display:         flex;
+  justify-content: center;
+  padding:         4px 0 8px;
+}
+
+.storefront-card__cta {
+  font-family:     var(--font-gt-medium);
+  font-size:       var(--text-body-14-size);
+  line-height:     var(--text-body-14-line-height);
+  color:           var(--color-contrast-black);
+  text-decoration: underline;
+  text-align:      center;
+}
+</style>
+</body>
+</html>
