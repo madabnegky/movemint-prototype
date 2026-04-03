@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movemint — Offers Everywhere</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:      #0d2b52;
+  --navy-mid:  #1a3d6b;
+  --navy-light:#234880;
+  --teal:      #00b899;
+  --teal-light:#00d4b0;
+  --teal-dim:  rgba(0,184,153,0.12);
+  --white:     #ffffff;
+  --off-white: #f7f9fc;
+  --border:    #e4e9f0;
+  --ink:       #0d1f35;
+  --body:      #4a5568;
+  --muted:     #8896a8;
+  --radius-sm: 10px;
+  --radius:    16px;
+  --radius-lg: 24px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--white);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ——— HERO ——— */
+.hero {
+  background: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px 100px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(ellipse at center, rgba(0,184,153,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 780px; }
+
+.hero-wordmark {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: 52px;
+  animation: fadeUp 0.5s ease both;
+}
+.hero-wordmark-m {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--teal), var(--navy-light));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800; color: white;
+}
+.hero-wordmark-name { font-size: 17px; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: -0.3px; }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--teal);
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.06s ease both;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; display: block;
+  width: 24px; height: 1px;
+  background: var(--teal); opacity: 0.45;
+}
+
+.hero h1 {
+  font-size: clamp(56px, 9vw, 92px);
+  font-weight: 700; line-height: 1.0;
+  letter-spacing: -0.035em; color: var(--white);
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.12s ease both;
+}
+.hero h1 span { color: var(--teal-light); font-style: italic; font-weight: 300; }
+
+.hero-sub {
+  font-size: 18px; line-height: 1.65;
+  color: rgba(255,255,255,0.52); max-width: 500px;
+  margin: 0 auto 48px; font-weight: 400;
+  animation: fadeUp 0.5s 0.18s ease both;
+}
+
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--teal); color: var(--navy);
+  padding: 14px 28px; border-radius: 100px;
+  font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer;
+  animation: fadeUp 0.5s 0.24s ease both;
+  transition: background 0.2s, transform 0.18s, box-shadow 0.18s;
+  letter-spacing: 0.01em; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.hero-cta:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,184,153,0.38); }
+
+.hero-scroll-hint {
+  position: absolute; bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 6px;
+  animation: fadeUp 0.5s 0.5s ease both;
+}
+.hero-scroll-hint span { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+.hero-scroll-hint span:first-child { background: var(--teal); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ——— PROBLEM ——— */
+.problem-strip {
+  background: var(--off-white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 24px; text-align: center;
+}
+.problem-inner { max-width: 660px; margin: 0 auto; }
+.problem-strip h2 {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700; line-height: 1.25;
+  letter-spacing: -0.02em; color: var(--ink);
+  margin-bottom: 20px;
+}
+.problem-strip h2 em { color: var(--teal); font-style: normal; }
+.problem-strip p { font-size: 17px; line-height: 1.7; color: var(--body); }
+
+/* ——— SCENARIOS ——— */
+.scenarios-section {
+  background: var(--navy);
+  padding: 100px 24px;
+  position: relative; overflow: hidden;
+}
+.scenarios-section::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(0,184,153,0.055) 1px, transparent 1px);
+  background-size: 24px 24px; pointer-events: none;
+}
+.scenarios-section::after {
+  content: ''; position: absolute;
+  bottom: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(0,184,153,0.11) 0%, transparent 70%);
+  pointer-events: none;
+}
+.scenarios-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+.scenarios-header { text-align: center; margin-bottom: 52px; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--teal); margin-bottom: 16px;
+}
+.eyebrow::before, .eyebrow::after {
+  content: ''; display: block; width: 20px; height: 1px;
+  background: var(--teal); opacity: 0.38;
+}
+
+.scenarios-header h2 {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 700; letter-spacing: -0.025em;
+  color: var(--white); line-height: 1.1; margin-bottom: 16px;
+}
+.scenarios-header h2 em { color: var(--teal-light); font-style: italic; font-weight: 300; }
+.scenarios-header p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.48); max-width: 520px; margin: 0 auto; }
+
+/* Tabs */
+.tab-nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 44px; }
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 100px;
+  font-size: 13px; font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.11);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.52);
+  transition: all 0.16s; letter-spacing: 0.01em;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.82); border-color: rgba(255,255,255,0.18); }
+.tab-btn.active { background: var(--teal); border-color: var(--teal); color: var(--navy); }
+
+/* Scenario card */
+.scenario-display { display: none; animation: scenarioIn 0.32s ease both; }
+.scenario-display.active { display: grid; }
+.scenario-display { grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 780px) { .scenario-display { grid-template-columns: 1fr; } }
+@keyframes scenarioIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.scenario-narrative {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 40px;
+}
+.scenario-moment {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--teal); margin-bottom: 18px;
+}
+.scenario-narrative h3 {
+  font-size: 21px; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--white); line-height: 1.3; margin-bottom: 20px;
+}
+.scenario-narrative p { font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.52); margin-bottom: 13px; }
+.scenario-narrative p:last-child { margin-bottom: 0; }
+.scenario-narrative strong { color: rgba(255,255,255,0.84); font-weight: 600; }
+
+/* —— Mockup: AI Chat —— */
+.mock-chat { background: #16161a; border-radius: var(--radius); overflow: hidden; border: 1px solid rgba(255,255,255,0.07); }
+.mock-chat-header {
+  background: #0f0f13; padding: 12px 16px;
+  display: flex; align-items: center; gap: 9px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.mock-chat-logo-wrap {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #10a37f;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: white; font-weight: 700;
+}
+.mock-chat-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+.mock-chat-body { padding: 18px 16px; }
+.mock-msg { margin-bottom: 12px; }
+.mock-msg-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 4px; }
+.mock-msg-bubble {
+  background: rgba(255,255,255,0.07); border-radius: 10px 10px 10px 3px;
+  padding: 10px 13px; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.72);
+}
+.mock-msg-bubble.user { background: #10a37f; border-radius: 10px 10px 3px 10px; color: white; }
+.offer-card-inline {
+  background: linear-gradient(135deg, var(--navy), #091e3a);
+  border: 1px solid rgba(0,184,153,0.22);
+  border-radius: 10px; padding: 13px; margin-top: 10px;
+}
+.offer-card-inline-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.offer-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--teal); background: var(--teal-dim);
+  border: 1px solid rgba(0,184,153,0.18); padding: 3px 7px; border-radius: 100px;
+}
+.offer-cu-name { font-size: 11px; color: rgba(255,255,255,0.4); }
+.offer-amount { font-size: 20px; font-weight: 700; color: white; letter-spacing: -0.02em; margin-bottom: 2px; }
+.offer-rate { font-size: 11px; color: var(--teal); font-weight: 500; }
+.offer-cta-small {
+  display: inline-block; margin-top: 10px;
+  background: var(--teal); color: var(--navy);
+  font-size: 11px; font-weight: 700; padding: 6px 13px; border-radius: 100px;
+}
+
+/* —— Mockup: CRM —— */
+.mock-crm { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 24px rgba(13,43,82,0.09); }
+.mock-crm-topbar { background: var(--navy); padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; }
+.mock-crm-topbar-title { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 600; }
+.mock-crm-topbar-user { font-size: 10px; color: rgba(255,255,255,0.32); }
+.mock-crm-body { padding: 16px; }
+.mock-crm-member { display: flex; align-items: center; gap: 11px; padding-bottom: 13px; border-bottom: 1px solid var(--border); margin-bottom: 13px; }
+.mock-avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; letter-spacing: -0.5px;
+}
+.mock-member-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+.mock-member-since { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.mock-alert { background: #f0fdf9; border: 1px solid rgba(0,184,153,0.18); border-left: 3px solid var(--teal); border-radius: var(--radius-sm); padding: 13px; }
+.mock-alert-label { display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+.mock-alert-label::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; flex-shrink: 0; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.45; transform: scale(0.7); } }
+.mock-alert-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.mock-alert-body { font-size: 12px; color: var(--body); line-height: 1.55; }
+.mock-alert-actions { display: flex; gap: 7px; margin-top: 11px; }
+.mock-btn-primary { background: var(--navy); color: white; font-size: 11px; font-weight: 700; padding: 7px 13px; border-radius: 6px; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; }
+.mock-btn-secondary { background: transparent; color: var(--muted); font-size: 11px; padding: 7px 13px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+/* —— Mockup: Phone —— */
+.mock-phone { background: #18181b; border-radius: 44px; padding: 13px; max-width: 295px; margin: 0 auto; box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.07); }
+.mock-phone-screen {
+  background: linear-gradient(160deg, var(--navy) 0%, #0a1a30 55%, #060e1e 100%);
+  border-radius: 32px; padding: 50px 13px 22px;
+  min-height: 330px; position: relative; overflow: hidden;
+}
+.mock-phone-screen::before {
+  content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+  width: 200px; height: 200px;
+  background: radial-gradient(ellipse, rgba(0,184,153,0.14) 0%, transparent 70%);
+}
+.mock-phone-time { font-size: 42px; font-weight: 200; color: white; text-align: center; margin-bottom: 2px; letter-spacing: -1px; }
+.mock-phone-date { font-size: 12px; color: rgba(255,255,255,0.38); text-align: center; margin-bottom: 22px; }
+.mock-notification { background: rgba(255,255,255,0.1); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.11); border-radius: 14px; padding: 12px 13px; animation: notifDrop 0.5s 0.15s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes notifDrop { from { opacity: 0; transform: translateY(-14px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.mock-notif-header { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+.mock-notif-app-icon { width: 24px; height: 24px; background: var(--navy-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 1px solid rgba(0,184,153,0.25); }
+.mock-notif-app-name { font-size: 10px; color: rgba(255,255,255,0.48); flex: 1; font-weight: 600; }
+.mock-notif-time { font-size: 10px; color: rgba(255,255,255,0.28); }
+.mock-notif-title { font-size: 13px; font-weight: 700; color: white; margin-bottom: 3px; }
+.mock-notif-body { font-size: 12px; color: rgba(255,255,255,0.62); line-height: 1.45; }
+.mock-notif-teal { color: var(--teal-light); font-weight: 600; }
+
+/* —— Mockup: Website —— */
+.mock-website { background: white; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(13,43,82,0.07); }
+.mock-web-header { background: var(--navy); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+.mock-web-logo { font-size: 13px; font-weight: 700; color: white; }
+.mock-web-logo span { color: var(--teal); }
+.mock-web-nav { display: flex; gap: 14px; }
+.mock-web-nav a { font-size: 11px; color: rgba(255,255,255,0.48); font-weight: 500; }
+.mock-web-content { padding: 18px 16px; min-height: 220px; position: relative; }
+.mock-web-hero-text { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 3px; letter-spacing: -0.02em; }
+.mock-web-hero-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+.mock-web-rates { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mock-rate-card { background: var(--off-white); border: 1px solid var(--border); border-radius: 8px; padding: 11px; }
+.mock-rate-label { font-size: 9px; font-weight: 700; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.07em; }
+.mock-rate-value { font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; }
+.mock-rate-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.mock-chat-widget { position: absolute; bottom: 12px; right: 12px; width: 230px; }
+.mock-chat-widget-bubble { background: white; border: 1px solid var(--border); border-radius: 12px 12px 3px 12px; padding: 12px 13px; box-shadow: 0 8px 24px rgba(13,43,82,0.11); margin-bottom: 8px; }
+.mock-chat-widget-from { display: flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 700; color: var(--navy); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.09em; }
+.mock-chat-widget-from::before { content: ''; width: 16px; height: 16px; border-radius: 50%; background: var(--teal); display: block; flex-shrink: 0; }
+.mock-chat-widget-text { font-size: 12px; color: var(--body); line-height: 1.5; }
+.mock-chat-widget-offer { background: var(--navy); border-radius: 8px; padding: 10px 11px; margin-top: 7px; }
+.mock-chat-widget-offer-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 3px; }
+.mock-chat-widget-offer-amount { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.02em; }
+.mock-chat-widget-offer-rate { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.mock-chat-widget-fab { width: 40px; height: 40px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; box-shadow: 0 4px 14px rgba(0,184,153,0.38); font-size: 17px; }
+
+/* ——— HOW IT WORKS ——— */
+.how-section { background: var(--off-white); border-top: 1px solid var(--border); padding: 100px 24px; }
+.how-inner { max-width: 1100px; margin: 0 auto; }
+.how-header { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; margin-bottom: 56px; }
+@media (max-width: 700px) { .how-header { grid-template-columns: 1fr; } }
+.how-header h2 { font-size: clamp(30px, 4vw, 46px); font-weight: 700; letter-spacing: -0.025em; color: var(--ink); line-height: 1.1; }
+.how-header h2 em { color: var(--teal); font-style: italic; font-weight: 300; }
+.how-header p { font-size: 16px; line-height: 1.7; color: var(--body); padding-top: 8px; }
+
+.eyebrow-light { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 13px; }
+.eyebrow-light::before, .eyebrow-light::after { content: ''; display: block; width: 18px; height: 1px; background: var(--teal); opacity: 0.38; }
+
+.how-steps { display: grid; grid-template-columns: repeat(3, 1fr); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+@media (max-width: 700px) { .how-steps { grid-template-columns: 1fr; } }
+.how-step { background: var(--white); padding: 40px 32px; position: relative; border-right: 1px solid var(--border); transition: box-shadow 0.18s; }
+.how-step:last-child { border-right: none; }
+.how-step:hover { box-shadow: inset 0 0 0 2px var(--teal), 0 0 0 0 transparent; z-index: 1; }
+.how-step-num { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 20px; }
+.how-step-icon { width: 42px; height: 42px; background: var(--teal-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 19px; }
+.how-step h3 { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 10px; }
+.how-step p { font-size: 14px; line-height: 1.7; color: var(--body); }
+
+/* ——— CLOSER ——— */
+.closer { background: var(--navy); padding: 120px 24px; text-align: center; position: relative; overflow: hidden; }
+.closer::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(0,184,153,0.14) 0%, transparent 70%); }
+.closer::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 28px 28px; }
+.closer-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.closer h2 { font-size: clamp(26px, 4vw, 46px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; color: var(--white); margin-bottom: 18px; }
+.closer h2 em { color: var(--teal-light); font-style: italic; font-weight: 300; }
+.closer p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.46); }
+
+/* ——— FOOTER ——— */
+.footer { background: #060d18; padding: 32px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+.footer-left { display: flex; align-items: center; gap: 9px; }
+.footer-m { width: 26px; height: 26px; background: linear-gradient(135deg, var(--teal), var(--navy-light)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: white; }
+.footer-name { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.65); }
+.footer-right { font-size: 12px; color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-wordmark">
+      <div class="hero-wordmark-m">m</div>
+      <span class="hero-wordmark-name">movemint</span>
+    </div>
+    <div class="hero-eyebrow">Strategy Overview</div>
+    <h1>Offers<br><span>everywhere.</span></h1>
+    <p class="hero-sub">Consumers are making financial decisions across more channels than ever. Movemint helps financial institutions show up in the right place, at the right time, with the right offer.</p>
+    <button class="hero-cta" onclick="document.getElementById('problem').scrollIntoView({behavior:'smooth'})">
+      See how it works
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7l5 5 5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="hero-scroll-hint"><span></span><span></span><span></span></div>
+</section>
+
+<!-- PROBLEM -->
+<div class="problem-strip" id="problem">
+  <div class="problem-inner">
+    <h2>The offer exists.<br>The consumer has a need.<br><em>The two rarely connect.</em></h2>
+    <p>A consumer searches for an auto loan. They have a pre-approved offer from their financial institution sitting unused. They end up financing through the dealership — often at a higher rate — and neither side knew how close they were to a better outcome.</p>
+  </div>
+</div>
+
+<!-- SCENARIOS -->
+<div class="scenarios-section" id="scenarios">
+  <div class="scenarios-inner">
+    <div class="scenarios-header">
+      <div class="eyebrow">The Vision in Practice</div>
+      <h2>Every moment is a <em>touchpoint.</em></h2>
+      <p>Movemint connects your pre-approved offers to the channels your consumers already use — so your institution is present when a financial decision is being made.</p>
+    </div>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="ai" onclick="switchTab('ai')">AI Assistant</button>
+      <button class="tab-btn" data-tab="teller" onclick="switchTab('teller')">Teller CRM</button>
+      <button class="tab-btn" data-tab="push" onclick="switchTab('push')">Location Push</button>
+      <button class="tab-btn" data-tab="chatbot" onclick="switchTab('chatbot')">Website Chatbot</button>
+    </div>
+
+    <!-- AI -->
+    <div class="scenario-display active" id="tab-ai">
+      <div class="scenario-narrative">
+        <div class="scenario-moment">Scenario 01 — The Search</div>
+        <h3>Sarah asks an AI assistant where to get the best auto loan rate.</h3>
+        <p>She's not on your website or in your app. She's using a tool she already trusts to help her make a decision — and she's going to act on what it tells her.</p>
+        <p>Movemint connects your pre-approved offer to AI retrieval layers, so when Sarah asks that question, her institution's offer is part of the response. Her rate, her limit, personalized to her.</p>
+        <p>She gets a better outcome. The institution earns the loan. <strong>That's what showing up looks like.</strong></p>
+      </div>
+      <div class="scenario-mockup">
+        <div class="mock-chat">
+          <div class="mock-chat-header">
+            <div class="mock-chat-logo-wrap">G</div>
+            <div class="mock-chat-name">ChatGPT</div>
+          </div>
+          <div class="mock-chat-body">
+            <div class="mock-msg">
+              <div class="mock-msg-label">Sarah</div>
+              <div class="mock-msg-bubble user">I need a car loan. Where can I get the best deal?</div>
+            </div>
+            <div class="mock-msg">
+              <div class="mock-msg-label">ChatGPT</div>
+              <div class="mock-msg-bubble">
+                Based on your profile, your credit union already has a pre-approved offer available:
+                <div class="offer-card-inline">
+                  <div class="offer-card-inline-header">
+                    <span class="offer-badge">✓ Pre-Approved</span>
+                    <span class="offer-cu-name">Evergreen Federal Credit Union</span>
+                  </div>
+                  <div class="offer-amount">Up to $38,000</div>
+                  <div class="offer-rate">4.49% APR · 60 months · No prepayment penalty</div>
+                  <div class="offer-cta-small">Redeem this offer →</div>
+                </div>
+                No new application required to activate.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELLER -->
+    <div class="scenario-display" id="tab-teller">
+      <div class="scenario-narrative">
+        <div class="scenario-moment">Scenario 02 — The Branch</div>
+        <h3>Marcus comes in to make a deposit. Movemint gives the teller context they didn't have before.</h3>
+        <p>Marcus has a pre-approved credit card offer — but without a prompt, that offer stays invisible. The teller wouldn't know to bring it up, and Marcus wouldn't know to ask.</p>
+        <p>When his account is pulled up, Movemint surfaces the offer directly in the CRM with the relevant details. <strong>The teller has what they need to start a natural, informed conversation.</strong></p>
+        <p>The offer gets to the consumer. The institution captures a product relationship it might have missed.</p>
+      </div>
+      <div class="scenario-mockup">
+        <div class="mock-crm">
+          <div class="mock-crm-topbar">
+            <div class="mock-crm-topbar-title">Member Services — Branch CRM</div>
+            <div class="mock-crm-topbar-user">Teller: J. Rivera</div>
+          </div>
+          <div class="mock-crm-body">
+            <div class="mock-crm-member">
+              <div class="mock-avatar">MT</div>
+              <div>
+                <div class="mock-member-name">Marcus T.</div>
+                <div class="mock-member-since">Member since 2018 · Checking + Savings</div>
+              </div>
+            </div>
+            <div class="mock-alert">
+              <div class="mock-alert-label">Movemint · Offer Available</div>
+              <div class="mock-alert-title">Pre-Approved Credit Card</div>
+              <div class="mock-alert-body">Marcus qualifies for the Platinum Rewards Card — $12,000 limit, 0% intro APR for 15 months. No current credit card on file.</div>
+              <div class="mock-alert-actions">
+                <button class="mock-btn-primary">View Offer Details</button>
+                <button class="mock-btn-secondary">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUSH -->
+    <div class="scenario-display" id="tab-push">
+      <div class="scenario-narrative">
+        <div class="scenario-moment">Scenario 03 — The Dealership</div>
+        <h3>Elena walks into a dealership. Her phone lets her know she's already pre-approved.</h3>
+        <p>Movemint detects that Elena has entered a known auto dealership location. She has a pre-approved auto loan — but without a timely nudge, she'd likely finance through whoever the dealership suggests.</p>
+        <p>A push notification from her institution's app surfaces the offer in context. <strong>She goes into the conversation informed, with a concrete option already in hand.</strong></p>
+        <p>This is what it means for an institution to be present at the point of decision — not just at the point of application.</p>
+      </div>
+      <div class="scenario-mockup">
+        <div class="mock-phone">
+          <div class="mock-phone-screen">
+            <div class="mock-phone-time">2:17</div>
+            <div class="mock-phone-date">Thursday, October 12</div>
+            <div class="mock-notification">
+              <div class="mock-notif-header">
+                <div class="mock-notif-app-icon">🏦</div>
+                <div class="mock-notif-app-name">Evergreen FCU</div>
+                <div class="mock-notif-time">now</div>
+              </div>
+              <div class="mock-notif-title">Your auto loan offer is ready</div>
+              <div class="mock-notif-body">You're pre-approved for <span class="mock-notif-teal">up to $42,000 at 4.2% APR</span>. No paperwork needed to activate.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHATBOT -->
+    <div class="scenario-display" id="tab-chatbot">
+      <div class="scenario-narrative">
+        <div class="scenario-moment">Scenario 04 — The Website</div>
+        <h3>David visits the website to check CD rates. The chatbot surfaces something relevant.</h3>
+        <p>He came for one thing. Movemint gives the chatbot the context to offer something else — without interrupting the experience he came for.</p>
+        <p>Because David is logged in, the chatbot can surface his pre-approved personal loan offer in a way that's specific to him. <strong>It's a relevant, timely touchpoint — not a generic promotion.</strong></p>
+        <p>This is how financial institutions stay engaged with consumers between major life events. Small moments, done well, build the relationship.</p>
+      </div>
+      <div class="scenario-mockup">
+        <div class="mock-website">
+          <div class="mock-web-header">
+            <div class="mock-web-logo">Evergreen <span>FCU</span></div>
+            <div class="mock-web-nav"><a>Loans</a><a>Savings</a><a>Rates</a></div>
+          </div>
+          <div class="mock-web-content">
+            <div class="mock-web-hero-text">Current CD Rates</div>
+            <div class="mock-web-hero-sub">Updated daily · Member rates shown</div>
+            <div class="mock-web-rates">
+              <div class="mock-rate-card">
+                <div class="mock-rate-label">12-Month CD</div>
+                <div class="mock-rate-value">4.85%</div>
+                <div class="mock-rate-sub">APY · $500 min</div>
+              </div>
+              <div class="mock-rate-card">
+                <div class="mock-rate-label">24-Month CD</div>
+                <div class="mock-rate-value">4.60%</div>
+                <div class="mock-rate-sub">APY · $500 min</div>
+              </div>
+            </div>
+            <div class="mock-chat-widget">
+              <div class="mock-chat-widget-bubble">
+                <div class="mock-chat-widget-from">Evergreen Assistant</div>
+                <div class="mock-chat-widget-text">Hi David — you have a pre-approved personal loan offer available:
+                  <div class="mock-chat-widget-offer">
+                    <div class="mock-chat-widget-offer-label">Your offer · No application needed</div>
+                    <div class="mock-chat-widget-offer-amount">$15,000</div>
+                    <div class="mock-chat-widget-offer-rate">7.9% APR · Ready to activate</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mock-chat-widget-fab">💬</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="how-header">
+      <div>
+        <div class="eyebrow-light">How It Works</div>
+        <h2>One platform.<br><em>Every channel.</em></h2>
+      </div>
+      <p>Movemint connects your existing offers to the channels your consumers are already using. Your team defines the offers. Movemint handles delivery and timing across every connected touchpoint.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-num">Step 01</div>
+        <div class="how-step-icon">⚙️</div>
+        <h3>Configure and Publish</h3>
+        <p>Your institution defines pre-approved offers in Movemint — amount, rate, eligibility criteria. Your team stays in control of the offer. Movemint handles distribution.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 02</div>
+        <div class="how-step-icon">📡</div>
+        <h3>Signals Come In</h3>
+        <p>Location check-ins, AI queries, chatbot sessions, branch logins — every consumer touchpoint generates a signal. Movemint uses those signals to determine when and where an offer is relevant.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 03</div>
+        <div class="how-step-icon">⦿</div>
+        <h3>Offers Reach Consumers</h3>
+        <p>The right offer reaches the right consumer in the channel they're already using. Your institution shows up at the moment of decision — not after it's passed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSER -->
+<div class="closer">
+  <div class="closer-inner">
+    <div class="eyebrow" style="justify-content:center;">The Bottom Line</div>
+    <h2>Consumers are ready to engage.<br>They just need the offer to <em>find them.</em></h2>
+    <p>Movemint helps financial institutions increase engagement through relevant, timely digital experiences that support measurable growth.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">
+    <div class="footer-m">m</div>
+    <span class="footer-name">movemint</span>
+  </div>
+  <div class="footer-right">Helping financial institutions reach consumers where they already are.</div>
+</div>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.scenario-display').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.how-step').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = `opacity 0.45s ${i * 0.11}s ease, transform 0.45s ${i * 0.11}s ease`;
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
