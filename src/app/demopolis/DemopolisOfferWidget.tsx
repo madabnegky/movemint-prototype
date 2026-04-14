@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import type { Offer } from "@/context/StoreContext";
 import { useStorefront, CREDIT_MOUNTAIN_SECTION } from "@/hooks/useStorefront";
@@ -57,7 +56,6 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
     const [activeTab, setActiveTab] = useState<'amount' | 'payment'>('amount');
-    const [sectionDropdownOpen, setSectionDropdownOpen] = useState(false);
     const [applicationData, setApplicationData] = useState<ApplicationData>({
         loanAmount: '',
         term: '60 months (3.23%*)',
@@ -85,35 +83,22 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
         featuredOffers.forEach(offer => {
             pages.push({ type: 'featured', offer });
         });
+        const SECTION_PAGE_SIZE = 3;
         sections.forEach(section => {
             if (section.isCreditMountain) {
                 pages.push({ type: 'credit-mountain', sectionName: section.name, offers: section.offers });
             } else if (section.offers.length > 0) {
-                pages.push({ type: 'section', sectionName: section.name, offers: section.offers });
+                for (let i = 0; i < section.offers.length; i += SECTION_PAGE_SIZE) {
+                    pages.push({
+                        type: 'section',
+                        sectionName: section.name,
+                        offers: section.offers.slice(i, i + SECTION_PAGE_SIZE),
+                    });
+                }
             }
         });
         return pages;
     }, [featuredOffers, sections]);
-
-    const sectionNames = useMemo(() => {
-        const sectionsList: string[] = [];
-        carouselPages.forEach((page) => {
-            if ((page.type === 'section' || page.type === 'credit-mountain') && page.sectionName) {
-                sectionsList.push(page.sectionName);
-            }
-        });
-        return sectionsList;
-    }, [carouselPages]);
-
-    const sectionPageIndexMap = useMemo(() => {
-        const map: Record<string, number> = {};
-        carouselPages.forEach((page, index) => {
-            if ((page.type === 'section' || page.type === 'credit-mountain') && page.sectionName) {
-                map[page.sectionName] = index;
-            }
-        });
-        return map;
-    }, [carouselPages]);
 
     const totalPages = carouselPages.length;
 
@@ -191,23 +176,6 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
         setCurrentPageIndex(prev => (prev < totalPages - 1 ? prev + 1 : 0));
     };
 
-    const jumpToSection = (sectionName: string) => {
-        const index = sectionPageIndexMap[sectionName];
-        if (index !== undefined) {
-            setCurrentPageIndex(index);
-        }
-        setSectionDropdownOpen(false);
-    };
-
-    const getVariantBadgeContent = (variant?: string) => {
-        switch (variant) {
-            case 'preapproved': return "You're Preapproved";
-            case 'prequalified': return "You're Prequalified";
-            case 'apply': return "Apply Now";
-            case 'special': return "Special Offer";
-            default: return "Special Offer";
-        }
-    };
 
     if (totalPages === 0) {
         return (
@@ -225,185 +193,293 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
     if (currentView === 'carousel') {
         const currentPage = carouselPages[currentPageIndex];
 
+        const tagStyles: Record<string, { bg: string; text: string; label: string }> = {
+            preapproved: { bg: "#269B78", text: "#FBFBFB", label: "You're preapproved!" },
+            prequalified: { bg: "#269B78", text: "#FBFBFB", label: "You're prequalified!" },
+            'auto-refi': { bg: "#269B78", text: "#FBFBFB", label: "You're preapproved!" },
+            'credit-limit': { bg: "#269B78", text: "#FBFBFB", label: "You're preapproved!" },
+            ita: { bg: "#8A55FB", text: "#FBFBFB", label: "APPLY NOW" },
+            wildcard: { bg: "#262C30", text: "#FBFBFB", label: "SPECIAL OFFER" },
+            protection: { bg: "#262C30", text: "#FBFBFB", label: "SPECIAL OFFER" },
+            'new-member': { bg: "#262C30", text: "#FBFBFB", label: "SPECIAL OFFER" },
+        };
+
+        const getTag = (variant?: string) => tagStyles[variant ?? ""] ?? tagStyles.wildcard;
+
         return (
-            <>
-                <div className="widget-header">
-                    <h2><i className="fas fa-store"></i> Storefront</h2>
-                    {sectionNames.length > 1 && (
-                        <div style={{ position: "relative" }}>
-                            <a href="#" className="link" onClick={(e) => { e.preventDefault(); setSectionDropdownOpen(!sectionDropdownOpen); }}>
-                                Jump to section <i className={`fas fa-chevron-${sectionDropdownOpen ? 'up' : 'down'}`} style={{ fontSize: '0.8rem', marginLeft: '4px' }}></i>
-                            </a>
-                            {sectionDropdownOpen && (
-                                <div className="solid-card" style={{ position: "absolute", right: 0, top: "100%", marginTop: "0.5rem", zIndex: 20, width: "200px", background: "white" }}>
-                                    <div style={{ display: "flex", flexDirection: "column" }}>
-                                        {sectionNames.map((section) => (
-                                            <button
-                                                key={section}
-                                                onClick={() => jumpToSection(section)}
-                                                style={{ textAlign: "left", padding: "0.75rem 1rem", border: "none", background: "none", cursor: "pointer", borderBottom: "1px solid var(--border-subtle)", fontSize: "0.9rem" }}
-                                            >
-                                                {section}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+            <div style={{
+                width: "393px",
+                maxWidth: "100%",
+                margin: "0 auto",
+                background: "#FFFFFF",
+                borderRadius: "16px",
+                padding: "24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                fontFamily: "var(--font-sans, -apple-system, BlinkMacSystemFont, sans-serif)",
+            }}>
+                {/* YOUR OFFERS title */}
+                <div style={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    fontWeight: 700,
+                    color: "#262C30",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                }}>
+                    Your Offers
                 </div>
 
-                <div className="offer-cards-container">
-                    {currentPage.type === 'featured' && currentPage.offer && (
-                        <div className="offer-card premium-offer" style={{ padding: 0, overflow: 'hidden' }}>
-                            <div style={{ position: "relative", height: "160px" }}>
-                                <img
-                                    src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
-                                    alt={currentPage.offer.title}
-                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                />
-                                <div className="offer-badge" style={{ backgroundColor: currentPage.offer.variant === 'preapproved' || currentPage.offer.variant === 'prequalified' ? 'var(--movemint-teal)' : 'var(--movemint-purple)', position: "absolute", top: "12px", right: "12px", borderRadius: "var(--radius-sm)" }}>
-                                    {getVariantBadgeContent(currentPage.offer.variant)}
+                {/* Tinted panel containing the carousel content + pagination + footer */}
+                <div style={{
+                    background: "#E7EAEC",
+                    borderRadius: "12px",
+                    padding: "20px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "20px",
+                }}>
+                    {/* Page content */}
+                    <div style={{ minHeight: "320px" }}>
+                        {currentPage.type === 'featured' && currentPage.offer && (
+                            <div style={{
+                                background: "#FBFBFB",
+                                borderRadius: "16px",
+                                overflow: "hidden",
+                                boxShadow: "0 4px 8px 0 rgba(0,0,0,0.06)",
+                            }}>
+                                <div style={{ width: "100%", height: "152px", overflow: "hidden" }}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                                        alt={currentPage.offer.title}
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />
                                 </div>
-                            </div>
-
-                            <div style={{ padding: "1.75rem" }}>
-                                <div className="offer-header-flex">
-                                    <div className="offer-icon">
-                                        <i className="fas fa-car" style={{ color: "var(--movemint-teal)" }}></i>
-                                    </div>
-                                </div>
-
-                                <h4 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#111827", marginBottom: "0.25rem", lineHeight: 1.25, letterSpacing: "-0.02em" }}>
-                                    {currentPage.offer.featuredHeadline || currentPage.offer.title}
-                                </h4>
-                                <p style={{ fontSize: "0.875rem", color: "#4B5563", marginBottom: "0.75rem" }}>
-                                    {currentPage.offer.featuredDescription || currentPage.offer.description}
-                                </p>
-
-                                {currentPage.offer.attributes && currentPage.offer.attributes.length > 0 && (
-                                    <div style={{ display: "flex", gap: "2rem", marginBottom: "1rem" }}>
-                                        {currentPage.offer.attributes.slice(0, 2).map((attr, idx) => (
-                                            <div key={idx}>
-                                                <div style={{ fontSize: "10px", fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem", marginTop: "0.5rem" }}>{attr.label}</div>
-                                                <div style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827" }}>
-                                                    {attr.value}
-                                                    {attr.subtext && (
-                                                        <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#6B7280", marginLeft: "0.25rem" }}>
-                                                            {attr.subtext}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={() => handleReviewOffer(currentPage.offer!)}
-                                    style={{ display: "block", width: "100%", padding: "0.75rem", backgroundColor: "#112240", color: "white", textAlign: "center", fontSize: "15px", fontWeight: 600, borderRadius: "0.25rem", border: "none", cursor: "pointer", letterSpacing: "0.025em" }}
-                                >
-                                    Review Offer
-                                </button>
-                                <div style={{ textAlign: "center", marginTop: "0.5rem" }}>
-                                    <button onClick={() => handleReviewOffer(currentPage.offer!)} style={{ background: "none", border: "none", color: "#2563EB", cursor: "pointer", fontSize: "0.75rem" }}>
-                                        Details & disclosures
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {currentPage.type === 'section' && currentPage.offers && (
-                        <div className="solid-card" style={{ padding: "1.5rem" }}>
-                            <h3 style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>{currentPage.sectionName}</h3>
-                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                                {currentPage.offers.map((offer) => (
-                                    <button
-                                        key={offer.id}
-                                        onClick={() => handleReviewOffer(offer as Offer)}
-                                        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem", background: "#F8FAFC", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", cursor: "pointer", textAlign: "left" }}
-                                    >
-                                        <div>
-                                            <span className="badge" style={{ background: "var(--movemint-teal)", color: "white", fontSize: "0.6rem", marginBottom: "0.5rem", display: "inline-block" }}>
-                                                {getVariantBadgeContent(offer.variant)}
-                                            </span>
-                                            <h4 style={{ fontSize: "0.95rem", margin: 0 }}>{offer.title}</h4>
-                                            {offer.attributes?.[0] && (
-                                                <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                                                    {offer.attributes[0].label && `${offer.attributes[0].label} `}
-                                                    <strong style={{ color: "var(--text-primary)" }}>{offer.attributes[0].value}</strong>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <i className="fas fa-chevron-right" style={{ color: "var(--text-muted)" }}></i>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {currentPage.type === 'credit-mountain' && (
-                        <div className="solid-card" style={{ padding: "1.5rem" }}>
-                            <h3 style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>{CREDIT_MOUNTAIN_SECTION}</h3>
-                            <CreditMountainCard variant="widget" />
-
-                            {currentPage.offers && currentPage.offers.length > 0 && (
-                                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1rem" }}>
-                                    {isCreditMountainGraduate && (
-                                        <p style={{ fontSize: "0.75rem", color: "var(--movemint-teal)", fontWeight: 600, marginBottom: "0.25rem" }}>
-                                            Your improved credit has unlocked new opportunities!
+                                <div style={{ padding: "20px 20px 24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                                    <h3 style={{
+                                        fontSize: "22px",
+                                        lineHeight: "26px",
+                                        letterSpacing: "-0.5px",
+                                        color: "#262C30",
+                                        fontWeight: 700,
+                                        margin: 0,
+                                    }}>
+                                        {currentPage.offer.featuredHeadline || "You're preapproved!"}
+                                    </h3>
+                                    {(currentPage.offer.featuredDescription || currentPage.offer.description) && (
+                                        <p style={{
+                                            fontSize: "14px",
+                                            lineHeight: "20px",
+                                            color: "#576975",
+                                            margin: 0,
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: 3,
+                                            WebkitBoxOrient: "vertical",
+                                            overflow: "hidden",
+                                        }}>
+                                            {currentPage.offer.featuredDescription || currentPage.offer.description}
                                         </p>
                                     )}
-                                    {currentPage.offers.map((offer) => (
+                                    {currentPage.offer.attributes && currentPage.offer.attributes.length > 0 && (
+                                        <div style={{ display: "flex", gap: "16px", marginTop: "4px" }}>
+                                            {currentPage.offer.attributes.slice(0, 2).map((attr, idx) => (
+                                                <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: "100px" }}>
+                                                    <span style={{ fontSize: "14px", lineHeight: "20px", color: "#576975" }}>{attr.label}</span>
+                                                    <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
+                                                        <span style={{ fontSize: "18px", fontWeight: 700, letterSpacing: "-0.5px", color: "#262C30" }}>{attr.value}</span>
+                                                        {attr.subtext && (
+                                                            <span style={{ fontSize: "11px", color: "#262C30" }}>{attr.subtext}</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <button
+                                        onClick={() => handleReviewOffer(currentPage.offer as Offer)}
+                                        style={{
+                                            marginTop: "8px",
+                                            width: "100%",
+                                            height: "48px",
+                                            background: "#3B82F6",
+                                            color: "#FFFFFF",
+                                            border: "none",
+                                            borderRadius: "100px",
+                                            fontSize: "15px",
+                                            fontWeight: 700,
+                                            letterSpacing: "0.05em",
+                                            textTransform: "uppercase",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        Review Offer
+                                    </button>
+                                    <div style={{ textAlign: "center" }}>
+                                        <button
+                                            onClick={() => handleReviewOffer(currentPage.offer as Offer)}
+                                            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "13px", color: "#262C30", textDecoration: "underline", fontWeight: 600 }}
+                                        >
+                                            Details & disclosures
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {currentPage.type === 'section' && currentPage.offers && (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                                {currentPage.offers.map((offer) => {
+                                    const tag = getTag(offer.variant);
+                                    return (
                                         <button
                                             key={offer.id}
                                             onClick={() => handleReviewOffer(offer as Offer)}
-                                            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem", background: "rgba(91, 154, 139, 0.05)", border: "1px solid rgba(91, 154, 139, 0.2)", borderRadius: "var(--radius-md)", cursor: "pointer", textAlign: "left" }}
+                                            style={{
+                                                background: "#FBFBFB",
+                                                borderRadius: "16px",
+                                                overflow: "hidden",
+                                                boxShadow: "0 4px 8px 0 rgba(0,0,0,0.06)",
+                                                border: "none",
+                                                padding: 0,
+                                                cursor: "pointer",
+                                                textAlign: "left",
+                                                width: "100%",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                            }}
                                         >
-                                            <div>
-                                                <span className="badge" style={{ background: "var(--movemint-teal)", color: "white", fontSize: "0.6rem", marginBottom: "0.5rem", display: "inline-block" }}>
-                                                    NEW OPPORTUNITY
-                                                </span>
-                                                <h4 style={{ fontSize: "0.95rem", margin: 0 }}>{offer.title}</h4>
-                                                <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", margin: "0.25rem 0", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{offer.description}</p>
-                                                {offer.attributes?.[0] && (
-                                                    <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                                                        {offer.attributes[0].label && `${offer.attributes[0].label} `}
-                                                        <strong style={{ color: "var(--text-primary)" }}>{offer.attributes[0].value}</strong>
-                                                    </div>
-                                                )}
+                                            <div style={{ display: "inline-block", alignSelf: "flex-start", background: tag.bg, color: tag.text, padding: "4px 16px", borderRadius: "20px 0 20px 0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                                                {tag.label}
                                             </div>
-                                            <i className="fas fa-chevron-right" style={{ color: "var(--movemint-teal)" }}></i>
+                                            <div style={{ padding: "8px 16px 16px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                                                <div style={{ fontSize: "18px", lineHeight: "22px", letterSpacing: "-0.3px", color: "#262C30", fontWeight: 600 }}>
+                                                    {offer.title}
+                                                </div>
+                                                {offer.attributes && offer.attributes.length > 0 ? (
+                                                    <div style={{ display: "flex", gap: "16px", marginTop: "2px" }}>
+                                                        {offer.attributes.slice(0, 2).map((attr, idx) => (
+                                                            <div key={idx} style={{ display: "flex", flexDirection: "column" }}>
+                                                                <span style={{ fontSize: "12px", color: "#576975", lineHeight: "16px" }}>{attr.label}</span>
+                                                                <div style={{ display: "flex", alignItems: "baseline", gap: "3px" }}>
+                                                                    <span style={{ fontSize: "16px", fontWeight: 700, color: "#262C30", letterSpacing: "-0.3px" }}>{attr.value}</span>
+                                                                    {attr.subtext && (
+                                                                        <span style={{ fontSize: "10px", color: "#262C30" }}>{attr.subtext}</span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : offer.description ? (
+                                                    <p style={{ fontSize: "13px", lineHeight: "18px", color: "#576975", margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                        {offer.description}
+                                                    </p>
+                                                ) : null}
+                                                <div style={{ textAlign: "center", marginTop: "4px" }}>
+                                                    <span style={{ fontSize: "13px", fontWeight: 600, color: "#262C30", textDecoration: "underline" }}>
+                                                        Learn More
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
+                                    );
+                                })}
+                            </div>
+                        )}
 
-                    {/* Pagination Controls */}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "0.5rem", marginBottom: "1rem" }}>
-                        <button onClick={goToPrevPage} className="icon-btn" aria-label="Previous page">
-                            <i className="fas fa-chevron-left"></i>
+                        {currentPage.type === 'credit-mountain' && (
+                            <div style={{ background: "#FBFBFB", borderRadius: "16px", padding: "16px", boxShadow: "0 4px 8px 0 rgba(0,0,0,0.06)" }}>
+                                <h3 style={{ marginTop: 0, marginBottom: "12px", fontSize: "16px", color: "#262C30" }}>{CREDIT_MOUNTAIN_SECTION}</h3>
+                                <CreditMountainCard variant="widget" />
+                                {currentPage.offers && currentPage.offers.length > 0 && (
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
+                                        {isCreditMountainGraduate && (
+                                            <p style={{ fontSize: "12px", color: "#269B78", fontWeight: 600, margin: 0 }}>
+                                                Your improved credit has unlocked new opportunities!
+                                            </p>
+                                        )}
+                                        {currentPage.offers.slice(0, 3).map((offer) => (
+                                            <button
+                                                key={offer.id}
+                                                onClick={() => handleReviewOffer(offer as Offer)}
+                                                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px", background: "rgba(38, 155, 120, 0.06)", border: "1px solid rgba(38, 155, 120, 0.2)", borderRadius: "8px", cursor: "pointer", textAlign: "left" }}
+                                            >
+                                                <div>
+                                                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#269B78", letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: "4px" }}>NEW OPPORTUNITY</div>
+                                                    <div style={{ fontSize: "14px", color: "#262C30", fontWeight: 600 }}>{offer.title}</div>
+                                                </div>
+                                                <ChevronRight size={16} color="#269B78" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Pagination — chevrons + dots */}
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
+                        <button
+                            onClick={goToPrevPage}
+                            aria-label="Previous page"
+                            style={{ background: "none", border: "none", padding: "4px", cursor: "pointer", color: "#262C30", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        >
+                            <ChevronLeft size={20} />
                         </button>
-                        <span style={{ fontSize: "0.75rem", fontWeight: "600", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                            {currentPageIndex + 1} OF {totalPages}
-                        </span>
-                        <button onClick={goToNextPage} className="icon-btn" aria-label="Next page">
-                            <i className="fas fa-chevron-right"></i>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            {carouselPages.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setCurrentPageIndex(i)}
+                                    aria-label={`Go to page ${i + 1}`}
+                                    style={{
+                                        width: "8px",
+                                        height: "8px",
+                                        borderRadius: "999px",
+                                        background: i === currentPageIndex ? "#262C30" : "transparent",
+                                        border: i === currentPageIndex ? "none" : "1.5px solid #262C30",
+                                        padding: 0,
+                                        cursor: "pointer",
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        <button
+                            onClick={goToNextPage}
+                            aria-label="Next page"
+                            style={{ background: "none", border: "none", padding: "4px", cursor: "pointer", color: "#262C30", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        >
+                            <ChevronRight size={20} />
                         </button>
                     </div>
 
-                    {/* Want to see more + Go to Storefront */}
-                    <div style={{ textAlign: "center", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)", marginTop: "auto" }}>
-                        <p style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "0.5rem" }}>Looking for something else?</p>
-                        <Link href="/storefront" className="btn btn-secondary" style={{ fontSize: "0.6rem", padding: "0.4rem 1rem", borderRadius: "2rem", textTransform: "uppercase", letterSpacing: "0.1em", display: "inline-block" }}>
-                            Shop Full Storefront
+                    {/* Want to see more + Go to All Offers */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                        <p style={{ fontSize: "14px", color: "#262C30", margin: 0 }}>Want to see more?</p>
+                        <Link
+                            href="/storefront"
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                padding: "10px 32px",
+                                background: "transparent",
+                                color: "#262C30",
+                                border: "1.5px solid #262C30",
+                                borderRadius: "100px",
+                                fontSize: "13px",
+                                fontWeight: 700,
+                                letterSpacing: "0.05em",
+                                textTransform: "uppercase",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Go to All Offers
                         </Link>
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
 

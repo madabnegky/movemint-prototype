@@ -1177,6 +1177,23 @@ const DEFAULT_OFFERS: Offer[] = [
         imageUrl: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800&q=80",
         ctaText: "Learn More"
     },
+    {
+        id: "demo-nuuvia-grandkid",
+        title: "Nuuvia SmartStart for a Grandkid",
+        variant: 'wildcard',
+        productType: 'savings',
+        section: "Special Offers",
+        isFeatured: true,
+        featuredHeadline: "A head start for your grandkid",
+        featuredDescription: "Open a Nuuvia youth account for a grandchild and help them learn to save, spend, and earn — with parental controls and goal tracking built in.",
+        description: "Open a Nuuvia youth account for a grandchild and help them learn to save, spend, and earn — with parental controls and goal tracking built in.",
+        attributes: [
+            { label: "Opening gift", value: "$25" },
+            { label: "Monthly fee", value: "$0" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Open Account"
+    },
     // Deposit Product Offers
     {
         id: "demo-7",

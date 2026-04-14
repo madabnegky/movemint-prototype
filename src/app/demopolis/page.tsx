@@ -134,9 +134,9 @@ export default function DemopolisPage() {
         <div style={{ flexGrow: 1 }}></div>
 
         <div className="user-profile">
-          <img src="https://ui-avatars.com/api/?name=Kyle+Christian&background=F1F5F9&color=002d72&bold=true" alt="Kyle" className="avatar" />
+          <img src="https://ui-avatars.com/api/?name=Betsy+Golden&background=F1F5F9&color=002d72&bold=true" alt="Betsy" className="avatar" />
           <div className="user-info">
-            <span className="name">Kyle Christian</span>
+            <span className="name">Betsy Golden</span>
             <span className="status">Premium Member</span>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function DemopolisPage() {
           {/* Left Column */}
           <div className="dashboard-col-left">
             <section className="welcome-section">
-              <h1>Good morning, Kyle</h1>
+              <h1>Good morning, Betsy</h1>
               <p className="subtitle">Here's a look at your financial ecosystem today.</p>
 
               <div className="quick-actions">

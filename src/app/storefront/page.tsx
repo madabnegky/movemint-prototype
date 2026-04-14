@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronDown, ChevronLeft, ChevronRight, CheckCircle2, Info, X } from "lucide-react";
-import { OfferCard } from "@/components/storefront/OfferCard";
+import { LargeStorefrontCard, type LargeCardTag, type LargeCardHeroValue } from "@/components/storefront/LargeStorefrontCard";
 import { HeroCarousel } from "@/components/storefront/HeroCarousel";
 import { CreditMountainCard } from "@/components/storefront/CreditMountainCard";
 import { PrequalificationCard } from "@/components/storefront/PrequalificationCard";
@@ -12,7 +12,51 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useStore } from "@/context/StoreContext";
 import { useStorefront } from "@/hooks/useStorefront";
-import type { Offer } from "@/context/StoreContext";
+import type { Offer, OfferVariant } from "@/context/StoreContext";
+
+// Map StoreContext OfferVariant → LargeStorefrontCard tag
+function variantToTag(variant: OfferVariant, isRedeemed?: boolean): LargeCardTag {
+    if (isRedeemed) return "redeemed";
+    switch (variant) {
+        case "preapproved":
+        case "prequalified":
+        case "auto-refi":
+        case "credit-limit":
+            return "preapproved";
+        case "ita":
+            return "apply-now";
+        case "wildcard":
+        case "protection":
+        case "new-member":
+        case "redeemed":
+        default:
+            return variant === "redeemed" ? "redeemed" : "special";
+    }
+}
+
+// Pick the first two attributes (or fill with blanks) for the card hero values
+function offerToHeroValues(offer: Offer): [LargeCardHeroValue, LargeCardHeroValue] {
+    const attrs = offer.attributes ?? [];
+    const v = (i: number): LargeCardHeroValue => ({
+        label: attrs[i]?.label ?? "",
+        value: attrs[i]?.value ?? "",
+        suffix: attrs[i]?.subtext,
+    });
+    return [v(0), v(1)];
+}
+
+function OfferAsLargeCard({ offer }: { offer: Offer }) {
+    return (
+        <LargeStorefrontCard
+            productName={offer.title}
+            tag={variantToTag(offer.variant, offer.isRedeemed)}
+            heroValues={offerToHeroValues(offer)}
+            imageUrl={offer.imageUrl ?? "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+            ctaLabel={offer.ctaText}
+            ctaHref={offer.ctaLink ?? `/storefront/offer/${offer.id}`}
+        />
+    );
+}
 
 export default function StorefrontPage() {
     const { storefrontConfig, featureFlags, previewMode, addOffer, addSection, sections: storeSections } = useStore();
@@ -76,7 +120,7 @@ export default function StorefrontPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30]">
+        <div className="min-h-screen bg-page font-sans text-contrast-black">
 
             {/* Navigation */}
             <nav className="bg-white px-6 lg:px-8 h-14 flex items-center justify-between border-b border-gray-200">
@@ -107,7 +151,7 @@ export default function StorefrontPage() {
                 </button>
             </nav>
 
-            <main className="max-w-[1200px] mx-auto px-6 lg:px-8 py-6">
+            <main className="max-w-[1296px] mx-auto px-[48px] py-6">
 
                 {/* Preview Controls Bar */}
                 <div className="mb-4 flex items-center justify-between">
@@ -280,108 +324,68 @@ export default function StorefrontPage() {
                 <HeroCarousel />
 
                 {/* Filter Categories */}
-                <div className="mb-8">
-                    <div className="text-[10px] font-medium text-[#677178] uppercase tracking-wider mb-2">
+                <div className="mb-12 flex flex-col gap-2">
+                    <div className="text-[16px] leading-5 text-greyscale-08">
                         Filter Categories
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                        {/* All button - filled when active */}
-                        <button
-                            onClick={() => setActiveCategory("All")}
-                            className={cn(
-                                "px-4 py-1.5 rounded-full text-[12px] font-medium transition-all border",
-                                activeCategory === "All"
-                                    ? "bg-[#262C30] text-white border-[#262C30]"
-                                    : "bg-white text-[#262C30] border-gray-300 hover:border-gray-400"
-                            )}
-                        >
-                            All
-                        </button>
-                        {sectionNames.map((sectionName) => (
-                            <button
-                                key={sectionName}
-                                onClick={() => setActiveCategory(sectionName)}
-                                className={cn(
-                                    "px-4 py-1.5 rounded-full text-[12px] font-medium transition-all border",
-                                    activeCategory === sectionName
-                                        ? "bg-[#262C30] text-white border-[#262C30]"
-                                        : "bg-white text-[#262C30] border-gray-300 hover:border-gray-400"
-                                )}
-                            >
-                                {sectionName}
-                            </button>
-                        ))}
-                        {activeCategory !== "All" && (
-                            <button
-                                onClick={() => setActiveCategory("All")}
-                                className="px-3 py-1.5 text-[12px] font-medium text-[#677178] hover:text-[#262C30] transition-colors underline underline-offset-2"
-                            >
-                                Clear filters
-                            </button>
-                        )}
+                    <div className="flex flex-wrap items-center gap-4">
+                        {["All", ...sectionNames].map((name) => {
+                            const isActive = activeCategory === name;
+                            return (
+                                <button
+                                    key={name}
+                                    onClick={() => setActiveCategory(name)}
+                                    className={cn(
+                                        "px-4 py-2.5 rounded-chip text-[16px] leading-5 transition-colors whitespace-nowrap",
+                                        isActive
+                                            ? "bg-contrast-black text-white"
+                                            : "bg-contrast-white text-contrast-black border border-greyscale-07 hover:border-contrast-black"
+                                    )}
+                                >
+                                    {name}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
                 {/* Offer Sections */}
-                {getVisibleSections().map(section => {
-                    // For Credit Mountain section, render specially
-                    if (section.isCreditMountain) {
+                <div className="flex flex-col gap-12">
+                    {getVisibleSections().map(section => {
+                        if (section.isCreditMountain) {
+                            return (
+                                <section key={section.name} className="flex flex-col gap-6">
+                                    <h2 className="text-[32px] leading-8 tracking-[-1px] text-contrast-black font-ss03">
+                                        {section.name}
+                                    </h2>
+                                    <div className="flex flex-wrap items-start justify-start gap-4">
+                                        <div className="w-[288px]">
+                                            <CreditMountainCard variant="card" />
+                                        </div>
+                                        {section.offers.map(offer => (
+                                            <OfferAsLargeCard key={offer.id} offer={offer} />
+                                        ))}
+                                    </div>
+                                </section>
+                            );
+                        }
+
+                        if (section.offers.length === 0) return null;
+
                         return (
-                            <section key={section.name} className="mb-10">
-                                <h2 className="text-[20px] font-semibold text-[#262C30] mb-4">
+                            <section key={section.name} className="flex flex-col gap-6">
+                                <h2 className="text-[32px] leading-8 tracking-[-1px] text-contrast-black font-ss03">
                                     {section.name}
                                 </h2>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                                    {/* Credit Mountain Card */}
-                                    <CreditMountainCard variant="card" />
-
-                                    {/* Section offers (e.g., Personal Loan ITA for graduates) */}
+                                <div className="flex flex-wrap items-start justify-start gap-4">
                                     {section.offers.map(offer => (
-                                        <OfferCard
-                                            key={offer.id}
-                                            id={offer.id}
-                                            variant={offer.variant}
-                                            title={offer.title}
-                                            description={offer.description}
-                                            attributes={offer.attributes}
-                                            imageUrl={offer.imageUrl}
-                                            ctaText={offer.ctaText}
-                                            ctaLink={offer.ctaLink}
-                                            isRedeemed={offer.isRedeemed}
-                                        />
+                                        <OfferAsLargeCard key={offer.id} offer={offer} />
                                     ))}
                                 </div>
                             </section>
                         );
-                    }
-
-                    // Regular sections
-                    if (section.offers.length === 0) return null;
-
-                    return (
-                        <section key={section.name} className="mb-10">
-                            <h2 className="text-[20px] font-semibold text-[#262C30] mb-4">
-                                {section.name}
-                            </h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                                {section.offers.map(offer => (
-                                    <OfferCard
-                                        key={offer.id}
-                                        id={offer.id}
-                                        variant={offer.variant}
-                                        title={offer.title}
-                                        description={offer.description}
-                                        attributes={offer.attributes}
-                                        imageUrl={offer.imageUrl}
-                                        ctaText={offer.ctaText}
-                                        ctaLink={offer.ctaLink}
-                                        isRedeemed={offer.isRedeemed}
-                                    />
-                                ))}
-                            </div>
-                        </section>
-                    );
-                })}
+                    })}
+                </div>
 
                 {/* Live Mode without profile selected - prompt to select */}
                 {previewMode === 'live' && !selectedProfile && (

@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+/*
+ * Design tokens — Figma source of truth: CNX Templates/XL Storefront (6118:207855)
+ * See claude.md "Design tokens" section for the full table.
+ */
+@theme {
+  /* Colors */
+  --color-page: #E7EAEC;
+  --color-contrast-white: #FBFBFB;
+  --color-contrast-black: #262C30;
+  --color-ultra-black: #131515;
+  --color-greyscale-03: #E6EAEB;
+  --color-greyscale-06: #9BA7AE;
+  --color-greyscale-07: #677178;
+  --color-greyscale-08: #576975;
+  --color-system-green: #269B78;
+  --color-system-purple: #8A55FB;
+  --color-tag-neutral: #C8CED1;
+
+  /* Shadows */
+  --shadow-card: 0 4px 8px 0 rgba(0, 0, 0, 0.06);
+  --shadow-header: 0 6px 10px 0 rgba(0, 0, 0, 0.08);
+
+  /* Radii */
+  --radius-card: 20px;
+  --radius-card-image: 10px;
+  --radius-medium-img: 8px;
+  --radius-chip: 43px;
+  --radius-button: 100px;
+
+  /* Font family — GT America loaded via next/font/local in layout.tsx */
+  --font-sans: var(--font-gt-america), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Tag has an asymmetric radius that doesn't fit Tailwind's radius scale */
+.tag-radius {
+  border-radius: 20px 0 20px 0;
+}
+
+/* Use ss03 stylistic set for Extended Medium numerals (Figma spec) */
+.font-ss03 {
+  font-feature-settings: "ss03";
+}
+
+html,
+body {
+  background: var(--color-page);
+  color: var(--color-contrast-black);
+}
