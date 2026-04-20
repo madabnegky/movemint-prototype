@@ -9,7 +9,7 @@ import { CreditMountainCard } from "@/components/storefront/CreditMountainCard";
 import type { GeneratedOffer } from "@/lib/ruleEvaluator";
 import Link from "next/link";
 
-type WidgetView = 'carousel' | 'details' | 'review' | 'vehicle' | 'contact' | 'terms' | 'confirmation';
+type WidgetView = 'carousel' | 'details' | 'review' | 'vehicle' | 'contact' | 'terms' | 'confirmation' | 'interest-captured';
 
 interface ApplicationData {
     loanAmount: string;
@@ -298,7 +298,14 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
                                         </div>
                                     )}
                                     <button
-                                        onClick={() => handleReviewOffer(currentPage.offer as Offer)}
+                                        onClick={() => {
+                                            if (currentPage.offer!.variant === 'wildcard') {
+                                                setSelectedOffer(currentPage.offer as Offer);
+                                                setCurrentView('interest-captured');
+                                            } else {
+                                                handleReviewOffer(currentPage.offer as Offer);
+                                            }
+                                        }}
                                         style={{
                                             marginTop: "8px",
                                             width: "100%",
@@ -314,16 +321,18 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
                                             cursor: "pointer",
                                         }}
                                     >
-                                        Review Offer
+                                        {currentPage.offer!.ctaText || "Review Offer"}
                                     </button>
-                                    <div style={{ textAlign: "center" }}>
-                                        <button
-                                            onClick={() => handleReviewOffer(currentPage.offer as Offer)}
-                                            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "13px", color: "#262C30", textDecoration: "underline", fontWeight: 600 }}
-                                        >
-                                            Details & disclosures
-                                        </button>
-                                    </div>
+                                    {currentPage.offer!.variant !== 'wildcard' && (
+                                        <div style={{ textAlign: "center" }}>
+                                            <button
+                                                onClick={() => handleReviewOffer(currentPage.offer as Offer)}
+                                                style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "13px", color: "#262C30", textDecoration: "underline", fontWeight: 600 }}
+                                            >
+                                                Details & disclosures
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -852,6 +861,63 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
                     </div>
                 </div>
             </>
+        );
+    }
+
+    if (currentView === 'interest-captured' && selectedOffer) {
+        return (
+            <div style={{
+                width: "393px",
+                maxWidth: "100%",
+                margin: "0 auto",
+                background: "#FFFFFF",
+                borderRadius: "16px",
+                padding: "24px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "16px",
+                textAlign: "center",
+                fontFamily: "var(--font-sans, -apple-system, BlinkMacSystemFont, sans-serif)",
+            }}>
+                <div style={{
+                    width: "64px",
+                    height: "64px",
+                    background: "#ECFDF5",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}>
+                    <i className="fas fa-check" style={{ fontSize: "1.75rem", color: "#269B78" }}></i>
+                </div>
+                <h3 style={{ fontSize: "20px", fontWeight: 700, color: "#262C30", margin: 0 }}>
+                    Thanks, Betsy!
+                </h3>
+                <p style={{ fontSize: "14px", lineHeight: "20px", color: "#576975", margin: 0, maxWidth: "300px" }}>
+                    We&apos;ve noted your interest in <strong>{selectedOffer.title}</strong>. A member of our team will reach out to you shortly with more details.
+                </p>
+                <button
+                    onClick={() => { setCurrentView('carousel'); setSelectedOffer(null); }}
+                    style={{
+                        marginTop: "8px",
+                        width: "100%",
+                        maxWidth: "280px",
+                        height: "44px",
+                        background: "transparent",
+                        color: "#262C30",
+                        border: "1.5px solid #262C30",
+                        borderRadius: "100px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        cursor: "pointer",
+                    }}
+                >
+                    Back to Offers
+                </button>
+            </div>
         );
     }
 

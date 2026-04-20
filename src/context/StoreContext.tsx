@@ -1192,7 +1192,7 @@ const DEFAULT_OFFERS: Offer[] = [
             { label: "Monthly fee", value: "$0" }
         ],
         imageUrl: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80",
-        ctaText: "Open Account"
+        ctaText: "I'm Interested"
     },
     // Deposit Product Offers
     {
