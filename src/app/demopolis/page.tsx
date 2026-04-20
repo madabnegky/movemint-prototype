@@ -115,11 +115,11 @@ export default function DemopolisPage() {
         </div>
       </div>
 
-      {/* Sidebar Shell (Tyfone nFinia customized for MCU) */}
+      {/* Sidebar Shell (Tyfone nFinia customized for CU) */}
       <aside className="sidebar">
         <div className="logo">
-          <div className="logo-icon">MCU</div>
-          <span>Municipal <span className="dt">Credit Union</span></span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logoSPFCU.jpeg" alt="Summit Peak Federal Credit Union" style={{ width: "100%", maxWidth: "180px", height: "auto" }} />
         </div>
         <nav className="nav-menu">
           <a href="#" className="nav-item active"><i className="fas fa-home"></i> Home</a>

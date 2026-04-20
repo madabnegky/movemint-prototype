@@ -10,11 +10,11 @@
     --text-secondary: #64748B;
     --text-muted: #94A3B8;
 
-    /* MCU / Primary Bank Brand */
+    /* CU / Primary Bank Brand */
     --brand-primary: #002d72;
-    /* MCU Navy */
+    /* CU Navy */
     --brand-accent: #00a9e0;
-    /* MCU Light Blue */
+    /* CU Light Blue */
 
     /* Movemint DSF Tokens (from design specs) */
     --movemint-navy: #143C67;
