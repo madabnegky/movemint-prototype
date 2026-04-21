@@ -182,16 +182,16 @@ export default function StorefrontPage() {
 
                 {/* Prequalification Banner - Success */}
                 {prequalStatus === 'has_offers' && !bannerDismissed && (
-                    <div className="mb-6 bg-[#d4edda] border-l-4 border-[#4D9B56] rounded-r-lg px-5 py-4 flex items-center justify-between">
+                    <div className="mb-6 bg-system-green/10 border-l-4 border-system-green rounded-r-lg px-5 py-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-[#4D9B56] shrink-0" />
-                            <p className="text-[14px] text-[#1a472a] font-medium">
+                            <CheckCircle2 className="w-5 h-5 text-system-green shrink-0" />
+                            <p className="text-[14px] text-contrast-black font-medium">
                                 You have {prequalOffers.length} prequalified offers below.
                             </p>
                         </div>
                         <button
                             onClick={() => setBannerDismissed(true)}
-                            className="text-[#1a472a]/60 hover:text-[#1a472a] transition-colors"
+                            className="text-contrast-black/40 hover:text-contrast-black transition-colors"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -200,16 +200,16 @@ export default function StorefrontPage() {
 
                 {/* Prequalification Banner - No Offers */}
                 {prequalStatus === 'no_offers' && !bannerDismissed && (
-                    <div className="mb-6 bg-[#d6e4f0] border-l-4 border-[#6b8db5] rounded-r-lg px-5 py-4 flex items-center justify-between">
+                    <div className="mb-6 bg-greyscale-03 border-l-4 border-greyscale-07 rounded-r-lg px-5 py-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Info className="w-5 h-5 text-[#3b6a9a] shrink-0" />
-                            <p className="text-[14px] text-[#1e3a5f] font-medium">
+                            <Info className="w-5 h-5 text-greyscale-08 shrink-0" />
+                            <p className="text-[14px] text-contrast-black font-medium">
                                 There are no prequalified offers at this time, come back again.
                             </p>
                         </div>
                         <button
                             onClick={() => setBannerDismissed(true)}
-                            className="text-[#1e3a5f]/60 hover:text-[#1e3a5f] transition-colors"
+                            className="text-contrast-black/40 hover:text-contrast-black transition-colors"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -262,7 +262,7 @@ export default function StorefrontPage() {
                                     <div className="flex flex-col gap-3 items-center min-[804px]:items-stretch max-w-[280px]">
                                         <Link
                                             href={`/storefront/offer/${currentPrequalOffer.id}`}
-                                            className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-[#B8C4E0] text-[#1e293b] text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-[#a3b1d1] transition-colors"
+                                            className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-system-green text-white text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-[#1e8466] transition-colors"
                                         >
                                             REVIEW OFFER
                                         </Link>
