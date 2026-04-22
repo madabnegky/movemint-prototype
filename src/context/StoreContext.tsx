@@ -1194,6 +1194,40 @@ const DEFAULT_OFFERS: Offer[] = [
         imageUrl: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80",
         ctaText: "I'm Interested"
     },
+    {
+        id: "demo-skip-a-pay",
+        title: "Skip-a-Pay",
+        variant: 'wildcard',
+        productType: 'savings',
+        section: "Special Offers",
+        isFeatured: true,
+        featuredHeadline: "Need a little breathing room?",
+        featuredDescription: "Skip a loan payment this month and free up cash for whatever life throws your way. Qualify in seconds — no branch visit, no phone call.",
+        description: "Skip a qualifying loan payment this month and free up cash for whatever life throws your way.",
+        attributes: [
+            { label: "Skip fee", value: "$35" },
+            { label: "Due date pushed", value: "30 days" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=800&q=80",
+        ctaText: "I'm Interested"
+    },
+    {
+        id: "demo-quick-pay",
+        title: "Quick Pay",
+        variant: 'wildcard',
+        productType: 'savings',
+        section: "Special Offers",
+        isFeatured: true,
+        featuredHeadline: "Pay any loan, any way, from anywhere",
+        featuredDescription: "Make a loan payment in under a minute — debit card, credit card, or bank transfer. No login required, posts to your loan in real time.",
+        description: "Make a loan payment in under a minute from any device. Debit, credit, or bank transfer — posts in real time.",
+        attributes: [
+            { label: "Posts in", value: "Real time" },
+            { label: "Login", value: "Not required" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80",
+        ctaText: "I'm Interested"
+    },
     // Deposit Product Offers
     {
         id: "demo-7",
