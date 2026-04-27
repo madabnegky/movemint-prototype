@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# NCUA Call Report raw extracts (downloaded by scripts/fetch-ncua.mjs;
+# reproducible from the parser, not source). The generated
+# src/data/ncua-cus.json IS committed.
+/scripts/ncua-tmp/
+
+# Local Claude Code / MCP settings — personal to each dev's machine.
+.claude/
+.mcp.json
