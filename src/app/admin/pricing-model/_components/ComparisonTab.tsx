@@ -19,12 +19,15 @@ export type ComparisonTabProps = {
   depositPenetration: number;
   bpsMonthlyFloor: number;
 
-  // SaaS+event inputs
+  // SaaS+event inputs (module-split prices)
   tierPrices: SaasTierPrices;
   saasOverride: number | null;
-  pricePerRedemption: number;
-  pricePerApplication: number;
-  pricePerOfferGen: number;
+  pricePerRedemptionLoan: number;
+  pricePerRedemptionDeposit: number;
+  pricePerApplicationLoan: number;
+  pricePerApplicationDeposit: number;
+  pricePerOfferGenLoan: number;
+  pricePerOfferGenDeposit: number;
   eventCounts: EventCounts;
 };
 
@@ -40,9 +43,12 @@ export function ComparisonTab(props: ComparisonTabProps) {
     bpsMonthlyFloor,
     tierPrices,
     saasOverride,
-    pricePerRedemption,
-    pricePerApplication,
-    pricePerOfferGen,
+    pricePerRedemptionLoan,
+    pricePerRedemptionDeposit,
+    pricePerApplicationLoan,
+    pricePerApplicationDeposit,
+    pricePerOfferGenLoan,
+    pricePerOfferGenDeposit,
     eventCounts,
   } = props;
 
@@ -61,18 +67,24 @@ export function ComparisonTab(props: ComparisonTabProps) {
   });
   const redemption = calcSaasPerEventRevenue({
     monthlySaas,
-    pricePerEvent: pricePerRedemption,
-    eventCount: eventCounts.redemptionsTotal,
+    pricePerEventLoan: pricePerRedemptionLoan,
+    pricePerEventDeposit: pricePerRedemptionDeposit,
+    eventCountLoan: eventCounts.redemptionsLoan,
+    eventCountDeposit: eventCounts.redemptionsDeposit,
   });
   const application = calcSaasPerEventRevenue({
     monthlySaas,
-    pricePerEvent: pricePerApplication,
-    eventCount: eventCounts.applicationsTotal,
+    pricePerEventLoan: pricePerApplicationLoan,
+    pricePerEventDeposit: pricePerApplicationDeposit,
+    eventCountLoan: eventCounts.applicationsLoan,
+    eventCountDeposit: eventCounts.applicationsDeposit,
   });
   const offerGen = calcSaasPerEventRevenue({
     monthlySaas,
-    pricePerEvent: pricePerOfferGen,
-    eventCount: eventCounts.offersGeneratedTotal,
+    pricePerEventLoan: pricePerOfferGenLoan,
+    pricePerEventDeposit: pricePerOfferGenDeposit,
+    eventCountLoan: eventCounts.offersGeneratedLoan,
+    eventCountDeposit: eventCounts.offersGeneratedDeposit,
   });
 
   // For BPS, "SaaS share" = floor share if floor is active; otherwise 0.
@@ -92,7 +104,7 @@ export function ComparisonTab(props: ComparisonTabProps) {
     },
     {
       label: "SaaS + per redemption",
-      sublabel: `${formatPriceLabel(pricePerRedemption)} × ${formatCount(eventCounts.redemptionsTotal)} redemptions/yr`,
+      sublabel: `${formatPriceLabel(pricePerRedemptionLoan)} loan / ${formatPriceLabel(pricePerRedemptionDeposit)} deposit · ${formatCount(eventCounts.redemptionsTotal)} total redemptions/yr`,
       total: redemption.totalRev,
       saasShare: redemption.saasShare,
       txnShare: 1 - redemption.saasShare,
@@ -101,7 +113,7 @@ export function ComparisonTab(props: ComparisonTabProps) {
     },
     {
       label: "SaaS + per application",
-      sublabel: `${formatPriceLabel(pricePerApplication)} × ${formatCount(eventCounts.applicationsTotal)} apps/yr`,
+      sublabel: `${formatPriceLabel(pricePerApplicationLoan)} loan / ${formatPriceLabel(pricePerApplicationDeposit)} deposit · ${formatCount(eventCounts.applicationsTotal)} total apps/yr`,
       total: application.totalRev,
       saasShare: application.saasShare,
       txnShare: 1 - application.saasShare,
@@ -110,7 +122,7 @@ export function ComparisonTab(props: ComparisonTabProps) {
     },
     {
       label: "SaaS + per offer generated",
-      sublabel: `${formatPriceLabel(pricePerOfferGen)} × ${formatCount(eventCounts.offersGeneratedTotal)} offers/yr`,
+      sublabel: `${formatPriceLabel(pricePerOfferGenLoan)} loan / ${formatPriceLabel(pricePerOfferGenDeposit)} deposit · ${formatCount(eventCounts.offersGeneratedTotal)} total offers/yr`,
       total: offerGen.totalRev,
       saasShare: offerGen.saasShare,
       txnShare: 1 - offerGen.saasShare,

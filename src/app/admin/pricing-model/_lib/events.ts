@@ -67,11 +67,20 @@ export const DEFAULT_EVENT_ASSUMPTIONS: Omit<EventAssumptions, "loanPenetrationP
   offersPerMemberPerYear: DEFAULT_OFFERS_PER_MEMBER_PER_YEAR,
 };
 
+/**
+ * Event counts split by module (lending vs. deposit). Each event type can
+ * be priced separately by module, since a funded loan is worth more than a
+ * new deposit account, etc.
+ */
 export type EventCounts = {
   redemptionsLoan: number;
   redemptionsDeposit: number;
   redemptionsTotal: number;
+  applicationsLoan: number;
+  applicationsDeposit: number;
   applicationsTotal: number;
+  offersGeneratedLoan: number;
+  offersGeneratedDeposit: number;
   offersGeneratedTotal: number;
 };
 
@@ -96,19 +105,33 @@ export function calcEventCounts(
       : 0;
 
   const redemptionsTotal = redemptionsLoan + redemptionsDeposit;
-  const applicationsTotal = redemptionsTotal * assumptions.appToFundedRatio;
+
+  // Applications scale from redemptions per module (apps-to-funded ratio
+  // applies symmetrically across modules — adjust here if modules differ).
+  const applicationsLoan = redemptionsLoan * assumptions.appToFundedRatio;
+  const applicationsDeposit = redemptionsDeposit * assumptions.appToFundedRatio;
+  const applicationsTotal = applicationsLoan + applicationsDeposit;
 
   // Offers generated scales with member count, not balance-sheet volume.
-  // Penetration here = blended share of members reached (avg of loan & deposit
-  // module penetrations). If both modules are 0, no offers are generated.
-  const blendedPen = (loanPen + depPen) / 2;
+  // Split by module via each module's penetration: if loan pen=4% and deposit
+  // pen=2%, offers split 4/(4+2)=67% lending, 33% deposit. If both modules
+  // are 0, no offers are generated.
+  const totalPen = loanPen + depPen;
+  const blendedPen = totalPen / 2;
   const offersGeneratedTotal = members * assumptions.offersPerMemberPerYear * blendedPen;
+  const loanShare = totalPen > 0 ? loanPen / totalPen : 0.5;
+  const offersGeneratedLoan = offersGeneratedTotal * loanShare;
+  const offersGeneratedDeposit = offersGeneratedTotal * (1 - loanShare);
 
   return {
     redemptionsLoan,
     redemptionsDeposit,
     redemptionsTotal,
+    applicationsLoan,
+    applicationsDeposit,
     applicationsTotal,
+    offersGeneratedLoan,
+    offersGeneratedDeposit,
     offersGeneratedTotal,
   };
 }

@@ -17,8 +17,9 @@ import { Stat, Card } from "./_components/primitives";
 import { BpsTab } from "./_components/BpsTab";
 import { SaasPerEventTab } from "./_components/SaasPerEventTab";
 import { ComparisonTab } from "./_components/ComparisonTab";
+import { RepricingTab } from "./_components/RepricingTab";
 
-type TabId = "bps" | "redemption" | "application" | "offerGen" | "comparison";
+type TabId = "bps" | "redemption" | "application" | "offerGen" | "comparison" | "repricing";
 
 const TABS: { id: TabId; label: string; sublabel?: string }[] = [
   { id: "bps", label: "BPS take-rate", sublabel: "Pure transaction" },
@@ -26,6 +27,7 @@ const TABS: { id: TabId; label: string; sublabel?: string }[] = [
   { id: "application", label: "SaaS + application", sublabel: "$ per app started" },
   { id: "offerGen", label: "SaaS + offer generated", sublabel: "$ per impression" },
   { id: "comparison", label: "Compare all 4", sublabel: "Side-by-side" },
+  { id: "repricing", label: "Repricing", sublabel: "Existing clients" },
 ];
 
 export default function PricingModelPage() {
@@ -51,10 +53,15 @@ export default function PricingModelPage() {
   const [tierPrices, setTierPrices] = useState<SaasTierPrices>({ ...DEFAULT_SAAS_TIER_PRICES });
   const [saasOverride, setSaasOverride] = useState<number | null>(null);
 
-  // Per-event prices (start at 0 — user discovers the right number by tuning)
-  const [pricePerRedemption, setPricePerRedemption] = useState<number>(0);
-  const [pricePerApplication, setPricePerApplication] = useState<number>(0);
-  const [pricePerOfferGen, setPricePerOfferGen] = useState<number>(0);
+  // Per-event prices, split by module (lending vs deposit). All start at 0 —
+  // user discovers the right numbers by tuning, or applies a "70% mix"
+  // suggestion. 6 prices total (3 event types × 2 modules).
+  const [pricePerRedemptionLoan, setPricePerRedemptionLoan] = useState<number>(0);
+  const [pricePerRedemptionDeposit, setPricePerRedemptionDeposit] = useState<number>(0);
+  const [pricePerApplicationLoan, setPricePerApplicationLoan] = useState<number>(0);
+  const [pricePerApplicationDeposit, setPricePerApplicationDeposit] = useState<number>(0);
+  const [pricePerOfferGenLoan, setPricePerOfferGenLoan] = useState<number>(0);
+  const [pricePerOfferGenDeposit, setPricePerOfferGenDeposit] = useState<number>(0);
 
   // Event-count assumptions (shared across the 3 SaaS+event tabs)
   const [eventAssumptionsRaw, setEventAssumptionsRaw] = useState(DEFAULT_EVENT_ASSUMPTIONS);
@@ -190,44 +197,45 @@ export default function PricingModelPage() {
         )}
       </div>
 
-      {!selectedCu ? (
-        <div className="bg-white p-8 md:p-12 rounded-xl border border-dashed border-slate-300 text-center text-slate-500">
-          Select a credit union to begin modeling.
+      {/* Tab switcher — always visible. The 5 prospective-modeling tabs require
+          a selected CU; the Repricing tab works off uploaded client data and
+          does not require a CU selection. */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+        <div className="flex min-w-max">
+          {TABS.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 min-w-[160px] px-4 py-3 text-left border-b-2 transition-colors ${
+                  isActive ? "border-blue-600 bg-blue-50/50" : "border-transparent hover:bg-slate-50"
+                }`}
+              >
+                <div className={`text-sm font-semibold ${isActive ? "text-blue-700" : "text-slate-700"}`}>
+                  {tab.label}
+                </div>
+                {tab.sublabel && (
+                  <div className={`text-xs ${isActive ? "text-blue-600" : "text-slate-500"} mt-0.5`}>
+                    {tab.sublabel}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
-      ) : (
-        <>
-          {/* Tab switcher */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
-            <div className="flex min-w-max">
-              {TABS.map((tab) => {
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 min-w-[160px] px-4 py-3 text-left border-b-2 transition-colors ${
-                      isActive
-                        ? "border-blue-600 bg-blue-50/50"
-                        : "border-transparent hover:bg-slate-50"
-                    }`}
-                  >
-                    <div
-                      className={`text-sm font-semibold ${isActive ? "text-blue-700" : "text-slate-700"}`}
-                    >
-                      {tab.label}
-                    </div>
-                    {tab.sublabel && (
-                      <div className={`text-xs ${isActive ? "text-blue-600" : "text-slate-500"} mt-0.5`}>
-                        {tab.sublabel}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      </div>
 
+      {/* Prospective-modeling tabs need a selected CU */}
+      {activeTab !== "repricing" && !selectedCu && (
+        <div className="bg-white p-8 md:p-12 rounded-xl border border-dashed border-slate-300 text-center text-slate-500">
+          Select a credit union above to begin modeling, or switch to the <b>Repricing</b> tab to work with uploaded client data.
+        </div>
+      )}
+
+      {selectedCu && (
+        <>
           {/* Tab content */}
           {activeTab === "bps" && (
             <BpsTab
@@ -259,8 +267,10 @@ export default function PricingModelPage() {
             <SaasPerEventTab
               selectedCu={selectedCu}
               kind="redemption"
-              pricePerEvent={pricePerRedemption}
-              setPricePerEvent={setPricePerRedemption}
+              pricePerEventLoan={pricePerRedemptionLoan}
+              setPricePerEventLoan={setPricePerRedemptionLoan}
+              pricePerEventDeposit={pricePerRedemptionDeposit}
+              setPricePerEventDeposit={setPricePerRedemptionDeposit}
               tierPrices={tierPrices}
               setTierPrice={(id, v) => setTierPrices({ ...tierPrices, [id]: v })}
               saasOverride={saasOverride}
@@ -282,8 +292,10 @@ export default function PricingModelPage() {
             <SaasPerEventTab
               selectedCu={selectedCu}
               kind="application"
-              pricePerEvent={pricePerApplication}
-              setPricePerEvent={setPricePerApplication}
+              pricePerEventLoan={pricePerApplicationLoan}
+              setPricePerEventLoan={setPricePerApplicationLoan}
+              pricePerEventDeposit={pricePerApplicationDeposit}
+              setPricePerEventDeposit={setPricePerApplicationDeposit}
               tierPrices={tierPrices}
               setTierPrice={(id, v) => setTierPrices({ ...tierPrices, [id]: v })}
               saasOverride={saasOverride}
@@ -305,8 +317,10 @@ export default function PricingModelPage() {
             <SaasPerEventTab
               selectedCu={selectedCu}
               kind="offerGen"
-              pricePerEvent={pricePerOfferGen}
-              setPricePerEvent={setPricePerOfferGen}
+              pricePerEventLoan={pricePerOfferGenLoan}
+              setPricePerEventLoan={setPricePerOfferGenLoan}
+              pricePerEventDeposit={pricePerOfferGenDeposit}
+              setPricePerEventDeposit={setPricePerOfferGenDeposit}
               tierPrices={tierPrices}
               setTierPrice={(id, v) => setTierPrices({ ...tierPrices, [id]: v })}
               saasOverride={saasOverride}
@@ -336,14 +350,17 @@ export default function PricingModelPage() {
               bpsMonthlyFloor={bpsMonthlyFloor}
               tierPrices={tierPrices}
               saasOverride={saasOverride}
-              pricePerRedemption={pricePerRedemption}
-              pricePerApplication={pricePerApplication}
-              pricePerOfferGen={pricePerOfferGen}
+              pricePerRedemptionLoan={pricePerRedemptionLoan}
+              pricePerRedemptionDeposit={pricePerRedemptionDeposit}
+              pricePerApplicationLoan={pricePerApplicationLoan}
+              pricePerApplicationDeposit={pricePerApplicationDeposit}
+              pricePerOfferGenLoan={pricePerOfferGenLoan}
+              pricePerOfferGenDeposit={pricePerOfferGenDeposit}
               eventCounts={eventCounts}
             />
           )}
 
-          {/* Methodology — shared, lives below the tabs */}
+          {/* Methodology — shown for prospective-modeling tabs only */}
           <Card title="Methodology &amp; data caveats" tone="muted">
             <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
               <p>
@@ -368,6 +385,20 @@ export default function PricingModelPage() {
             </div>
           </Card>
         </>
+      )}
+
+      {/* Repricing tab works on uploaded client data — does not need a CU selection */}
+      {activeTab === "repricing" && (
+        <RepricingTab
+          loanBps={loanBps}
+          depositBps={depositBps}
+          loanPenetration={loanPenetration}
+          depositPenetration={depositPenetration}
+          bpsMonthlyFloor={bpsMonthlyFloor}
+          tierPrices={tierPrices}
+          eventAssumptions={eventAssumptions}
+          depositChurnGrossup={depositChurnGrossup}
+        />
       )}
     </div>
   );

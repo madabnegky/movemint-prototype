@@ -12,23 +12,20 @@ import { Card, Row } from "./primitives";
 
 type EventKind = "redemption" | "application" | "offerGen";
 
-const EVENT_LABELS: Record<EventKind, { title: string; one: string; many: string; description: string }> = {
+const EVENT_LABELS: Record<EventKind, { title: string; one: string; description: string }> = {
   redemption: {
     title: "SaaS + per-redemption",
     one: "redemption",
-    many: "redemptions",
     description: "Charge per offer redeemed (loan funded or new deposit account opened).",
   },
   application: {
     title: "SaaS + per-application",
     one: "application",
-    many: "applications",
     description: "Charge per loan/deposit application started, regardless of whether it funded.",
   },
   offerGen: {
     title: "SaaS + per-offer-generated",
     one: "offer generated",
-    many: "offers generated",
     description: "Charge per offer rendered to a member, regardless of whether they engaged.",
   },
 };
@@ -36,8 +33,10 @@ const EVENT_LABELS: Record<EventKind, { title: string; one: string; many: string
 export type SaasPerEventTabProps = {
   selectedCu: CU;
   kind: EventKind;
-  pricePerEvent: number;
-  setPricePerEvent: (v: number) => void;
+  pricePerEventLoan: number;
+  setPricePerEventLoan: (v: number) => void;
+  pricePerEventDeposit: number;
+  setPricePerEventDeposit: (v: number) => void;
   tierPrices: SaasTierPrices;
   setTierPrice: (id: string, v: number) => void;
   saasOverride: number | null;
@@ -48,24 +47,67 @@ export type SaasPerEventTabProps = {
 };
 
 export function SaasPerEventTab(props: SaasPerEventTabProps) {
-  const { selectedCu, kind, pricePerEvent, setPricePerEvent, tierPrices, saasOverride, setSaasOverride, assumptions, setAssumptions, eventCounts } = props;
+  const {
+    selectedCu,
+    kind,
+    pricePerEventLoan,
+    setPricePerEventLoan,
+    pricePerEventDeposit,
+    setPricePerEventDeposit,
+    tierPrices,
+    saasOverride,
+    setSaasOverride,
+    assumptions,
+    setAssumptions,
+    eventCounts,
+  } = props;
   const labels = EVENT_LABELS[kind];
 
-  const eventCount = pickCount(eventCounts, kind);
+  const counts = pickCounts(eventCounts, kind);
+  const eventCountTotal = counts.loan + counts.deposit;
   const activeTier = tierForAssets(selectedCu.assets);
   const monthlySaas = saasOverride ?? (tierPrices[activeTier.id] ?? activeTier.defaultMonthly);
 
-  const result = calcSaasPerEventRevenue({ monthlySaas, pricePerEvent, eventCount });
+  const result = calcSaasPerEventRevenue({
+    monthlySaas,
+    pricePerEventLoan,
+    pricePerEventDeposit,
+    eventCountLoan: counts.loan,
+    eventCountDeposit: counts.deposit,
+  });
   const saasSharePct = result.saasShare * 100;
   const inSweetSpot = saasSharePct >= 60 && saasSharePct <= 80;
 
-  // Inverse: at the current event count + tier SaaS, what price-per-event hits 70% SaaS share?
-  // total = saas / 0.70  →  eventRev = total - saas = saas / 0.70 - saas = saas × (1/0.70 - 1)
-  // pricePerEvent = eventRev / eventCount
-  const pricePerEventForTargetMix = (target: number) => {
-    if (eventCount <= 0) return 0;
+  // For each "suggested price" button, derive the per-event price needed
+  // to hit the target SaaS share. The ratio between lending and deposit
+  // prices is preserved (or set to 1:1 if both are currently 0).
+  const pricesForTargetMix = (target: number) => {
+    if (eventCountTotal <= 0) return { loan: 0, deposit: 0 };
     const requiredEventRev = result.saasRev * (1 / target - 1);
-    return requiredEventRev / eventCount;
+    // Default ratio: same per-event price across modules
+    let loanShare = 0.5;
+    if (counts.loan + counts.deposit > 0) {
+      loanShare = counts.loan / (counts.loan + counts.deposit);
+    }
+    // Preserve current loan/deposit price ratio if user has tuned it
+    const currentLoanRev = pricePerEventLoan * counts.loan;
+    const currentDepRev = pricePerEventDeposit * counts.deposit;
+    const currentTotalRev = currentLoanRev + currentDepRev;
+    if (currentTotalRev > 0) {
+      loanShare = currentLoanRev / currentTotalRev;
+    }
+    const eventRevLoan = requiredEventRev * loanShare;
+    const eventRevDeposit = requiredEventRev - eventRevLoan;
+    return {
+      loan: counts.loan > 0 ? eventRevLoan / counts.loan : 0,
+      deposit: counts.deposit > 0 ? eventRevDeposit / counts.deposit : 0,
+    };
+  };
+
+  const apply = (target: number) => {
+    const p = pricesForTargetMix(target);
+    setPricePerEventLoan(round2(p.loan));
+    setPricePerEventDeposit(round2(p.deposit));
   };
 
   return (
@@ -80,31 +122,35 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
           onChangeOverride={setSaasOverride}
         />
 
-        <Card title={`Price per ${labels.one}`}>
-          <p className="text-sm text-slate-600 mb-3">{labels.description}</p>
-          <div className="flex items-center gap-3">
-            <span className="text-slate-400">$</span>
-            <input
-              type="number"
-              value={pricePerEvent}
-              step={0.01}
-              min={0}
-              onChange={(e) => setPricePerEvent(Math.max(0, Number(e.target.value)))}
-              className="w-40 px-3 py-2 border border-slate-300 rounded-lg text-base font-mono text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <Card title={`Price per ${labels.one} — by module`}>
+          <p className="text-sm text-slate-600 mb-4">{labels.description}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ModulePriceField
+              label="Lending module"
+              hint={`${fmtCount(counts.loan)} ${labels.one}s/yr`}
+              value={pricePerEventLoan}
+              onChange={setPricePerEventLoan}
+              one={labels.one}
             />
-            <span className="text-sm text-slate-500">per {labels.one}</span>
+            <ModulePriceField
+              label="Deposit module"
+              hint={`${fmtCount(counts.deposit)} ${labels.one}s/yr`}
+              value={pricePerEventDeposit}
+              onChange={setPricePerEventDeposit}
+              one={labels.one}
+            />
           </div>
 
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <SuggestedPrice
-              label="Price for 70% SaaS share"
-              value={pricePerEventForTargetMix(0.7)}
-              onApply={() => setPricePerEvent(round2(pricePerEventForTargetMix(0.7)))}
+              label="Prices for 70% SaaS share"
+              prices={pricesForTargetMix(0.7)}
+              onApply={() => apply(0.7)}
             />
             <SuggestedPrice
-              label="Price for 60% SaaS share (more event-heavy)"
-              value={pricePerEventForTargetMix(0.6)}
-              onApply={() => setPricePerEvent(round2(pricePerEventForTargetMix(0.6)))}
+              label="Prices for 60% SaaS share (more event-heavy)"
+              prices={pricesForTargetMix(0.6)}
+              onApply={() => apply(0.6)}
             />
           </div>
         </Card>
@@ -129,9 +175,14 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
             <div className="border-t border-slate-200 pt-4 space-y-2 text-sm">
               <Row label={`SaaS base (${fmtUSDExact(monthlySaas)}/mo × 12)`} value={fmtUSDExact(result.saasRev)} />
               <Row
-                label={`Per-${labels.one} (${fmtCount(eventCount)} × ${fmtUSDExact(pricePerEvent)})`}
-                value={fmtUSDExact(result.eventRev)}
+                label={`Lending: ${fmtCount(counts.loan)} × ${fmtUSDExact(pricePerEventLoan)}`}
+                value={fmtUSDExact(result.eventRevLoan)}
               />
+              <Row
+                label={`Deposit: ${fmtCount(counts.deposit)} × ${fmtUSDExact(pricePerEventDeposit)}`}
+                value={fmtUSDExact(result.eventRevDeposit)}
+              />
+              <Row label="Total per-event revenue" value={fmtUSDExact(result.eventRev)} muted />
               <Row label="Total annual revenue" value={fmtUSDExact(result.totalRev)} bold />
             </div>
           </div>
@@ -153,8 +204,8 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
                 {inSweetSpot
                   ? "✓ In strategic sweet spot (60–80%)"
                   : saasSharePct < 60
-                    ? `Below target — too event-heavy. Lower price per ${labels.one} or raise SaaS tier.`
-                    : `Above target — too SaaS-heavy. Raise price per ${labels.one} or lower SaaS tier.`}
+                    ? `Below target — too event-heavy. Lower per-${labels.one} prices or raise SaaS tier.`
+                    : `Above target — too SaaS-heavy. Raise per-${labels.one} prices or lower SaaS tier.`}
               </div>
             </div>
             <div className="border-t border-slate-200 pt-3 space-y-1.5 text-sm">
@@ -163,20 +214,18 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
             </div>
           </div>
         </Card>
-
       </div>
     </div>
   );
 }
 
-function pickCount(c: EventCounts, kind: EventKind): number {
-  if (kind === "redemption") return c.redemptionsTotal;
-  if (kind === "application") return c.applicationsTotal;
-  return c.offersGeneratedTotal;
+function pickCounts(c: EventCounts, kind: EventKind): { loan: number; deposit: number } {
+  if (kind === "redemption") return { loan: c.redemptionsLoan, deposit: c.redemptionsDeposit };
+  if (kind === "application") return { loan: c.applicationsLoan, deposit: c.applicationsDeposit };
+  return { loan: c.offersGeneratedLoan, deposit: c.offersGeneratedDeposit };
 }
 
 function ShareBar({ value }: { value: number }) {
-  // Highlight 60-80% sweet spot zone on a 0-100 bar.
   const pct = Math.max(0, Math.min(1, value)) * 100;
   return (
     <div className="relative h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -193,8 +242,52 @@ function ShareBar({ value }: { value: number }) {
   );
 }
 
-function SuggestedPrice({ label, value, onApply }: { label: string; value: number; onApply: () => void }) {
-  if (!isFinite(value) || value <= 0) {
+function ModulePriceField({
+  label,
+  hint,
+  value,
+  onChange,
+  one,
+}: {
+  label: string;
+  hint: string;
+  value: number;
+  onChange: (v: number) => void;
+  one: string;
+}) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-1">
+        <label className="text-sm font-medium text-slate-700">{label}</label>
+        <span className="text-[11px] text-slate-500 font-mono">{hint}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-slate-400 text-sm">$</span>
+        <input
+          type="number"
+          value={value}
+          step={0.01}
+          min={0}
+          onChange={(e) => onChange(Math.max(0, Number(e.target.value)))}
+          className="w-32 px-3 py-2 border border-slate-300 rounded-lg text-base font-mono text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <span className="text-xs text-slate-500">/{one}</span>
+      </div>
+    </div>
+  );
+}
+
+function SuggestedPrice({
+  label,
+  prices,
+  onApply,
+}: {
+  label: string;
+  prices: { loan: number; deposit: number };
+  onApply: () => void;
+}) {
+  const valid = isFinite(prices.loan) && isFinite(prices.deposit) && prices.loan + prices.deposit > 0;
+  if (!valid) {
     return (
       <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-400">
         <div className="font-medium">{label}</div>
@@ -209,7 +302,9 @@ function SuggestedPrice({ label, value, onApply }: { label: string; value: numbe
       className="bg-slate-50 hover:bg-blue-50 hover:border-blue-300 border border-slate-200 rounded-lg p-2.5 text-left transition-colors"
     >
       <div className="text-slate-600 font-medium">{label}</div>
-      <div className="font-mono text-slate-900 text-sm font-semibold mt-0.5">${round2(value).toFixed(2)}</div>
+      <div className="font-mono text-slate-900 text-sm font-semibold mt-0.5">
+        ${round2(prices.loan).toFixed(2)} loan / ${round2(prices.deposit).toFixed(2)} deposit
+      </div>
       <div className="text-[10px] text-blue-700 mt-0.5">Click to apply</div>
     </button>
   );
