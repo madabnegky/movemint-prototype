@@ -17,8 +17,6 @@ export type BpsTabProps = {
   setDepositChurnGrossup: (v: number) => void;
   monthlyFloor: number;
   setMonthlyFloor: (v: number) => void;
-  currentFlatRate: number;
-  setCurrentFlatRate: (v: number) => void;
 
   loanBps: LoanTakeRates;
   setLoanBps: (next: LoanTakeRates) => void;
@@ -47,8 +45,6 @@ export function BpsTab(props: BpsTabProps) {
     setDepositChurnGrossup,
     monthlyFloor,
     setMonthlyFloor,
-    currentFlatRate,
-    setCurrentFlatRate,
     loanBps,
     setLoanBps,
     depositBps,
@@ -155,14 +151,6 @@ export function BpsTab(props: BpsTabProps) {
               prefix="$"
               step={500}
             />
-            <NumberInput
-              label="Comparison: current flat-rate ($/yr)"
-              hint="What this CU would pay (or is paying) under your current flat-rate model."
-              value={currentFlatRate}
-              onChange={setCurrentFlatRate}
-              prefix="$"
-              step={1000}
-            />
           </div>
         </Card>
 
@@ -244,19 +232,6 @@ export function BpsTab(props: BpsTabProps) {
               <Row label="Total transaction revenue" value={fmtUSDExact(projected.txnRev)} bold />
               <Row label="Annual floor (12 × monthly)" value={fmtUSDExact(projected.annualFloor)} muted />
             </div>
-          </div>
-        </Card>
-
-        <Card title="Vs. current flat-rate">
-          <div className="space-y-3 text-sm">
-            <Row label="Current flat-rate" value={fmtUSDExact(currentFlatRate)} />
-            <Row label="Projected (txn model)" value={fmtUSDExact(projected.billed)} />
-            <Row
-              label="Δ vs. flat-rate"
-              value={`${projected.billed >= currentFlatRate ? "+" : ""}${fmtUSDExact(projected.billed - currentFlatRate)}`}
-              bold
-              positive={projected.billed >= currentFlatRate}
-            />
           </div>
         </Card>
 

@@ -45,11 +45,10 @@ export type SaasPerEventTabProps = {
   assumptions: EventAssumptions;
   setAssumptions: (a: EventAssumptions) => void;
   eventCounts: EventCounts;
-  currentFlatRate: number;
 };
 
 export function SaasPerEventTab(props: SaasPerEventTabProps) {
-  const { selectedCu, kind, pricePerEvent, setPricePerEvent, tierPrices, saasOverride, setSaasOverride, assumptions, setAssumptions, eventCounts, currentFlatRate } = props;
+  const { selectedCu, kind, pricePerEvent, setPricePerEvent, tierPrices, saasOverride, setSaasOverride, assumptions, setAssumptions, eventCounts } = props;
   const labels = EVENT_LABELS[kind];
 
   const eventCount = pickCount(eventCounts, kind);
@@ -165,18 +164,6 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
           </div>
         </Card>
 
-        <Card title="Vs. current flat-rate">
-          <div className="space-y-3 text-sm">
-            <Row label="Current flat-rate" value={fmtUSDExact(currentFlatRate)} />
-            <Row label="Projected (this model)" value={fmtUSDExact(result.totalRev)} />
-            <Row
-              label="Δ vs. flat-rate"
-              value={`${result.totalRev >= currentFlatRate ? "+" : ""}${fmtUSDExact(result.totalRev - currentFlatRate)}`}
-              bold
-              positive={result.totalRev >= currentFlatRate}
-            />
-          </div>
-        </Card>
       </div>
     </div>
   );

@@ -26,8 +26,6 @@ export type ComparisonTabProps = {
   pricePerApplication: number;
   pricePerOfferGen: number;
   eventCounts: EventCounts;
-
-  currentFlatRate: number;
 };
 
 export function ComparisonTab(props: ComparisonTabProps) {
@@ -46,7 +44,6 @@ export function ComparisonTab(props: ComparisonTabProps) {
     pricePerApplication,
     pricePerOfferGen,
     eventCounts,
-    currentFlatRate,
   } = props;
 
   const activeTier = tierForAssets(selectedCu.assets);
@@ -138,21 +135,20 @@ export function ComparisonTab(props: ComparisonTabProps) {
       {/* Results cards — one per model */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {rows.map((r) => (
-          <ResultCard key={r.label} row={r} flatRate={currentFlatRate} />
+          <ResultCard key={r.label} row={r} />
         ))}
       </div>
 
       {/* Summary table */}
       <Card title="Summary table">
         <div className="overflow-x-auto -mx-1 px-1">
-          <table className="w-full text-sm min-w-[640px]">
+          <table className="w-full text-sm min-w-[560px]">
             <thead>
               <tr className="text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
                 <th className="text-left py-2 font-medium">Model</th>
                 <th className="text-right py-2 font-medium">Annual revenue</th>
                 <th className="text-right py-2 font-medium">SaaS / Floor %</th>
                 <th className="text-right py-2 font-medium">Txn %</th>
-                <th className="text-right py-2 font-medium">vs. flat-rate</th>
                 <th className="text-right py-2 font-medium">In sweet spot?</th>
               </tr>
             </thead>
@@ -160,7 +156,6 @@ export function ComparisonTab(props: ComparisonTabProps) {
               {rows.map((r) => {
                 const sharePct = r.saasShare * 100;
                 const inSweet = sharePct >= 60 && sharePct <= 80;
-                const delta = r.total - currentFlatRate;
                 return (
                   <tr key={r.label} className="border-b border-slate-100 last:border-0">
                     <td className="py-2 font-medium text-slate-800">{r.label}</td>
@@ -169,11 +164,6 @@ export function ComparisonTab(props: ComparisonTabProps) {
                       {sharePct.toFixed(1)}%
                     </td>
                     <td className="py-2 text-right font-mono text-slate-700">{(r.txnShare * 100).toFixed(1)}%</td>
-                    <td
-                      className={`py-2 text-right font-mono ${delta >= 0 ? "text-emerald-700" : "text-rose-700"}`}
-                    >
-                      {delta >= 0 ? "+" : ""}{fmtUSDExact(delta)}
-                    </td>
                     <td className="py-2 text-right">
                       {inSweet ? (
                         <span className="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-medium">✓ Yes</span>
@@ -220,10 +210,9 @@ type ComparisonRow = {
   txnLabel: string;
 };
 
-function ResultCard({ row, flatRate }: { row: ComparisonRow; flatRate: number }) {
+function ResultCard({ row }: { row: ComparisonRow }) {
   const sharePct = row.saasShare * 100;
   const inSweet = sharePct >= 60 && sharePct <= 80;
-  const delta = row.total - flatRate;
   return (
     <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm">
       <div className="flex items-baseline justify-between gap-2 mb-1">
@@ -236,9 +225,6 @@ function ResultCard({ row, flatRate }: { row: ComparisonRow; flatRate: number })
       </div>
       <div className="text-xs text-slate-500 mb-3">{row.sublabel}</div>
       <div className="text-2xl font-bold text-slate-900 font-mono break-all">{fmtUSDExact(row.total)}</div>
-      <div className={`text-xs mt-1 ${delta >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
-        {delta >= 0 ? "+" : ""}{fmtUSDExact(delta)} vs. flat-rate
-      </div>
       <div className="mt-3 pt-3 border-t border-slate-100">
         <div className="flex h-2 rounded overflow-hidden">
           <div

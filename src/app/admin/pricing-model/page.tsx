@@ -39,7 +39,6 @@ export default function PricingModelPage() {
   const [loanPenetration, setLoanPenetration] = useState(2.5);
   const [depositPenetration, setDepositPenetration] = useState(2.5);
   const [depositChurnGrossup, setDepositChurnGrossup] = useState(18);
-  const [currentFlatRate, setCurrentFlatRate] = useState(60_000);
 
   // BPS-specific
   const [bpsMonthlyFloor, setBpsMonthlyFloor] = useState(2_500);
@@ -136,7 +135,7 @@ export default function PricingModelPage() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Pricing Model</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Model four pricing variations side-by-side using NCUA Call Report data. Compare BPS take-rate vs. SaaS + per-event models.
+          Estimate annual revenue for a prospective credit union client across four pricing variations. Prefilled with NCUA Call Report data.
         </p>
       </div>
 
@@ -241,8 +240,6 @@ export default function PricingModelPage() {
               setDepositChurnGrossup={setDepositChurnGrossup}
               monthlyFloor={bpsMonthlyFloor}
               setMonthlyFloor={setBpsMonthlyFloor}
-              currentFlatRate={currentFlatRate}
-              setCurrentFlatRate={setCurrentFlatRate}
               loanBps={loanBps}
               setLoanBps={setLoanBps}
               depositBps={depositBps}
@@ -278,7 +275,6 @@ export default function PricingModelPage() {
                 })
               }
               eventCounts={eventCounts}
-              currentFlatRate={currentFlatRate}
             />
           )}
 
@@ -302,7 +298,6 @@ export default function PricingModelPage() {
                 })
               }
               eventCounts={eventCounts}
-              currentFlatRate={currentFlatRate}
             />
           )}
 
@@ -326,7 +321,6 @@ export default function PricingModelPage() {
                 })
               }
               eventCounts={eventCounts}
-              currentFlatRate={currentFlatRate}
             />
           )}
 
@@ -346,7 +340,6 @@ export default function PricingModelPage() {
               pricePerApplication={pricePerApplication}
               pricePerOfferGen={pricePerOfferGen}
               eventCounts={eventCounts}
-              currentFlatRate={currentFlatRate}
             />
           )}
 
