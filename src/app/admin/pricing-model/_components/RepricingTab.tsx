@@ -1,13 +1,12 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { Upload, Download, Trash2, FileWarning, ArrowLeft, Search } from "lucide-react";
+import { Upload, Download, Trash2, FileWarning, ArrowLeft, Search, Info, X } from "lucide-react";
 import ncuaData from "@/data/ncua-cus.json";
 
 import type { LoanTakeRates, DepositTakeRates } from "../_lib/types";
 import { tierForAssets, SAAS_TIERS } from "../_lib/types";
 import type { EventAssumptions } from "../_lib/events";
-import { deriveLoanVolumes, deriveDepositVolumes } from "../_lib/events";
 import { fmtUSD, fmtUSDExact, fmtCount } from "../_lib/format";
 import {
   type ExistingClient,
@@ -28,7 +27,11 @@ import { Card } from "./primitives";
 
 const REVENUE_TARGETS = [1.0, 1.05, 1.1, 1.15, 1.2] as const;
 const TARGET_SAAS_SHARE_DEFAULT = 70; // %
-const LENDING_PREMIUM_DEFAULT = 2;   // lending events priced 2× deposit by default
+const LENDING_PREMIUM_DEFAULT = 2;    // lending events priced 2× deposit by default
+const LOAN_FUNDING_RATE_DEFAULT = 35;     // % of loan apps that fund (default 35%)
+const DEPOSIT_FUNDING_RATE_DEFAULT = 60;  // % of deposit apps that fund (default 60%)
+const BPS_AVG_LOAN_SIZE_DEFAULT = 35_000; // $ — blended avg funded loan size for BPS calc
+const BPS_AVG_DEPOSIT_SIZE_DEFAULT = 5_000; // $ — avg new-deposit account size
 
 type BillingOption = "bps" | "redemption" | "application" | "offerGen";
 
@@ -66,6 +69,15 @@ export function RepricingTab(props: RepricingTabProps) {
   const [targetSaasShare, setTargetSaasShare] = useState<number>(TARGET_SAAS_SHARE_DEFAULT);
   const [lendingPremium, setLendingPremium] = useState<number>(LENDING_PREMIUM_DEFAULT);
   const [tierBillingOption, setTierBillingOption] = useState<BillingOption>("redemption");
+  // BPS funding-rate + avg-size assumptions. Funded volume is derived as:
+  //   loan_funded_volume    = applications_lending × loanFundingRate × bpsAvgLoanSize
+  //   deposit_funded_volume = applications_deposit × depositFundingRate × bpsAvgDepositSize
+  // These replace the NCUA-derived volumes the BPS back-solve previously used.
+  const [loanFundingRate, setLoanFundingRate] = useState<number>(LOAN_FUNDING_RATE_DEFAULT);
+  const [depositFundingRate, setDepositFundingRate] = useState<number>(DEPOSIT_FUNDING_RATE_DEFAULT);
+  const [bpsAvgLoanSize, setBpsAvgLoanSize] = useState<number>(BPS_AVG_LOAN_SIZE_DEFAULT);
+  const [bpsAvgDepositSize, setBpsAvgDepositSize] = useState<number>(BPS_AVG_DEPOSIT_SIZE_DEFAULT);
+  const [showAssumptions, setShowAssumptions] = useState(false);
 
   function persist(next: ExistingClient[]) {
     saveClients(next);
@@ -86,14 +98,24 @@ export function RepricingTab(props: RepricingTabProps) {
             per client, targeting <b>60–80% from SaaS</b> across <b>100–120% of current revenue</b>. Each client&apos;s
             module mode (lending-only / deposit-only / both) is inferred from their actual event activity in the CSV.
           </p>
-          <a
-            href="/repricing-guide.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors whitespace-nowrap"
-          >
-            Read the guide →
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setShowAssumptions(true)}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg font-medium transition-colors whitespace-nowrap"
+            >
+              <Info className="w-3.5 h-3.5" />
+              Assumptions
+            </button>
+            <a
+              href="/repricing-guide.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors whitespace-nowrap"
+            >
+              Read the guide →
+            </a>
+          </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
           <div className="flex items-center gap-2">
@@ -122,8 +144,33 @@ export function RepricingTab(props: RepricingTabProps) {
             />
             <span className="text-slate-500">× (loan-event price ÷ deposit-event price)</span>
           </div>
+          <button
+            type="button"
+            onClick={() => setShowAssumptions(true)}
+            className="text-xs text-blue-600 hover:text-blue-800 underline"
+          >
+            …more BPS assumptions
+          </button>
         </div>
       </Card>
+
+      {showAssumptions && (
+        <AssumptionsModal
+          onClose={() => setShowAssumptions(false)}
+          targetSaasShare={targetSaasShare}
+          setTargetSaasShare={setTargetSaasShare}
+          lendingPremium={lendingPremium}
+          setLendingPremium={setLendingPremium}
+          loanFundingRate={loanFundingRate}
+          setLoanFundingRate={setLoanFundingRate}
+          depositFundingRate={depositFundingRate}
+          setDepositFundingRate={setDepositFundingRate}
+          bpsAvgLoanSize={bpsAvgLoanSize}
+          setBpsAvgLoanSize={setBpsAvgLoanSize}
+          bpsAvgDepositSize={bpsAvgDepositSize}
+          setBpsAvgDepositSize={setBpsAvgDepositSize}
+        />
+      )}
 
       {view === "list" && (
         <ClientListView
@@ -153,6 +200,10 @@ export function RepricingTab(props: RepricingTabProps) {
           loanPenetration={props.loanPenetration}
           depositPenetration={props.depositPenetration}
           depositChurnGrossup={props.depositChurnGrossup}
+          loanFundingRate={loanFundingRate}
+          depositFundingRate={depositFundingRate}
+          bpsAvgLoanSize={bpsAvgLoanSize}
+          bpsAvgDepositSize={bpsAvgDepositSize}
         />
       )}
 
@@ -169,6 +220,10 @@ export function RepricingTab(props: RepricingTabProps) {
           loanPenetration={props.loanPenetration}
           depositPenetration={props.depositPenetration}
           depositChurnGrossup={props.depositChurnGrossup}
+          loanFundingRate={loanFundingRate}
+          depositFundingRate={depositFundingRate}
+          bpsAvgLoanSize={bpsAvgLoanSize}
+          bpsAvgDepositSize={bpsAvgDepositSize}
         />
       )}
     </div>
@@ -528,6 +583,14 @@ type RepricingMathProps = {
   depositChurnGrossup: number;
   /** Used by per-event back-solves — lending events priced this many × deposit events. */
   lendingPremium: number;
+  /** % of loan applications that fund (used to derive funded volume for BPS). */
+  loanFundingRate: number;
+  /** % of deposit applications that fund. */
+  depositFundingRate: number;
+  /** Blended avg funded loan size, $ — for BPS calc. */
+  bpsAvgLoanSize: number;
+  /** Avg new-deposit account size, $ — for BPS calc. */
+  bpsAvgDepositSize: number;
 };
 
 function ClientDetailView({
@@ -584,18 +647,11 @@ function ClientDetailView({
           <EventStat label="Applications" loan={client.applicationsLending} deposit={client.applicationsDeposit} mode={mode} />
           <EventStat label="Offers generated" loan={client.offersGeneratedLending} deposit={client.offersGeneratedDeposit} mode={mode} />
         </div>
-        {!client.ncua && (
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
-            <FileWarning className="inline w-4 h-4 mr-1" />
-            This client is not associated with an NCUA record. SaaS+event back-solves still work, but BPS back-solve
-            requires NCUA volume data.
-          </div>
-        )}
       </Card>
 
       <Card title="Recommended pricing — revenue targets × pricing models">
         <p className="text-sm text-slate-600 mb-4">
-          Each cell shows the recommended SaaS fee + per-event price (or BPS multiplier + floor) needed to hit that
+          Each cell shows the recommended SaaS fee + per-event price (or BPS rates + floor) needed to hit that
           revenue target with <b>{targetSaasSharePct}% of revenue from SaaS</b> (or floor for BPS).
         </p>
         <div className="overflow-x-auto -mx-1 px-1">
@@ -617,7 +673,7 @@ function ClientDetailView({
                     <div className="font-mono text-slate-500">{fmtUSDExact(c.targetRev)}</div>
                   </td>
                   <td className="py-3 pr-3">
-                    {c.bps ? <BpsCell bps={c.bps} /> : <span className="text-slate-400 italic">no NCUA data</span>}
+                    <BpsCell bps={c.bps} mode={mode} />
                   </td>
                   <SaasEventCellWrap result={c.redemption} mode={mode} unit="redemption" />
                   <SaasEventCellWrap result={c.application} mode={mode} unit="application" />
@@ -678,24 +734,24 @@ function computeBackSolves(
     lendingPremium: mathProps.lendingPremium,
   });
 
-  // BPS back-solve: also mode-filter volumes (zero out the unused module's volumes)
-  let bps: ReturnType<typeof backSolveBps> | null = null;
-  if (client.ncua) {
-    const lvBase = deriveLoanVolumes(client.ncua);
-    const dvBase = deriveDepositVolumes(client.ncua, mathProps.depositChurnGrossup);
-    const lv = mode === "deposit" ? zeroVolumes(lvBase) : lvBase;
-    const dv = mode === "lending" ? zeroVolumes(dvBase) : dvBase;
-    bps = backSolveBps({
-      targetTotalRev: targetRev,
-      targetSaasSharePct,
-      loanVolumes: lv,
-      depositVolumes: dv,
-      baseLoanBps: mathProps.loanBps,
-      baseDepositBps: mathProps.depositBps,
-      loanPenetrationPct: mathProps.loanPenetration,
-      depositPenetrationPct: mathProps.depositPenetration,
-    });
-  }
+  // BPS back-solve: derives funded volume from the client's applications +
+  // funding rates + avg sizes — no NCUA dependency. Mode-filter the
+  // applications so single-module clients don't get bps for the unused side.
+  const bpsApplicationsLoan =
+    mode === "deposit" ? 0 : client.applicationsLending;
+  const bpsApplicationsDeposit =
+    mode === "lending" ? 0 : client.applicationsDeposit;
+  const bps = backSolveBps({
+    targetTotalRev: targetRev,
+    targetSaasSharePct,
+    applicationsLoan: bpsApplicationsLoan,
+    applicationsDeposit: bpsApplicationsDeposit,
+    loanFundingRate: mathProps.loanFundingRate / 100,
+    depositFundingRate: mathProps.depositFundingRate / 100,
+    avgLoanSize: mathProps.bpsAvgLoanSize,
+    avgDepositSize: mathProps.bpsAvgDepositSize,
+    lendingPremium: mathProps.lendingPremium,
+  });
 
   return { redemption, application, offerGen, bps };
 }
@@ -716,14 +772,6 @@ function filterCountsByMode<T extends Record<string, number>>(counts: T, mode: C
     return out;
   }
   return counts;
-}
-
-function zeroVolumes<T extends Record<string, number>>(v: T): T {
-  const out = {} as T;
-  Object.keys(v).forEach((k) => {
-    (out as Record<string, number>)[k] = 0;
-  });
-  return out;
 }
 
 function DetailStat({ label, value }: { label: string; value: string }) {
@@ -808,10 +856,10 @@ function SaasEventCell({
   );
 }
 
-function BpsCell({ bps }: { bps: ReturnType<typeof backSolveBps> }) {
+function BpsCell({ bps, mode }: { bps: ReturnType<typeof backSolveBps>; mode: ClientMode }) {
   if (bps.feasibility === "no_volume") {
     return (
-      <div className="rounded-lg p-2 bg-slate-50 border border-slate-200 text-slate-400 italic">no volume</div>
+      <div className="rounded-lg p-2 bg-slate-50 border border-slate-200 text-slate-400 italic">no funded volume</div>
     );
   }
   return (
@@ -819,8 +867,17 @@ function BpsCell({ bps }: { bps: ReturnType<typeof backSolveBps> }) {
       <div className="font-mono text-slate-900 font-semibold">
         ${bps.recommendedMonthlyFloor.toFixed(0)}/mo floor
       </div>
-      <div className="font-mono text-slate-900 mt-0.5">{bps.multiplier.toFixed(2)}× current bps</div>
-      <div className="text-[10px] text-slate-500 mt-0.5">scaled uniformly</div>
+      {(mode === "lending" || mode === "both") && bps.recommendedLoanBps > 0 && (
+        <div className="font-mono text-slate-900 mt-0.5">
+          {bps.recommendedLoanBps.toFixed(1)} bps loan
+        </div>
+      )}
+      {(mode === "deposit" || mode === "both") && bps.recommendedDepositBps > 0 && (
+        <div className="font-mono text-slate-900">
+          {bps.recommendedDepositBps.toFixed(1)} bps deposit
+        </div>
+      )}
+      <div className="text-[10px] text-slate-500 mt-0.5">on funded volume</div>
     </div>
   );
 }
@@ -1041,7 +1098,7 @@ function ModeColumn({
             {isBps ? (
               <>
                 <th className="text-left py-1 font-medium text-slate-500">Floor / mo</th>
-                <th className="text-left py-1 font-medium text-slate-500">BPS multiplier</th>
+                <th className="text-left py-1 font-medium text-slate-500">BPS on funded volume</th>
               </>
             ) : (
               <>
@@ -1075,19 +1132,7 @@ function ModeColumn({
                       )}
                     </td>
                     <td className="py-2 pr-2 font-mono">
-                      {summary.medianBpsMultiplier != null ? (
-                        <>
-                          <div>{summary.medianBpsMultiplier.toFixed(2)}×</div>
-                          {summary.minBpsMultiplier !== summary.maxBpsMultiplier && (
-                            <div className="text-[10px] text-slate-400">
-                              {summary.minBpsMultiplier!.toFixed(2)}×–
-                              {summary.maxBpsMultiplier!.toFixed(2)}×
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <span className="text-slate-400">—</span>
-                      )}
+                      {summary.medianBpsDisplay ?? <span className="text-slate-400">—</span>}
                     </td>
                   </>
                 ) : (
@@ -1127,9 +1172,8 @@ type TierModeSummary = {
   maxMonthlySaas: number | null;
   /** "$X loan / $Y dep" display for median per-event price under the selected event type. */
   medianPerEventDisplay: string | null;
-  medianBpsMultiplier: number | null;
-  minBpsMultiplier: number | null;
-  maxBpsMultiplier: number | null;
+  /** "X bps loan / Y bps dep" display for median bps. */
+  medianBpsDisplay: string | null;
   medianBpsFloor: number | null;
   minBpsFloor: number | null;
   maxBpsFloor: number | null;
@@ -1145,7 +1189,8 @@ function summarizeTierMode(
   const monthlySaasValues: number[] = [];
   const perEventLoanValues: number[] = [];
   const perEventDepositValues: number[] = [];
-  const bpsMultValues: number[] = [];
+  const bpsLoanValues: number[] = [];
+  const bpsDepositValues: number[] = [];
   const bpsFloorValues: number[] = [];
 
   for (const c of clients) {
@@ -1167,9 +1212,10 @@ function summarizeTierMode(
       if (eventResult.pricePerEventLoan > 0) perEventLoanValues.push(eventResult.pricePerEventLoan);
       if (eventResult.pricePerEventDeposit > 0) perEventDepositValues.push(eventResult.pricePerEventDeposit);
     }
-    if (billingOption === "bps" && r.bps && r.bps.feasibility === "ok") {
-      bpsMultValues.push(r.bps.multiplier);
+    if (billingOption === "bps" && r.bps.feasibility === "ok") {
       bpsFloorValues.push(r.bps.recommendedMonthlyFloor);
+      if (r.bps.recommendedLoanBps > 0) bpsLoanValues.push(r.bps.recommendedLoanBps);
+      if (r.bps.recommendedDepositBps > 0) bpsDepositValues.push(r.bps.recommendedDepositBps);
     }
   }
 
@@ -1181,14 +1227,20 @@ function summarizeTierMode(
     perEventParts.push(`$${median(perEventDepositValues).toFixed(2)} dep`);
   }
 
+  const bpsParts: string[] = [];
+  if (bpsLoanValues.length > 0) {
+    bpsParts.push(`${median(bpsLoanValues).toFixed(1)} bps loan`);
+  }
+  if (bpsDepositValues.length > 0) {
+    bpsParts.push(`${median(bpsDepositValues).toFixed(1)} bps dep`);
+  }
+
   return {
     medianMonthlySaas: monthlySaasValues.length > 0 ? median(monthlySaasValues) : null,
     minMonthlySaas: monthlySaasValues.length > 0 ? Math.min(...monthlySaasValues) : null,
     maxMonthlySaas: monthlySaasValues.length > 0 ? Math.max(...monthlySaasValues) : null,
     medianPerEventDisplay: perEventParts.length > 0 ? perEventParts.join(" / ") : null,
-    medianBpsMultiplier: bpsMultValues.length > 0 ? median(bpsMultValues) : null,
-    minBpsMultiplier: bpsMultValues.length > 0 ? Math.min(...bpsMultValues) : null,
-    maxBpsMultiplier: bpsMultValues.length > 0 ? Math.max(...bpsMultValues) : null,
+    medianBpsDisplay: bpsParts.length > 0 ? bpsParts.join(" / ") : null,
     medianBpsFloor: bpsFloorValues.length > 0 ? median(bpsFloorValues) : null,
     minBpsFloor: bpsFloorValues.length > 0 ? Math.min(...bpsFloorValues) : null,
     maxBpsFloor: bpsFloorValues.length > 0 ? Math.max(...bpsFloorValues) : null,
@@ -1200,4 +1252,203 @@ function median(values: number[]): number {
   const mid = Math.floor(sorted.length / 2);
   if (sorted.length % 2 === 0) return (sorted[mid - 1] + sorted[mid]) / 2;
   return sorted[mid];
+}
+
+// ============================================================================
+// Assumptions modal — surfaces every assumption the back-solve depends on
+// ============================================================================
+
+function AssumptionsModal({
+  onClose,
+  targetSaasShare,
+  setTargetSaasShare,
+  lendingPremium,
+  setLendingPremium,
+  loanFundingRate,
+  setLoanFundingRate,
+  depositFundingRate,
+  setDepositFundingRate,
+  bpsAvgLoanSize,
+  setBpsAvgLoanSize,
+  bpsAvgDepositSize,
+  setBpsAvgDepositSize,
+}: {
+  onClose: () => void;
+  targetSaasShare: number;
+  setTargetSaasShare: (v: number) => void;
+  lendingPremium: number;
+  setLendingPremium: (v: number) => void;
+  loanFundingRate: number;
+  setLoanFundingRate: (v: number) => void;
+  depositFundingRate: number;
+  setDepositFundingRate: (v: number) => void;
+  bpsAvgLoanSize: number;
+  setBpsAvgLoanSize: (v: number) => void;
+  bpsAvgDepositSize: number;
+  setBpsAvgDepositSize: (v: number) => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40">
+      <div
+        className="absolute inset-0"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div className="relative bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-slate-200 p-5 flex items-start justify-between rounded-t-xl">
+          <div>
+            <h3 className="text-base font-semibold text-slate-900">Repricing assumptions</h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Every assumption the back-solve depends on. Edits apply across the whole tool.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-600 -mr-1 -mt-1 p-1"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="p-5 space-y-6">
+          <AssumptionGroup title="Strategic mix">
+            <AssumptionRow
+              label="Target SaaS share"
+              hint="Share of total client revenue from the SaaS / floor (rest is per-event / bps revenue)."
+              value={targetSaasShare}
+              onChange={(v) => setTargetSaasShare(Math.max(50, Math.min(90, v)))}
+              suffix="%"
+              min={50}
+              max={90}
+              step={1}
+            />
+            <AssumptionRow
+              label="Lending premium"
+              hint="Lending events / bps priced this many × deposit. Reflects that loan conversions are higher-value. Affects both per-event and BPS back-solves."
+              value={lendingPremium}
+              onChange={(v) => setLendingPremium(Math.max(1, Math.min(5, v)))}
+              suffix="×"
+              min={1}
+              max={5}
+              step={0.1}
+            />
+          </AssumptionGroup>
+
+          <AssumptionGroup title="BPS — application-funding assumptions">
+            <p className="text-xs text-slate-500 mb-2">
+              The BPS back-solve estimates funded volume from the client&apos;s actual application counts (no NCUA
+              dependency). Funded volume = applications × funding rate × avg size.
+            </p>
+            <AssumptionRow
+              label="Loan funding rate"
+              hint="% of loan applications that result in a funded loan. Industry typical: 30–40%."
+              value={loanFundingRate}
+              onChange={(v) => setLoanFundingRate(Math.max(0, Math.min(100, v)))}
+              suffix="%"
+              min={0}
+              max={100}
+              step={1}
+            />
+            <AssumptionRow
+              label="Deposit funding rate"
+              hint="% of deposit applications that result in a new account opened. Industry typical: 50–70% (less underwriting friction than loans)."
+              value={depositFundingRate}
+              onChange={(v) => setDepositFundingRate(Math.max(0, Math.min(100, v)))}
+              suffix="%"
+              min={0}
+              max={100}
+              step={1}
+            />
+            <AssumptionRow
+              label="Avg funded loan size"
+              hint="Blended average across all loan types. Default $35K reflects a mix of auto, personal, and mortgage. Tune higher if mortgage-heavy, lower if mostly consumer."
+              value={bpsAvgLoanSize}
+              onChange={(v) => setBpsAvgLoanSize(Math.max(0, v))}
+              prefix="$"
+              step={1000}
+            />
+            <AssumptionRow
+              label="Avg new deposit account size"
+              hint="Avg balance of a newly-opened deposit account. Default $5K is a conservative cross-product estimate."
+              value={bpsAvgDepositSize}
+              onChange={(v) => setBpsAvgDepositSize(Math.max(0, v))}
+              prefix="$"
+              step={500}
+            />
+          </AssumptionGroup>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+            <FileWarning className="inline w-3.5 h-3.5 mr-1" />
+            These assumptions affect every cell in the Repricing tab (per-client detail and tier summary). Changes
+            apply immediately. Reload the page to reset to defaults.
+          </div>
+        </div>
+
+        <div className="sticky bottom-0 bg-white border-t border-slate-200 p-4 rounded-b-xl flex justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-sm px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AssumptionGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h4 className="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-3">{title}</h4>
+      <div className="space-y-3">{children}</div>
+    </div>
+  );
+}
+
+function AssumptionRow({
+  label,
+  hint,
+  value,
+  onChange,
+  suffix,
+  prefix,
+  min,
+  max,
+  step,
+}: {
+  label: string;
+  hint?: string;
+  value: number;
+  onChange: (v: number) => void;
+  suffix?: string;
+  prefix?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-3">
+        <label className="text-sm font-medium text-slate-700">{label}</label>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {prefix && <span className="text-xs text-slate-500">{prefix}</span>}
+          <input
+            type="number"
+            value={value}
+            onChange={(e) => onChange(Number(e.target.value))}
+            min={min}
+            max={max}
+            step={step}
+            className="w-24 px-2 py-1 border border-slate-300 rounded font-mono text-right text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {suffix && <span className="text-xs text-slate-500">{suffix}</span>}
+        </div>
+      </div>
+      {hint && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{hint}</p>}
+    </div>
+  );
 }

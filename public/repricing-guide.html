@@ -125,7 +125,7 @@
                 <li><span class="pill both">Both modules</span> — Has activity on both sides.</li>
                 <li><span class="pill none">No activity</span> — All counts are 0. Edge case; will show in the roster but back-solve outputs will be sparse.</li>
             </ul>
-            <p>For <b>both-modules</b> clients, the tool can charge a <i>different</i> per-event price for lending events vs. deposit events. The default is loan events priced 2× deposit events (the "lending premium"), reflecting that a funded loan is typically more valuable than a new deposit account.</p>
+            <p>For <b>both-modules</b> clients, the tool can charge a <i>different</i> per-event price (or per-module bps rate) for lending vs. deposit. The default is lending priced 2× deposit (the "lending premium"), reflecting that a funded loan is typically more valuable than a new deposit account. The premium applies to both per-event prices and BPS rates.</p>
 
             <h3>The five revenue targets</h3>
             <p>For every client, the tool computes pricing at five revenue targets relative to their 2025 actual fee:</p>
@@ -250,6 +250,16 @@
                 <span class="label">Lending-only / Deposit-only clients</span>
                 <p>The lending premium only matters for both-modules clients. Single-module clients have all event revenue allocated to the one module they use, regardless of premium.</p>
             </div>
+
+            <h3>BPS-specific assumptions (in the Assumptions modal)</h3>
+            <p>Click <b>Assumptions</b> in the top-right of the Repricing tab to open a modal with the rest of the BPS knobs:</p>
+            <ul>
+                <li><b>Loan funding rate</b> (default 35%) — % of loan applications that result in a funded loan. Industry typical: 30–40%.</li>
+                <li><b>Deposit funding rate</b> (default 60%) — % of deposit applications that result in a new account. Higher than loans because there's less underwriting friction.</li>
+                <li><b>Avg funded loan size</b> (default $35K) — blended average across all loan types. Tune higher for mortgage-heavy books, lower for mostly-consumer books.</li>
+                <li><b>Avg new deposit account size</b> (default $5K) — average balance of a newly-opened deposit account.</li>
+            </ul>
+            <p>These four values feed the BPS back-solve. Funded volume is computed from the client's actual application counts in the CSV, multiplied by the funding rate, multiplied by the avg size — no NCUA dependency.</p>
         </section>
 
         <!-- ========== STEP 4: PER CLIENT ========== -->
@@ -267,7 +277,7 @@
             <p>The headline output. Rows are revenue targets (100/105/110/115/120%); columns are the four billing options.</p>
             <p>Each cell shows the recommended pricing for that combination:</p>
             <ul>
-                <li><b>BPS</b> cells: <code>$X/mo floor</code> + <code>Y× current bps</code> (uniformly scales your existing per-category bps strategy from the BPS tab).</li>
+                <li><b>BPS</b> cells: <code>$X/mo floor</code> + <code>Y bps loan / Z bps deposit</code> applied to funded volume. Funded volume is derived from the client's applications + the funding rate / avg size assumptions.</li>
                 <li><b>Per-event</b> cells: <code>$X/mo SaaS</code> + <code>$Y per event</code> (lending and deposit shown separately for both-modules clients).</li>
                 <li>Cells highlight green when feasible; grey when there's no event volume / no NCUA data.</li>
             </ul>
@@ -291,7 +301,7 @@
             <ul>
                 <li><b>Target</b> — revenue target (100/105/110/115/120%)</li>
                 <li><b>SaaS / mo</b> (or <b>Floor / mo</b> for BPS) — the median recommended monthly fee across clients in this tier+mode, with the min–max range below</li>
-                <li><b>Per-event price</b> (or <b>BPS multiplier</b> for BPS) — the median recommendation</li>
+                <li><b>Per-event price</b> (or <b>BPS rates per module</b> for BPS) — the median recommendation</li>
             </ul>
 
             <h3>How to use it</h3>
@@ -334,19 +344,31 @@ price_loan = 2 × price_dep   <span class="comment"># lending premium constraint
             <p>Both prices fall out cleanly. The total event revenue is preserved exactly; only the split between modules changes with the premium.</p>
 
             <h3>BPS back-solve</h3>
-            <p>For BPS, instead of solving for a per-event price, the tool computes a uniform multiplier on your existing per-category bps strategy (set on the BPS tab). The per-category ratios (auto bps : mortgage bps, etc.) are preserved.</p>
+            <p>BPS produces two clean rate-card numbers per client (or per tier+mode in the tier summary): a <b>recommended monthly floor</b> and a <b>recommended bps rate per module</b>. There is no dependency on the BPS tab or NCUA balance-sheet data — funded volume is derived from the client's actual application counts plus a few global assumptions.</p>
+            <h4>Step 1: derive funded volume from applications</h4>
             <div class="formula">
-recommended_floor    = target_saas_share × target_rev / 12<br>
-target_bps_rev       = (1 - target_saas_share) × target_rev<br>
-base_bps_rev         = sum( volume_k × penetration × base_bps_k / 10000 )<br>
-multiplier           = target_bps_rev / base_bps_rev
+loan_funded_volume     = applications_lending × loan_funding_rate × avg_loan_size<br>
+deposit_funded_volume  = applications_deposit × deposit_funding_rate × avg_deposit_size
             </div>
-            <p>So "1.4× current bps" means: take whatever rates you set on the BPS tab (auto = 15bps, mortgage = 8bps, etc.) and scale them all by 1.4 (auto becomes 21bps, mortgage becomes 11.2bps).</p>
+            <p>Defaults: loan funding rate 35%, deposit funding rate 60%, avg loan size $35K, avg deposit size $5K. All are editable in the <b>Assumptions</b> modal at the top of the Repricing tab.</p>
+            <h4>Step 2: back-solve to the strategic mix</h4>
+            <div class="formula">
+recommended_floor      = target_saas_share × target_rev / 12<br>
+target_bps_rev         = (1 - target_saas_share) × target_rev<br>
+<br>
+<span class="comment"># lending-premium constraint (loan_bps = p × deposit_bps):</span><br>
+deposit_bps × (p × loan_volume + deposit_volume) = target_bps_rev<br>
+=> deposit_bps_rate     = target_bps_rev / (p × loan_volume + deposit_volume)<br>
+=> loan_bps_rate        = p × deposit_bps_rate<br>
+=> recommended_loan_bps = loan_bps_rate × 10000<br>
+=> recommended_dep_bps  = deposit_bps_rate × 10000
+            </div>
+            <p>The recommendation is two clean numbers — for example "12 bps loan / 4 bps deposit + $5,500/mo floor" — directly publishable on a rate card.</p>
 
             <h3>Mode filtering</h3>
-            <p>Before back-solving, the tool zeroes out the unused module's data:</p>
+            <p>Before back-solving, the tool zeroes out the unused module's counts:</p>
             <ul>
-                <li><b>Lending-only</b>: deposit event counts and deposit volumes set to 0. Per-event price floats up because event revenue concentrates on fewer events.</li>
+                <li><b>Lending-only</b>: deposit event counts and deposit applications set to 0. Per-event price (and deposit bps) floats up because revenue concentrates on the lending side.</li>
                 <li><b>Deposit-only</b>: same, mirror image.</li>
                 <li><b>Both</b>: no filtering; full event counts and volumes used.</li>
             </ul>
@@ -360,7 +382,7 @@ multiplier           = target_bps_rev / base_bps_rev
             <ul>
                 <li><b>Tier prices from the prospective tabs</b> — the Repricing tab does <i>not</i> read the tier prices set on the SaaS+event tabs. SaaS is an output here, not an input.</li>
                 <li><b>Floor from the BPS tab</b> — same. The Repricing tab recommends a floor; it doesn't consume the one set elsewhere.</li>
-                <li><b>NCUA data for SaaS+event back-solves</b> — the per-event back-solves only need the client's actual event counts and 2025 fee. NCUA data is only used for BPS (which needs balance-sheet volumes) and for asset-tier grouping.</li>
+                <li><b>NCUA data is only used for asset-tier grouping</b> — the per-event AND BPS back-solves only need the client's actual event/application counts, 2025 fee, and the global assumptions (funding rates, avg sizes). NCUA's only role is mapping a client to an asset tier in the tier summary view.</li>
             </ul>
         </section>
 
@@ -375,7 +397,7 @@ multiplier           = target_bps_rev / base_bps_rev
 
             <div class="callout amber">
                 <span class="label">Pitfall 2</span>
-                <p><b>BPS shows "no NCUA data" for a client.</b> Means the <code>cu_number</code> didn't match. Use the inline "associate…" picker in the roster to link the client to the right NCUA charter. SaaS+event back-solves still work without the match — only BPS depends on NCUA volume data.</p>
+                <p><b>BPS shows "no funded volume" for a client.</b> Means both their lending and deposit application counts are 0 in the CSV — the BPS calc has nothing to apply rates to. If the client really does fund loans/accounts but the CSV captured no application data, the BPS column will stay grey for them. (No NCUA dependency for BPS — only for asset-tier grouping in the tier summary.)</p>
             </div>
 
             <div class="callout amber">

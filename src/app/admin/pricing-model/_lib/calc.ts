@@ -148,35 +148,49 @@ export function backSolveSaasPerEvent(i: BackSolveSaasInput): BackSolveSaasOutpu
 }
 
 /**
- * Back-solve the BPS model: scale per-category rates AND derive the
- * monthly floor that together hit:
- *   - total revenue = target
- *   - floor share   = targetSaasSharePct  (floor plays the SaaS role here)
+ * Back-solve the BPS model — application-derived funded volume.
  *
- * Math:
- *   floorRev  = targetSaasShare × targetRev → monthlyFloor = floorRev / 12
- *   bpsRev    = (1 - targetSaasShare) × targetRev
- *   multiplier = bpsRev / baseBpsRev    (uniform scale on existing per-category rates)
+ * Funded volume is derived from the client's actual application counts in
+ * the CSV (no NCUA dependency). Math:
+ *
+ *   loanFundedCount       = applicationsLoan × loanFundingRate
+ *   loanFundedVolume      = loanFundedCount × avgLoanSize
+ *   depositFundedCount    = applicationsDeposit × depositFundingRate
+ *   depositFundedVolume   = depositFundedCount × avgDepositSize
+ *
+ * Then back-solve to the strategic mix:
+ *
+ *   floorRev          = targetSaasShare × targetRev → monthlyFloor = floorRev / 12
+ *   bpsRev            = (1 - targetSaasShare) × targetRev
+ *   bpsRev split across modules with the same lending-premium constraint as
+ *   per-event back-solve. With premium p, total bps revenue is:
+ *     bpsRev = bpsLoan × loanVolume + bpsDeposit × depositVolume
+ *     bpsLoan = p × bpsDeposit
+ *   →  bpsDeposit = bpsRev / (p × loanVolume + depositVolume)  (in dollars per dollar of volume)
+ *      bpsLoan    = p × bpsDeposit
+ *   The result is the per-module rate-card bps to put on the rate card.
  */
 export type BackSolveBpsInput = {
   targetTotalRev: number;
   targetSaasSharePct: number;
-  loanVolumes: Record<LoanCategory, number>;
-  depositVolumes: Record<DepositCategory, number>;
-  baseLoanBps: LoanTakeRates;
-  baseDepositBps: DepositTakeRates;
-  loanPenetrationPct: number;
-  depositPenetrationPct: number;
+  applicationsLoan: number;
+  applicationsDeposit: number;
+  loanFundingRate: number;     // 0..1 — % of loan apps that fund
+  depositFundingRate: number;  // 0..1 — % of deposit apps that fund
+  avgLoanSize: number;         // $ — avg funded loan size
+  avgDepositSize: number;      // $ — avg new-deposit account size
+  /** Lending bps priced this many × deposit bps. Default 1. */
+  lendingPremium?: number;
 };
 
 export type BackSolveBpsOutput = {
-  multiplier: number;
-  scaledLoanBps: LoanTakeRates;
-  scaledDepositBps: DepositTakeRates;
   recommendedMonthlyFloor: number;
   recommendedFloorRev: number;
-  projectedBpsRev: number;
-  /** "ok" if base bps revenue is nonzero; "no_volume" if there's nothing to scale. */
+  recommendedLoanBps: number;     // basis points on funded loan volume
+  recommendedDepositBps: number;  // basis points on funded deposit volume
+  loanFundedVolume: number;       // $ — for transparency in the UI
+  depositFundedVolume: number;    // $
+  bpsRevTarget: number;
   feasibility: "ok" | "no_volume";
 };
 
@@ -184,51 +198,48 @@ export function backSolveBps(i: BackSolveBpsInput): BackSolveBpsOutput {
   const targetSaasShare = i.targetSaasSharePct / 100;
   const recommendedFloorRev = i.targetTotalRev * targetSaasShare;
   const recommendedMonthlyFloor = recommendedFloorRev / 12;
-  const targetBpsRev = i.targetTotalRev * (1 - targetSaasShare);
+  const bpsRevTarget = i.targetTotalRev * (1 - targetSaasShare);
+  const premium = i.lendingPremium ?? 1;
 
-  // Compute baseline bps revenue at multiplier=1.0 (no floor — the
-  // floor is recommended separately above and isn't part of the bps math).
-  const lf = i.loanPenetrationPct / 100;
-  const df = i.depositPenetrationPct / 100;
-  let baseBpsRev = 0;
-  (Object.keys(i.loanVolumes) as LoanCategory[]).forEach((k) => {
-    baseBpsRev += i.loanVolumes[k] * lf * (i.baseLoanBps[k] / 10000);
-  });
-  (Object.keys(i.depositVolumes) as DepositCategory[]).forEach((k) => {
-    baseBpsRev += i.depositVolumes[k] * df * (i.baseDepositBps[k] / 10000);
-  });
+  const loanFundedVolume = i.applicationsLoan * i.loanFundingRate * i.avgLoanSize;
+  const depositFundedVolume = i.applicationsDeposit * i.depositFundingRate * i.avgDepositSize;
 
-  if (baseBpsRev <= 0) {
+  if (loanFundedVolume + depositFundedVolume <= 0) {
     return {
-      multiplier: 1,
-      scaledLoanBps: i.baseLoanBps,
-      scaledDepositBps: i.baseDepositBps,
       recommendedMonthlyFloor,
       recommendedFloorRev,
-      projectedBpsRev: 0,
+      recommendedLoanBps: 0,
+      recommendedDepositBps: 0,
+      loanFundedVolume: 0,
+      depositFundedVolume: 0,
+      bpsRevTarget,
       feasibility: "no_volume",
     };
   }
 
-  const multiplier = targetBpsRev / baseBpsRev;
-  const scaledLoanBps = scaleRates(i.baseLoanBps, multiplier);
-  const scaledDepositBps = scaleRates(i.baseDepositBps, multiplier);
+  // Solve for bpsDeposit (as a decimal rate, not yet bps), then scale to bps.
+  // Edge case: if one module has 0 volume, the constraint doesn't bind —
+  // allocate all bps revenue to the active module.
+  let rateLoan = 0;
+  let rateDeposit = 0;
+  if (loanFundedVolume === 0) {
+    rateDeposit = bpsRevTarget / depositFundedVolume;
+  } else if (depositFundedVolume === 0) {
+    rateLoan = bpsRevTarget / loanFundedVolume;
+  } else {
+    const denom = premium * loanFundedVolume + depositFundedVolume;
+    rateDeposit = bpsRevTarget / denom;
+    rateLoan = premium * rateDeposit;
+  }
 
   return {
-    multiplier,
-    scaledLoanBps,
-    scaledDepositBps,
     recommendedMonthlyFloor,
     recommendedFloorRev,
-    projectedBpsRev: targetBpsRev,
+    recommendedLoanBps: rateLoan * 10000,
+    recommendedDepositBps: rateDeposit * 10000,
+    loanFundedVolume,
+    depositFundedVolume,
+    bpsRevTarget,
     feasibility: "ok",
   };
-}
-
-function scaleRates<T extends Record<string, number>>(rates: T, mult: number): T {
-  const out = {} as T;
-  (Object.keys(rates) as Array<keyof T>).forEach((k) => {
-    out[k] = (rates[k] * mult) as T[keyof T];
-  });
-  return out;
 }
