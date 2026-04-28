@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movemint Repricing Tool — User Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.65;
+            color: #262C30;
+            background-color: #E8EBED;
+        }
+        .hero {
+            background: linear-gradient(135deg, #143C67 0%, #1e5a9a 100%);
+            color: white;
+            padding: 56px 20px 48px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.02em; }
+        .hero .subtitle { font-size: 1.1rem; opacity: 0.85; max-width: 720px; margin: 0 auto; }
+        .container { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+        section { background: white; border-radius: 16px; padding: 36px 40px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        h2 { color: #143C67; font-size: 1.6rem; margin-bottom: 16px; letter-spacing: -0.01em; }
+        h3 { color: #2e3a44; font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; font-weight: 600; }
+        h4 { color: #4a5568; font-size: 0.95rem; margin-top: 20px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+        p { margin-bottom: 12px; color: #2e3a44; }
+        ul, ol { margin: 8px 0 16px 24px; }
+        li { margin-bottom: 6px; color: #2e3a44; }
+        b, strong { color: #1a2733; font-weight: 600; }
+        code { background: #f1f4f7; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.88em; color: #2c5282; }
+        .toc { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 22px; margin-bottom: 32px; }
+        .toc h3 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: #718096; font-weight: 600; }
+        .toc ol { margin: 8px 0 0 20px; }
+        .toc a { color: #143C67; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .callout { border-left: 4px solid #143C67; background: #f7fafc; padding: 14px 18px; margin: 16px 0; border-radius: 0 8px 8px 0; }
+        .callout.amber { border-color: #d69e2e; background: #fffaf0; }
+        .callout.green { border-color: #38a169; background: #f0fff4; }
+        .callout p:last-child { margin-bottom: 0; }
+        .callout .label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #143C67; margin-right: 6px; }
+        .callout.amber .label { color: #b7791f; }
+        .callout.green .label { color: #2f855a; }
+        .step { display: flex; gap: 16px; margin: 24px 0; }
+        .step-num { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: #143C67; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; }
+        .step-body { flex: 1; padding-top: 4px; }
+        .step-body h3 { margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 0.92rem; }
+        th { text-align: left; padding: 10px 12px; background: #f7fafc; color: #4a5568; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 12px; border-bottom: 1px solid #edf2f7; vertical-align: top; }
+        td:first-child { font-weight: 600; color: #2e3a44; }
+        .formula { background: #1a202c; color: #e2e8f0; padding: 16px 20px; border-radius: 8px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.9rem; line-height: 1.7; margin: 16px 0; }
+        .formula .comment { color: #718096; }
+        .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .pill.lending { background: #ebf8ff; color: #2c5282; }
+        .pill.deposit { background: #faf5ff; color: #553c9a; }
+        .pill.both { background: #f0fff4; color: #2f855a; }
+        .pill.none { background: #f1f4f7; color: #4a5568; }
+        .url-link { display: inline-block; padding: 10px 18px; background: #143C67; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 0.95rem; margin: 6px 0; }
+        .url-link:hover { background: #1e5a9a; }
+        .footer { text-align: center; padding: 30px 20px; color: #718096; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Repricing Tool — User Guide</h1>
+        <div class="subtitle">How to use Movemint's Repricing Tool to back-solve recommended pricing for existing credit-union clients.</div>
+    </div>
+
+    <div class="container">
+
+        <div class="toc">
+            <h3>Contents</h3>
+            <ol>
+                <li><a href="#what">What this tool solves</a></li>
+                <li><a href="#concepts">Key concepts (read once)</a></li>
+                <li><a href="#csv">Step 1 — Prepare your client CSV</a></li>
+                <li><a href="#upload">Step 2 — Upload and review the roster</a></li>
+                <li><a href="#tune">Step 3 — Tune the global controls</a></li>
+                <li><a href="#perclient">Step 4 — Drill into a specific client</a></li>
+                <li><a href="#tier">Step 5 — Use the Tier Summary to set publishable pricing</a></li>
+                <li><a href="#methodology">Methodology — what the math is doing under the hood</a></li>
+                <li><a href="#pitfalls">Common pitfalls and gotchas</a></li>
+            </ol>
+        </div>
+
+        <!-- ========== WHAT IT SOLVES ========== -->
+        <section id="what">
+            <h2>1. What this tool solves</h2>
+            <p>Movemint is moving from <b>flat-rate annual fees</b> to a hybrid pricing model: a <b>SaaS base fee</b> for platform access, plus a <b>transaction fee</b> on the activity Movemint drives (events generated, applications submitted, redemptions completed, or basis points on funded volume).</p>
+            <p>The Repricing Tool answers two questions for the existing book:</p>
+            <ol>
+                <li>For each existing client, <b>what would the new pricing need to charge</b> to land at <b>100–120% of their current revenue</b> while keeping <b>60–80% of revenue from SaaS</b>?</li>
+                <li>Across the whole book, <b>what's the publishable price per asset tier</b> — the SaaS fee + per-event price (or BPS rate) we'd put on the rate card?</li>
+            </ol>
+            <div class="callout green">
+                <span class="label">Strategic targets</span>
+                <p><b>Revenue mix:</b> 60–80% SaaS / 20–40% transaction (per client)<br><b>Per-client revenue:</b> 100–120% of 2025 actual</p>
+            </div>
+            <p>The tool back-solves <i>both</i> the recommended SaaS fee and the per-event/BPS price simultaneously for each combination of revenue target × pricing model, so you can compare options and pick the one that produces the best publishable price card.</p>
+        </section>
+
+        <!-- ========== KEY CONCEPTS ========== -->
+        <section id="concepts">
+            <h2>2. Key concepts (read once, then skim later)</h2>
+
+            <h3>The four billing options</h3>
+            <p>Every client will land on exactly one of these four pricing models. The Repricing tool computes recommended prices for all four so you can compare side by side.</p>
+            <table>
+                <thead><tr><th>Option</th><th>What's billed</th><th>Best when…</th></tr></thead>
+                <tbody>
+                    <tr><td>BPS take-rate</td><td>Floor + bps × funded loan / new deposit volume</td><td>Volume is high, predictable, and Movemint takes a cut at funding</td></tr>
+                    <tr><td>Per-redemption</td><td>SaaS + $ per loan funded / account opened</td><td>Aligns price with realized customer value</td></tr>
+                    <tr><td>Per-application</td><td>SaaS + $ per application started</td><td>Spreads risk earlier in the funnel; pre-funding billing</td></tr>
+                    <tr><td>Per-offer-generated</td><td>SaaS + $ per offer rendered to a member</td><td>Heavy member base, low conversion expectations (impression model)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Module configuration: every client is one of three</h3>
+            <p>Each client uses one of these module configurations, <b>inferred automatically</b> from the event counts in your CSV:</p>
+            <ul>
+                <li><span class="pill lending">Lending-only</span> — All deposit-side event counts are 0 in the CSV. Client uses Movemint for loan-side originations only.</li>
+                <li><span class="pill deposit">Deposit-only</span> — All lending-side event counts are 0. Client uses Movemint for deposit growth only.</li>
+                <li><span class="pill both">Both modules</span> — Has activity on both sides.</li>
+                <li><span class="pill none">No activity</span> — All counts are 0. Edge case; will show in the roster but back-solve outputs will be sparse.</li>
+            </ul>
+            <p>For <b>both-modules</b> clients, the tool can charge a <i>different</i> per-event price for lending events vs. deposit events. The default is loan events priced 2× deposit events (the "lending premium"), reflecting that a funded loan is typically more valuable than a new deposit account.</p>
+
+            <h3>The five revenue targets</h3>
+            <p>For every client, the tool computes pricing at five revenue targets relative to their 2025 actual fee:</p>
+            <p><b>100%, 105%, 110%, 115%, 120%</b></p>
+            <p>You'll see a 5×4 grid (revenue target × billing option) on the per-client view. The tier summary uses the same targets but aggregates across clients.</p>
+
+            <h3>The seven asset tiers</h3>
+            <p>Tiers are based on credit-union total assets and used for grouping in the tier summary view. <b>Boundaries are fixed</b>; only prices recommended at each tier are computed by the tool.</p>
+            <ol>
+                <li>$0 – $500M</li>
+                <li>$500M – $1B</li>
+                <li>$1B – $2B</li>
+                <li>$2B – $3B</li>
+                <li>$3B – $4B</li>
+                <li>$4B – $5B</li>
+                <li>$5B+</li>
+            </ol>
+        </section>
+
+        <!-- ========== STEP 1: CSV ========== -->
+        <section id="csv">
+            <h2>3. Step 1 — Prepare your client CSV</h2>
+            <p>The Repricing tool needs one row per existing client. Required columns (case-sensitive headers):</p>
+            <table>
+                <thead><tr><th>Column</th><th>Description</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td>cu_number</td><td>NCUA charter # — used to join to NCUA balance-sheet data. Leave blank if unknown; you can associate it manually later.</td><td>50377</td></tr>
+                    <tr><td>client_name</td><td>Display name for this client. Required.</td><td>Heritage Family CU</td></tr>
+                    <tr><td>annual_fee_2025</td><td>The 2025 actual annual fee paid to Movemint. The 100% revenue anchor.</td><td>52000</td></tr>
+                    <tr><td>redemptions_lending</td><td>Lending redemptions completed in 2025 (loans funded through Movemint).</td><td>1323</td></tr>
+                    <tr><td>redemptions_deposit</td><td>Deposit redemptions in 2025 (new accounts opened through Movemint).</td><td>670</td></tr>
+                    <tr><td>applications_lending</td><td>Lending applications started in 2025.</td><td>3595</td></tr>
+                    <tr><td>applications_deposit</td><td>Deposit applications started in 2025.</td><td>1958</td></tr>
+                    <tr><td>offers_generated_lending</td><td>Lending offers rendered to members in 2025.</td><td>246991</td></tr>
+                    <tr><td>offers_generated_deposit</td><td>Deposit offers rendered to members in 2025.</td><td>365807</td></tr>
+                </tbody>
+            </table>
+            <div class="callout">
+                <span class="label">Tip</span>
+                <p>Use the <b>"Download sample CSV"</b> button on the Repricing tab to grab a starter file with the right columns and example rows. Match the column names exactly.</p>
+            </div>
+            <h4>Numbers can include $ and commas</h4>
+            <p>The parser strips <code>$</code> and <code>,</code> from numeric fields, so <code>$52,000</code> works the same as <code>52000</code>.</p>
+            <h4>Module mode is inferred — don't add a column for it</h4>
+            <p>If a client uses lending only, set their three deposit columns to <code>0</code>. The tool detects this and treats them as Lending-only. Same logic for Deposit-only. Don't add a "module" or "mode" column — it'd be redundant.</p>
+        </section>
+
+        <!-- ========== STEP 2: UPLOAD ========== -->
+        <section id="upload">
+            <h2>4. Step 2 — Upload and review the roster</h2>
+
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <h3>Click "Upload CSV"</h3>
+                    <p>The button is in the upload card at the top of the Repricing tab. Pick your CSV file. The tool parses immediately; results appear below.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <h3>Read the validation feedback</h3>
+                    <p><b>Errors</b> (red) — block individual rows from being imported. Most common: missing required columns, missing client name. Fix the CSV and re-upload.</p>
+                    <p><b>Warnings</b> (amber) — accept the row but flag a non-fatal issue. The most common warning: <code>cu_number not found in NCUA data</code>. The row still imports; you'll see "unmatched (XXX)" in the NCUA column of the roster table. Click that link to manually associate the client with an NCUA charter.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <h3>Scan the roster for sanity</h3>
+                    <p>The roster table shows: client name (clickable to drill in), NCUA match (or "associate…" link if unmatched), assets, asset tier, module mode badge, 2025 fee, and total event count.</p>
+                    <p><b>Module mode</b> is the colored badge: <span class="pill lending">Lending-only</span>, <span class="pill deposit">Deposit-only</span>, <span class="pill both">Both modules</span>, <span class="pill none">No activity</span>. If a client looks like the wrong mode, double-check that you put the right zeros in the right columns.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <h3>Manage the roster</h3>
+                    <p><b>Delete one</b> — click the trash icon at the end of any row.</p>
+                    <p><b>Clear all</b> — button next to upload. Wipes localStorage. Confirms before deleting.</p>
+                    <p><b>Export</b> — "Export JSON" button downloads the current roster as a JSON file. Useful for committing a known-good dataset to the repo, or sharing with a teammate.</p>
+                </div>
+            </div>
+
+            <div class="callout">
+                <span class="label">How data persists</span>
+                <p>Your uploaded clients live in this browser's <b>localStorage</b>. They survive page reloads, but they don't sync to other browsers or other team members. To share, use "Export JSON" and have the recipient drop the JSON's contents back through the same upload flow (or commit it to the repo). To start fresh, hit "Clear all".</p>
+            </div>
+        </section>
+
+        <!-- ========== STEP 3: TUNE ========== -->
+        <section id="tune">
+            <h2>5. Step 3 — Tune the global controls</h2>
+            <p>Two controls at the top of the Repricing tab affect every back-solve in the tool:</p>
+
+            <h3>Target SaaS share (default 70%)</h3>
+            <p>The percentage of total client revenue that should come from the SaaS base fee (or floor for BPS). The remainder goes to per-event / BPS revenue.</p>
+            <p>Allowed range: 50–90%. The "sweet spot" is 60–80%, matching the strategic target.</p>
+            <ul>
+                <li><b>Higher</b> (e.g. 80%) — More predictable revenue, less exposure to client activity. Per-event prices come out lower.</li>
+                <li><b>Lower</b> (e.g. 60%) — More activity-aligned. Per-event prices come out higher; clients pay more when they use the platform.</li>
+            </ul>
+
+            <h3>Lending premium (default 2×)</h3>
+            <p>For both-modules clients, this multiplier sets the ratio of lending event price to deposit event price. Loan conversions are typically more valuable than deposit account openings, so they're priced higher per event.</p>
+            <p>Allowed range: 1× (equal) to 5× (lending events priced 5× deposit).</p>
+            <p>Example with 800 lending + 400 deposit redemptions, $33K event revenue target:</p>
+            <table>
+                <thead><tr><th>Premium</th><th>Loan price</th><th>Deposit price</th><th>Total event rev</th></tr></thead>
+                <tbody>
+                    <tr><td>1×</td><td>$27.50</td><td>$27.50</td><td>$33,000</td></tr>
+                    <tr><td>2×</td><td>$33.00</td><td>$16.50</td><td>$33,000</td></tr>
+                    <tr><td>3×</td><td>$35.36</td><td>$11.79</td><td>$33,000</td></tr>
+                </tbody>
+            </table>
+            <p>The premium just shifts how the same $33K is split between modules — total revenue always lands at target.</p>
+
+            <div class="callout amber">
+                <span class="label">Lending-only / Deposit-only clients</span>
+                <p>The lending premium only matters for both-modules clients. Single-module clients have all event revenue allocated to the one module they use, regardless of premium.</p>
+            </div>
+        </section>
+
+        <!-- ========== STEP 4: PER CLIENT ========== -->
+        <section id="perclient">
+            <h2>6. Step 4 — Drill into a specific client</h2>
+            <p>Click any client's name in the roster to open their detail view. You'll see:</p>
+
+            <h3>Stat strip</h3>
+            <p>2025 annual fee, asset tier, total assets, and member count (the last three pulled from NCUA data).</p>
+
+            <h3>Event count strip</h3>
+            <p>Lending vs deposit counts for redemptions / applications / offers generated. The unused side is <s>struck through</s> for single-module clients, so you can see at a glance which side the back-solve is using.</p>
+
+            <h3>The 5×4 grid</h3>
+            <p>The headline output. Rows are revenue targets (100/105/110/115/120%); columns are the four billing options.</p>
+            <p>Each cell shows the recommended pricing for that combination:</p>
+            <ul>
+                <li><b>BPS</b> cells: <code>$X/mo floor</code> + <code>Y× current bps</code> (uniformly scales your existing per-category bps strategy from the BPS tab).</li>
+                <li><b>Per-event</b> cells: <code>$X/mo SaaS</code> + <code>$Y per event</code> (lending and deposit shown separately for both-modules clients).</li>
+                <li>Cells highlight green when feasible; grey when there's no event volume / no NCUA data.</li>
+            </ul>
+            <div class="callout">
+                <span class="label">How to read it</span>
+                <p>Read across a row to compare what each billing option needs to charge to hit the same revenue target. Read down a column to see how a single billing option scales as the revenue target rises.</p>
+            </div>
+        </section>
+
+        <!-- ========== STEP 5: TIER SUMMARY ========== -->
+        <section id="tier">
+            <h2>7. Step 5 — Use the Tier Summary to set publishable pricing</h2>
+            <p>From the client list, click <b>"View tier summary →"</b> to switch into the aggregate view. This is the deliverable for your team — what you'd put on the rate card.</p>
+
+            <h3>Pick a billing option</h3>
+            <p>Four toggle pills at the top: <b>BPS take-rate / Per-redemption / Per-application / Per-offer-generated</b>. Click one. Every tier's tables re-render to show pricing for just that billing option.</p>
+
+            <h3>Three columns per tier</h3>
+            <p>Each asset tier shows three sub-columns: <span class="pill lending">Lending-only</span> · <span class="pill deposit">Deposit-only</span> · <span class="pill both">Both modules</span>. Each column is populated from the subset of clients in that tier with that mode.</p>
+            <p>Each sub-column has a 5-row table:</p>
+            <ul>
+                <li><b>Target</b> — revenue target (100/105/110/115/120%)</li>
+                <li><b>SaaS / mo</b> (or <b>Floor / mo</b> for BPS) — the median recommended monthly fee across clients in this tier+mode, with the min–max range below</li>
+                <li><b>Per-event price</b> (or <b>BPS multiplier</b> for BPS) — the median recommendation</li>
+            </ul>
+
+            <h3>How to use it</h3>
+            <ol>
+                <li>Pick a revenue target (e.g. 110% — what we want to land at on average)</li>
+                <li>Pick a billing option (e.g. Per-redemption — leadership wants this model)</li>
+                <li>Read the median price for each tier+mode</li>
+                <li>That's your rate card: "Tier 3 lending-only clients pay $X/mo + $Y/redemption"</li>
+            </ol>
+            <div class="callout green">
+                <span class="label">The deliverable</span>
+                <p>The tier summary view is what you take to your team to make the pricing decision. Switch billing options to compare; the column with the most stable recommendations across tiers (tightest min-max range) is usually the one to pick.</p>
+            </div>
+        </section>
+
+        <!-- ========== METHODOLOGY ========== -->
+        <section id="methodology">
+            <h2>8. Methodology — what the math is doing under the hood</h2>
+
+            <h3>The basic identity</h3>
+            <p>For every client, every revenue target, every billing option, the tool solves the same identity:</p>
+            <div class="formula">
+total_rev = saas_rev + event_rev<br>
+saas_rev  = target_saas_share × total_rev<br>
+event_rev = (1 - target_saas_share) × total_rev<br>
+<span class="comment"># where target_saas_share defaults to 70%</span>
+            </div>
+            <p>Given a target total revenue (e.g. $66K = 110% of $60K current fee) and a target SaaS share (e.g. 70%), the SaaS revenue is fully determined: <code>$66K × 70% = $46.2K/yr → $3,850/mo</code>.</p>
+            <p>The event revenue is then <code>$66K × 30% = $19.8K/yr</code>, divided across the client's actual event counts to get a per-event price.</p>
+
+            <h3>Module split for both-modules clients</h3>
+            <p>If a client has 800 lending + 400 deposit redemptions and the lending premium is 2×, we solve:</p>
+            <div class="formula">
+event_rev = price_loan × 800 + price_dep × 400<br>
+price_loan = 2 × price_dep   <span class="comment"># lending premium constraint</span><br>
+<br>
+=> price_dep = event_rev / (2 × 800 + 400)<br>
+=> price_loan = 2 × price_dep
+            </div>
+            <p>Both prices fall out cleanly. The total event revenue is preserved exactly; only the split between modules changes with the premium.</p>
+
+            <h3>BPS back-solve</h3>
+            <p>For BPS, instead of solving for a per-event price, the tool computes a uniform multiplier on your existing per-category bps strategy (set on the BPS tab). The per-category ratios (auto bps : mortgage bps, etc.) are preserved.</p>
+            <div class="formula">
+recommended_floor    = target_saas_share × target_rev / 12<br>
+target_bps_rev       = (1 - target_saas_share) × target_rev<br>
+base_bps_rev         = sum( volume_k × penetration × base_bps_k / 10000 )<br>
+multiplier           = target_bps_rev / base_bps_rev
+            </div>
+            <p>So "1.4× current bps" means: take whatever rates you set on the BPS tab (auto = 15bps, mortgage = 8bps, etc.) and scale them all by 1.4 (auto becomes 21bps, mortgage becomes 11.2bps).</p>
+
+            <h3>Mode filtering</h3>
+            <p>Before back-solving, the tool zeroes out the unused module's data:</p>
+            <ul>
+                <li><b>Lending-only</b>: deposit event counts and deposit volumes set to 0. Per-event price floats up because event revenue concentrates on fewer events.</li>
+                <li><b>Deposit-only</b>: same, mirror image.</li>
+                <li><b>Both</b>: no filtering; full event counts and volumes used.</li>
+            </ul>
+            <p>This means a Lending-only client with 800 lending events at 110% target will get a higher per-event price than a both-modules client with the same 800 lending events plus 400 deposit events — because the both-modules client has more events to spread the same $19.8K event revenue across.</p>
+
+            <h3>Tier aggregation</h3>
+            <p>The tier summary takes every client back-solve in a tier+mode and computes the <b>median</b> across them. The min and max are also surfaced as a "spread" beneath the median — that tells you how varied the recommendations are within a tier.</p>
+            <p>Tight spread = the tier is pricing-coherent (you can publish one price). Wide spread = the tier has heterogeneous clients and a single tier price will help-some-hurt-others.</p>
+
+            <h3>What's NOT in the back-solve</h3>
+            <ul>
+                <li><b>Tier prices from the prospective tabs</b> — the Repricing tab does <i>not</i> read the tier prices set on the SaaS+event tabs. SaaS is an output here, not an input.</li>
+                <li><b>Floor from the BPS tab</b> — same. The Repricing tab recommends a floor; it doesn't consume the one set elsewhere.</li>
+                <li><b>NCUA data for SaaS+event back-solves</b> — the per-event back-solves only need the client's actual event counts and 2025 fee. NCUA data is only used for BPS (which needs balance-sheet volumes) and for asset-tier grouping.</li>
+            </ul>
+        </section>
+
+        <!-- ========== PITFALLS ========== -->
+        <section id="pitfalls">
+            <h2>9. Common pitfalls and gotchas</h2>
+
+            <div class="callout amber">
+                <span class="label">Pitfall 1</span>
+                <p><b>Mode looks wrong on the roster.</b> Module mode is inferred from event counts. If a client looks like Lending-only but should be Both modules, check that the deposit columns aren't all zero in the CSV. The tool can't know the client's <i>intended</i> mode — only what their data says.</p>
+            </div>
+
+            <div class="callout amber">
+                <span class="label">Pitfall 2</span>
+                <p><b>BPS shows "no NCUA data" for a client.</b> Means the <code>cu_number</code> didn't match. Use the inline "associate…" picker in the roster to link the client to the right NCUA charter. SaaS+event back-solves still work without the match — only BPS depends on NCUA volume data.</p>
+            </div>
+
+            <div class="callout amber">
+                <span class="label">Pitfall 3</span>
+                <p><b>Per-event prices look implausibly high or low.</b> Two common causes: (1) the <code>annual_fee_2025</code> is wrong in the CSV — usually a missing zero or a comma issue; (2) the event counts are off by an order of magnitude. Open the per-client detail view; the stat strip shows the parsed annual fee and event counts.</p>
+            </div>
+
+            <div class="callout amber">
+                <span class="label">Pitfall 4</span>
+                <p><b>The tier summary shows huge spreads in some tier+mode cells.</b> Means the clients in that segment have very different volume profiles. The recommended fix is to look at the per-client view for those clients and decide whether to (a) pick a price closer to the high end (and let some clients overshoot 120%), (b) pick the low end (and accept some undershoot 100%), or (c) propose two sub-tiers. The tool surfaces the spread; the strategic call is on you.</p>
+            </div>
+
+            <div class="callout amber">
+                <span class="label">Pitfall 5</span>
+                <p><b>Multiple browsers / devices show different rosters.</b> Client data lives in <code>localStorage</code> on whichever browser uploaded the CSV. Use "Export JSON" + share if you need consistency across the team.</p>
+            </div>
+
+            <div class="callout">
+                <span class="label">Reset to defaults</span>
+                <p>If you want to start completely fresh: hit <b>"Clear all"</b> on the upload card, refresh the page (resets the global controls back to 70% SaaS / 2× lending premium), and re-upload your CSV.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="footer">
+        Movemint Repricing Tool · For internal use · Questions: ask Kyle
+    </div>
+</body>
+</html>

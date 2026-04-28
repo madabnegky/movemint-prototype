@@ -80,11 +80,21 @@ export function RepricingTab(props: RepricingTabProps) {
   return (
     <div className="space-y-6">
       <Card title="Existing-client repricing" tone="muted">
-        <p className="text-sm text-slate-600">
-          Upload your existing-client roster and the tool back-solves the recommended SaaS fee + per-event/bps prices
-          per client, targeting <b>60–80% from SaaS</b> across <b>100–120% of current revenue</b>. Each client&apos;s
-          module mode (lending-only / deposit-only / both) is inferred from their actual event activity in the CSV.
-        </p>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <p className="text-sm text-slate-600 flex-1 min-w-[280px]">
+            Upload your existing-client roster and the tool back-solves the recommended SaaS fee + per-event/bps prices
+            per client, targeting <b>60–80% from SaaS</b> across <b>100–120% of current revenue</b>. Each client&apos;s
+            module mode (lending-only / deposit-only / both) is inferred from their actual event activity in the CSV.
+          </p>
+          <a
+            href="/repricing-guide.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors whitespace-nowrap"
+          >
+            Read the guide →
+          </a>
+        </div>
         <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
           <div className="flex items-center gap-2">
             <label className="text-slate-600 font-medium">Target SaaS share:</label>
