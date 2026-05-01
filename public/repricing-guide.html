@@ -30,9 +30,18 @@
         li { margin-bottom: 6px; color: #2e3a44; }
         b, strong { color: #1a2733; font-weight: 600; }
         code { background: #f1f4f7; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.88em; color: #2c5282; }
-        .toc { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 22px; margin-bottom: 32px; }
-        .toc h3 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: #718096; font-weight: 600; }
-        .toc ol { margin: 8px 0 0 20px; }
+        .toc { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0; margin-bottom: 32px; }
+        .toc summary { padding: 14px 20px; cursor: pointer; list-style: none; user-select: none; display: flex; align-items: center; gap: 10px; }
+        .toc summary::-webkit-details-marker { display: none; }
+        .toc summary::before { content: "▶"; font-size: 0.7rem; color: #718096; transition: transform 0.15s ease; }
+        .toc[open] summary::before { transform: rotate(90deg); }
+        .toc summary h3 { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: #718096; font-weight: 600; }
+        .toc summary:hover h3 { color: #143C67; }
+        .toc-body { padding: 0 20px 16px 20px; border-top: 1px solid #e2e8f0; padding-top: 14px; }
+        .toc ol { margin: 0 0 0 20px; }
+        .toc ol li { margin-bottom: 4px; }
+        .toc ul { list-style: none; margin: 4px 0 6px 0; padding-left: 8px; }
+        .toc ul li { font-size: 0.88rem; color: #4a5568; margin-bottom: 2px; padding-left: 14px; border-left: 1px solid #cbd5e0; }
         .toc a { color: #143C67; text-decoration: none; }
         .toc a:hover { text-decoration: underline; }
         .callout { border-left: 4px solid #143C67; background: #f7fafc; padding: 14px 18px; margin: 16px 0; border-radius: 0 8px 8px 0; }
@@ -70,20 +79,71 @@
 
     <div class="container">
 
-        <div class="toc">
-            <h3>Contents</h3>
+        <details class="toc" open>
+            <summary><h3>Contents</h3></summary>
+            <div class="toc-body">
             <ol>
                 <li><a href="#what">What this tool solves</a></li>
-                <li><a href="#concepts">Key concepts (read once)</a></li>
+                <li>
+                    <a href="#concepts">Key concepts (read once)</a>
+                    <ul>
+                        <li><a href="#five-billing-options">The five billing options</a></li>
+                        <li><a href="#module-configuration">Module configuration: every client is one of three</a></li>
+                        <li><a href="#five-revenue-targets">The five revenue targets</a></li>
+                        <li><a href="#seven-asset-tiers">The seven asset tiers</a></li>
+                    </ul>
+                </li>
                 <li><a href="#csv">Step 1 — Prepare your client CSV</a></li>
                 <li><a href="#upload">Step 2 — Upload and review the roster</a></li>
-                <li><a href="#tune">Step 3 — Tune the global controls</a></li>
-                <li><a href="#perclient">Step 4 — Drill into a specific client</a></li>
-                <li><a href="#tier">Step 5 — Use the Tier Summary to set publishable pricing</a></li>
-                <li><a href="#methodology">Methodology — what the math is doing under the hood</a></li>
+                <li>
+                    <a href="#tune">Step 3 — Tune the global controls</a>
+                    <ul>
+                        <li><a href="#target-saas-share">Target SaaS share</a></li>
+                        <li><a href="#lending-premium">Lending premium</a></li>
+                        <li><a href="#bps-assumptions">BPS-specific assumptions</a></li>
+                        <li>
+                            <a href="#pricing-mode">Pricing mode — Live back-solve vs. Rate-card builder</a>
+                            <ul>
+                                <li><a href="#live-back-solve">Live back-solve (default)</a></li>
+                                <li><a href="#rate-card-builder">Rate-card builder</a></li>
+                                <li><a href="#rate-card-builder-card">The rate-card builder card</a></li>
+                                <li><a href="#share-slider-in-rate-card">What the SaaS share % slider does in rate-card mode</a></li>
+                                <li><a href="#rate-card-cells">Rate-card cells in the per-client view</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#perclient">Step 4 — Drill into a specific client</a>
+                    <ul>
+                        <li><a href="#stat-strip">Stat strip</a></li>
+                        <li><a href="#event-count-strip">Event count strip</a></li>
+                        <li><a href="#the-5x5-grid">The 5×5 grid</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#tier">Step 5 — Use the Tier Summary to set publishable pricing</a>
+                    <ul>
+                        <li><a href="#pick-billing-option">Pick a billing option</a></li>
+                        <li><a href="#three-columns-per-tier">Three columns per tier</a></li>
+                        <li><a href="#how-to-use-tier-summary">How to use it</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#methodology">Methodology — what the math is doing under the hood</a>
+                    <ul>
+                        <li><a href="#basic-identity">The basic identity</a></li>
+                        <li><a href="#module-split-math">Module split for both-modules clients</a></li>
+                        <li><a href="#bps-back-solve">BPS back-solve</a></li>
+                        <li><a href="#mode-filtering">Mode filtering</a></li>
+                        <li><a href="#tier-aggregation">Tier aggregation</a></li>
+                        <li><a href="#not-in-back-solve">What&apos;s NOT in the back-solve</a></li>
+                    </ul>
+                </li>
                 <li><a href="#pitfalls">Common pitfalls and gotchas</a></li>
             </ol>
-        </div>
+            </div>
+        </details>
 
         <!-- ========== WHAT IT SOLVES ========== -->
         <section id="what">
@@ -105,7 +165,7 @@
         <section id="concepts">
             <h2>2. Key concepts (read once, then skim later)</h2>
 
-            <h3>The four billing options</h3>
+            <h3 id="five-billing-options">The five billing options</h3>
             <p>Every client will land on exactly one of these four pricing models. The Repricing tool computes recommended prices for all four so you can compare side by side.</p>
             <table>
                 <thead><tr><th>Option</th><th>What's billed</th><th>Best when…</th></tr></thead>
@@ -113,11 +173,12 @@
                     <tr><td>BPS take-rate</td><td>Floor + bps × funded loan / new deposit volume</td><td>Volume is high, predictable, and Movemint takes a cut at funding</td></tr>
                     <tr><td>Per-redemption</td><td>SaaS + $ per loan funded / account opened</td><td>Aligns price with realized customer value</td></tr>
                     <tr><td>Per-application</td><td>SaaS + $ per application started</td><td>Spreads risk earlier in the funnel; pre-funding billing</td></tr>
+                    <tr><td>Per-click</td><td>SaaS + $ per offer click (intent signal)</td><td>Member engagement is meaningful but conversion timing is uncertain</td></tr>
                     <tr><td>Per-offer-generated</td><td>SaaS + $ per offer rendered to a member</td><td>Heavy member base, low conversion expectations (impression model)</td></tr>
                 </tbody>
             </table>
 
-            <h3>Module configuration: every client is one of three</h3>
+            <h3 id="module-configuration">Module configuration: every client is one of three</h3>
             <p>Each client uses one of these module configurations, <b>inferred automatically</b> from the event counts in your CSV:</p>
             <ul>
                 <li><span class="pill lending">Lending-only</span> — All deposit-side event counts are 0 in the CSV. Client uses Movemint for loan-side originations only.</li>
@@ -127,12 +188,12 @@
             </ul>
             <p>For <b>both-modules</b> clients, the tool can charge a <i>different</i> per-event price (or per-module bps rate) for lending vs. deposit. The default is lending priced 2× deposit (the "lending premium"), reflecting that a funded loan is typically more valuable than a new deposit account. The premium applies to both per-event prices and BPS rates.</p>
 
-            <h3>The five revenue targets</h3>
+            <h3 id="five-revenue-targets">The five revenue targets</h3>
             <p>For every client, the tool computes pricing at five revenue targets relative to their 2025 actual fee:</p>
             <p><b>100%, 105%, 110%, 115%, 120%</b></p>
-            <p>You'll see a 5×4 grid (revenue target × billing option) on the per-client view. The tier summary uses the same targets but aggregates across clients.</p>
+            <p>You'll see a 5×5 grid (revenue target × billing option) on the per-client view. The tier summary uses the same targets but aggregates across clients.</p>
 
-            <h3>The seven asset tiers</h3>
+            <h3 id="seven-asset-tiers">The seven asset tiers</h3>
             <p>Tiers are based on credit-union total assets and used for grouping in the tier summary view. <b>Boundaries are fixed</b>; only prices recommended at each tier are computed by the tool.</p>
             <ol>
                 <li>$0 – $500M</li>
@@ -161,6 +222,8 @@
                     <tr><td>applications_deposit</td><td>Deposit applications started in 2025.</td><td>1958</td></tr>
                     <tr><td>offers_generated_lending</td><td>Lending offers rendered to members in 2025.</td><td>246991</td></tr>
                     <tr><td>offers_generated_deposit</td><td>Deposit offers rendered to members in 2025.</td><td>365807</td></tr>
+                    <tr><td>clicks_lending</td><td>Lending offer clicks in 2025 (sit between offers and applications).</td><td>61748</td></tr>
+                    <tr><td>clicks_deposit</td><td>Deposit offer clicks in 2025.</td><td>91452</td></tr>
                 </tbody>
             </table>
             <div class="callout">
@@ -224,7 +287,7 @@
             <h2>5. Step 3 — Tune the global controls</h2>
             <p>Two controls at the top of the Repricing tab affect every back-solve in the tool:</p>
 
-            <h3>Target SaaS share (default 70%)</h3>
+            <h3 id="target-saas-share">Target SaaS share (default 70%)</h3>
             <p>The percentage of total client revenue that should come from the SaaS base fee (or floor for BPS). The remainder goes to per-event / BPS revenue.</p>
             <p>Allowed range: 50–90%. The "sweet spot" is 60–80%, matching the strategic target.</p>
             <ul>
@@ -232,7 +295,7 @@
                 <li><b>Lower</b> (e.g. 60%) — More activity-aligned. Per-event prices come out higher; clients pay more when they use the platform.</li>
             </ul>
 
-            <h3>Lending premium (default 2×)</h3>
+            <h3 id="lending-premium">Lending premium (default 2×)</h3>
             <p>For both-modules clients, this multiplier sets the ratio of lending event price to deposit event price. Loan conversions are typically more valuable than deposit account openings, so they're priced higher per event.</p>
             <p>Allowed range: 1× (equal) to 5× (lending events priced 5× deposit).</p>
             <p>Example with 800 lending + 400 deposit redemptions, $33K event revenue target:</p>
@@ -251,7 +314,7 @@
                 <p>The lending premium only matters for both-modules clients. Single-module clients have all event revenue allocated to the one module they use, regardless of premium.</p>
             </div>
 
-            <h3>BPS-specific assumptions (in the Assumptions modal)</h3>
+            <h3 id="bps-assumptions">BPS-specific assumptions (in the Assumptions modal)</h3>
             <p>Click <b>Assumptions</b> in the top-right of the Repricing tab to open a modal with the rest of the BPS knobs:</p>
             <ul>
                 <li><b>Loan funding rate</b> (default 35%) — % of loan applications that result in a funded loan. Industry typical: 30–40%.</li>
@@ -260,6 +323,57 @@
                 <li><b>Avg new deposit account size</b> (default $5K) — average balance of a newly-opened deposit account.</li>
             </ul>
             <p>These four values feed the BPS back-solve. Funded volume is computed from the client's actual application counts in the CSV, multiplied by the funding rate, multiplied by the avg size — no NCUA dependency.</p>
+
+            <h3 id="pricing-mode">Pricing mode — Live back-solve vs. Rate-card builder</h3>
+            <p>The Repricing tab has two modes, switchable via the pill control in the top controls strip.</p>
+
+            <h4 id="live-back-solve">Live back-solve (default)</h4>
+            <p>This is the original behavior. For each client × revenue target × billing option, the tool back-solves
+                the recommended SaaS fee + per-event/BPS prices that hit the target while preserving the strategic
+                mix (e.g. 70% SaaS / 30% transaction). Sliding the SaaS share % moves both numbers proportionally;
+                changing the revenue target moves both numbers proportionally. Useful for understanding what each
+                client <i>could</i> pay under different mixes.</p>
+
+            <h4 id="rate-card-builder">Rate-card builder</h4>
+            <p>Switch to this mode to design a publishable rate card — a single SaaS fee per tier that doesn&apos;t
+                change as you slide the revenue target. The transaction fee absorbs all revenue growth.</p>
+            <p>The math:</p>
+            <div class="formula">
+SaaS for tier T   = base × tier_multiplier[T]   <span class="comment"># flat across every revenue target</span><br>
+event_rev_target  = revenue_target − (SaaS × 12)<br>
+per_event_price   = event_rev_target ÷ event_count   <span class="comment"># lending and deposit split via lending premium</span>
+            </div>
+            <p>So for a client with $30K/yr current fee, $2,500/mo SaaS ($30K/yr), and 100% revenue target: SaaS already
+                accounts for the full revenue, per-event prices come out to $0. Bump to 105% target → revenue gap of
+                $1.5K → per-event prices rise to absorb it. Bump to 120% → $6K gap → prices rise much further.</p>
+
+            <h4 id="rate-card-builder-card">The rate-card builder card</h4>
+            <p>When you flip into rate-card mode, a new card appears at the top of the Tier Summary view:</p>
+            <ul>
+                <li><b>Base SaaS fee</b> — the anchor monthly fee. Defaults to the median back-solved SaaS of clients
+                    in the middle tier ($2B–$3B) at the current target SaaS share. Editable. The "reset to $X,XXX"
+                    link returns it to the auto-suggested value.</li>
+                <li><b>Per-tier multiplier table</b> — 7 rows, one per asset tier. Each tier&apos;s effective SaaS =
+                    base × that tier&apos;s multiplier. The middle tier ($2B–$3B) is the <b>anchor</b> at 1× by
+                    convention. Defaults: <code>0.4× / 0.6× / 0.8× / 1.0× / 1.2× / 1.4× / 1.7×</code>.</li>
+                <li><b>Reset all multipliers</b> — restores both the multipliers and the base SaaS to the defaults.</li>
+                <li>The card is collapsible — click the chevron next to "Rate-card builder" to hide the inputs and
+                    watch the tier tables below recompute as you adjust other controls.</li>
+            </ul>
+
+            <h4 id="share-slider-in-rate-card">What the SaaS share % slider does in rate-card mode</h4>
+            <p>The slider drives the <i>auto-suggested</i> base SaaS only. As you slide the share % down, the median
+                middle-tier client&apos;s back-solved SaaS gets smaller, so the auto-suggested base shrinks. If you
+                haven&apos;t manually overridden the base, the actual base used in the tier tables follows the slider —
+                which means the SaaS column drops and per-event prices grow to absorb the difference.</p>
+            <p>If you <b>have</b> manually overridden the base (the "reset to $X,XXX" link is visible), the slider has
+                no visible effect — the override is fixed. Click the reset link to return to auto-tracking.</p>
+
+            <h4 id="rate-card-cells">Rate-card cells in the per-client view</h4>
+            <p>Every cell in the per-client 5×5 grid renders SaaS at the same value (the client&apos;s tier rate-card
+                price), flat across all 5 revenue targets. Per-event prices and BPS rates change as the revenue target
+                rises. Cells are marked with a <b>🔒</b> icon to indicate the SaaS is from the rate card, not from a
+                live back-solve. A blue banner at the top of the per-client view confirms this.</p>
         </section>
 
         <!-- ========== STEP 4: PER CLIENT ========== -->
@@ -267,18 +381,18 @@
             <h2>6. Step 4 — Drill into a specific client</h2>
             <p>Click any client's name in the roster to open their detail view. You'll see:</p>
 
-            <h3>Stat strip</h3>
+            <h3 id="stat-strip">Stat strip</h3>
             <p>2025 annual fee, asset tier, total assets, and member count (the last three pulled from NCUA data).</p>
 
-            <h3>Event count strip</h3>
+            <h3 id="event-count-strip">Event count strip</h3>
             <p>Lending vs deposit counts for redemptions / applications / offers generated. The unused side is <s>struck through</s> for single-module clients, so you can see at a glance which side the back-solve is using.</p>
 
-            <h3>The 5×4 grid</h3>
-            <p>The headline output. Rows are revenue targets (100/105/110/115/120%); columns are the four billing options.</p>
+            <h3 id="the-5x5-grid">The 5×5 grid</h3>
+            <p>The headline output. Rows are revenue targets (100/105/110/115/120%); columns are the five billing options (BPS + four event-based).</p>
             <p>Each cell shows the recommended pricing for that combination:</p>
             <ul>
                 <li><b>BPS</b> cells: <code>$X/mo floor</code> + <code>Y bps loan / Z bps deposit</code> applied to funded volume. Funded volume is derived from the client's applications + the funding rate / avg size assumptions.</li>
-                <li><b>Per-event</b> cells: <code>$X/mo SaaS</code> + <code>$Y per event</code> (lending and deposit shown separately for both-modules clients).</li>
+                <li><b>Per-event</b> cells (redemption / application / click / offer-generated): <code>$X/mo SaaS</code> + <code>$Y per event</code> (lending and deposit shown separately for both-modules clients).</li>
                 <li>Cells highlight green when feasible; grey when there's no event volume / no NCUA data.</li>
             </ul>
             <div class="callout">
@@ -292,10 +406,10 @@
             <h2>7. Step 5 — Use the Tier Summary to set publishable pricing</h2>
             <p>From the client list, click <b>"View tier summary →"</b> to switch into the aggregate view. This is the deliverable for your team — what you'd put on the rate card.</p>
 
-            <h3>Pick a billing option</h3>
-            <p>Four toggle pills at the top: <b>BPS take-rate / Per-redemption / Per-application / Per-offer-generated</b>. Click one. Every tier's tables re-render to show pricing for just that billing option.</p>
+            <h3 id="pick-billing-option">Pick a billing option</h3>
+            <p>Five toggle pills at the top: <b>BPS take-rate / Per-redemption / Per-application / Per-click / Per-offer-generated</b>. Click one. Every tier&apos;s tables re-render to show pricing for just that billing option.</p>
 
-            <h3>Three columns per tier</h3>
+            <h3 id="three-columns-per-tier">Three columns per tier</h3>
             <p>Each asset tier shows three sub-columns: <span class="pill lending">Lending-only</span> · <span class="pill deposit">Deposit-only</span> · <span class="pill both">Both modules</span>. Each column is populated from the subset of clients in that tier with that mode.</p>
             <p>Each sub-column has a 5-row table:</p>
             <ul>
@@ -304,7 +418,7 @@
                 <li><b>Per-event price</b> (or <b>BPS rates per module</b> for BPS) — the median recommendation</li>
             </ul>
 
-            <h3>How to use it</h3>
+            <h3 id="how-to-use-tier-summary">How to use it</h3>
             <ol>
                 <li>Pick a revenue target (e.g. 110% — what we want to land at on average)</li>
                 <li>Pick a billing option (e.g. Per-redemption — leadership wants this model)</li>
@@ -321,7 +435,7 @@
         <section id="methodology">
             <h2>8. Methodology — what the math is doing under the hood</h2>
 
-            <h3>The basic identity</h3>
+            <h3 id="basic-identity">The basic identity</h3>
             <p>For every client, every revenue target, every billing option, the tool solves the same identity:</p>
             <div class="formula">
 total_rev = saas_rev + event_rev<br>
@@ -332,7 +446,7 @@ event_rev = (1 - target_saas_share) × total_rev<br>
             <p>Given a target total revenue (e.g. $66K = 110% of $60K current fee) and a target SaaS share (e.g. 70%), the SaaS revenue is fully determined: <code>$66K × 70% = $46.2K/yr → $3,850/mo</code>.</p>
             <p>The event revenue is then <code>$66K × 30% = $19.8K/yr</code>, divided across the client's actual event counts to get a per-event price.</p>
 
-            <h3>Module split for both-modules clients</h3>
+            <h3 id="module-split-math">Module split for both-modules clients</h3>
             <p>If a client has 800 lending + 400 deposit redemptions and the lending premium is 2×, we solve:</p>
             <div class="formula">
 event_rev = price_loan × 800 + price_dep × 400<br>
@@ -343,7 +457,7 @@ price_loan = 2 × price_dep   <span class="comment"># lending premium constraint
             </div>
             <p>Both prices fall out cleanly. The total event revenue is preserved exactly; only the split between modules changes with the premium.</p>
 
-            <h3>BPS back-solve</h3>
+            <h3 id="bps-back-solve">BPS back-solve</h3>
             <p>BPS produces two clean rate-card numbers per client (or per tier+mode in the tier summary): a <b>recommended monthly floor</b> and a <b>recommended bps rate per module</b>. There is no dependency on the BPS tab or NCUA balance-sheet data — funded volume is derived from the client's actual application counts plus a few global assumptions.</p>
             <h4>Step 1: derive funded volume from applications</h4>
             <div class="formula">
@@ -365,7 +479,7 @@ deposit_bps × (p × loan_volume + deposit_volume) = target_bps_rev<br>
             </div>
             <p>The recommendation is two clean numbers — for example "12 bps loan / 4 bps deposit + $5,500/mo floor" — directly publishable on a rate card.</p>
 
-            <h3>Mode filtering</h3>
+            <h3 id="mode-filtering">Mode filtering</h3>
             <p>Before back-solving, the tool zeroes out the unused module's counts:</p>
             <ul>
                 <li><b>Lending-only</b>: deposit event counts and deposit applications set to 0. Per-event price (and deposit bps) floats up because revenue concentrates on the lending side.</li>
@@ -374,11 +488,11 @@ deposit_bps × (p × loan_volume + deposit_volume) = target_bps_rev<br>
             </ul>
             <p>This means a Lending-only client with 800 lending events at 110% target will get a higher per-event price than a both-modules client with the same 800 lending events plus 400 deposit events — because the both-modules client has more events to spread the same $19.8K event revenue across.</p>
 
-            <h3>Tier aggregation</h3>
+            <h3 id="tier-aggregation">Tier aggregation</h3>
             <p>The tier summary takes every client back-solve in a tier+mode and computes the <b>median</b> across them. The min and max are also surfaced as a "spread" beneath the median — that tells you how varied the recommendations are within a tier.</p>
             <p>Tight spread = the tier is pricing-coherent (you can publish one price). Wide spread = the tier has heterogeneous clients and a single tier price will help-some-hurt-others.</p>
 
-            <h3>What's NOT in the back-solve</h3>
+            <h3 id="not-in-back-solve">What&apos;s NOT in the back-solve</h3>
             <ul>
                 <li><b>Tier prices from the prospective tabs</b> — the Repricing tab does <i>not</i> read the tier prices set on the SaaS+event tabs. SaaS is an output here, not an input.</li>
                 <li><b>Floor from the BPS tab</b> — same. The Repricing tab recommends a floor; it doesn't consume the one set elsewhere.</li>

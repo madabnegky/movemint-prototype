@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { Upload, Download, Trash2, FileWarning, ArrowLeft, Search, Info, X } from "lucide-react";
+import { Upload, Download, Trash2, FileWarning, ArrowLeft, Search, Info, X, ChevronDown, ChevronRight } from "lucide-react";
 import ncuaData from "@/data/ncua-cus.json";
 
 import type { LoanTakeRates, DepositTakeRates } from "../_lib/types";
-import { tierForAssets, SAAS_TIERS } from "../_lib/types";
+import { tierForAssets, SAAS_TIERS, MIDDLE_TIER_ID, DEFAULT_TIER_MULTIPLIERS } from "../_lib/types";
 import type { EventAssumptions } from "../_lib/events";
 import { fmtUSD, fmtUSDExact, fmtCount } from "../_lib/format";
 import {
@@ -33,12 +33,13 @@ const DEPOSIT_FUNDING_RATE_DEFAULT = 60;  // % of deposit apps that fund (defaul
 const BPS_AVG_LOAN_SIZE_DEFAULT = 35_000; // $ — blended avg funded loan size for BPS calc
 const BPS_AVG_DEPOSIT_SIZE_DEFAULT = 5_000; // $ — avg new-deposit account size
 
-type BillingOption = "bps" | "redemption" | "application" | "offerGen";
+type BillingOption = "bps" | "redemption" | "application" | "click" | "offerGen";
 
 const BILLING_OPTION_LABELS: Record<BillingOption, string> = {
   bps: "BPS take-rate",
   redemption: "Per-redemption",
   application: "Per-application",
+  click: "Per-click",
   offerGen: "Per-offer-generated",
 };
 
@@ -78,6 +79,19 @@ export function RepricingTab(props: RepricingTabProps) {
   const [bpsAvgLoanSize, setBpsAvgLoanSize] = useState<number>(BPS_AVG_LOAN_SIZE_DEFAULT);
   const [bpsAvgDepositSize, setBpsAvgDepositSize] = useState<number>(BPS_AVG_DEPOSIT_SIZE_DEFAULT);
   const [showAssumptions, setShowAssumptions] = useState(false);
+  // Rate-card builder mode: when ON, SaaS becomes a static rate card driven
+  // by `baseSaasFee × tierMultipliers[clientTier]`, applied flat across all
+  // revenue targets and ignoring the SaaS-share % slider. Per-event / bps
+  // prices absorb the rest. When OFF, the live back-solve (default behavior)
+  // governs everything.
+  const [useRateCardMode, setUseRateCardMode] = useState(false);
+  // Per-tier multipliers used in rate-card mode. Anchor: middle tier (t4) = 1×.
+  const [tierMultipliers, setTierMultipliers] = useState<Record<string, number>>(
+    () => ({ ...DEFAULT_TIER_MULTIPLIERS }),
+  );
+  // Base SaaS fee — the value at the anchor tier (1× multiplier). Either user-set
+  // or auto-computed from the middle-tier median at 70%/100%.
+  const [baseSaasFeeOverride, setBaseSaasFeeOverride] = useState<number | null>(null);
 
   function persist(next: ExistingClient[]) {
     saveClients(next);
@@ -88,6 +102,67 @@ export function RepricingTab(props: RepricingTabProps) {
     [clients],
   );
   const activeClient = clientsHydrated.find((c) => c.id === activeClientId) ?? null;
+
+  // Auto-computed base SaaS fee: median of middle-tier (anchor tier) clients'
+  // back-solved monthly SaaS at 100% revenue / 70% SaaS share. This is the
+  // recommended default; user can override with baseSaasFeeOverride.
+  const autoBaseSaasFee = useMemo(() => {
+    const middleTierClients = clientsHydrated.filter(
+      (c) => c.ncua && tierForAssets(c.ncua.assets).id === MIDDLE_TIER_ID,
+    );
+    if (middleTierClients.length === 0) return null;
+
+    const mathProps: RepricingMathProps = {
+      loanBps: props.loanBps,
+      depositBps: props.depositBps,
+      loanPenetration: props.loanPenetration,
+      depositPenetration: props.depositPenetration,
+      depositChurnGrossup: props.depositChurnGrossup,
+      lendingPremium,
+      loanFundingRate,
+      depositFundingRate,
+      bpsAvgLoanSize,
+      bpsAvgDepositSize,
+    };
+    // Use redemption result by convention — recommended SaaS is the same
+    // regardless of event type at any given share, since SaaS is computed
+    // from target × share before any event allocation. Auto-suggestion uses
+    // the live targetSaasShare so sliding the share % updates the auto value.
+    const values: number[] = [];
+    for (const c of middleTierClients) {
+      const r = computeBackSolves(c, c.annualFee2025, targetSaasShare, mathProps);
+      if (r.redemption.feasibility === "ok") values.push(r.redemption.recommendedMonthlySaas);
+    }
+    if (values.length === 0) return null;
+    return median(values);
+  }, [
+    clientsHydrated,
+    targetSaasShare,
+    lendingPremium,
+    loanFundingRate,
+    depositFundingRate,
+    bpsAvgLoanSize,
+    bpsAvgDepositSize,
+    props.loanBps,
+    props.depositBps,
+    props.loanPenetration,
+    props.depositPenetration,
+    props.depositChurnGrossup,
+  ]);
+
+  // Effective base SaaS fee: user override if set, else auto-computed median, else 0.
+  const baseSaasFee = baseSaasFeeOverride ?? autoBaseSaasFee ?? 0;
+
+  // Build the tierMonthlySaas map: { tierId: base × multiplier }.
+  // Only relevant when useRateCardMode is on; passed as override to back-solves.
+  const tierMonthlySaas = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const t of SAAS_TIERS) {
+      const mult = tierMultipliers[t.id] ?? 1;
+      out[t.id] = baseSaasFee * mult;
+    }
+    return out;
+  }, [baseSaasFee, tierMultipliers]);
 
   return (
     <div className="space-y-6">
@@ -144,6 +219,38 @@ export function RepricingTab(props: RepricingTabProps) {
             />
             <span className="text-slate-500">× (loan-event price ÷ deposit-event price)</span>
           </div>
+          <div className="flex items-center gap-2">
+            <label className="text-slate-600 font-medium">Pricing mode:</label>
+            <div className="flex">
+              <button
+                type="button"
+                onClick={() => setUseRateCardMode(false)}
+                className={`text-xs px-2.5 py-1 rounded-l border font-medium transition-colors ${
+                  !useRateCardMode
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
+                }`}
+              >
+                Live back-solve
+              </button>
+              <button
+                type="button"
+                onClick={() => setUseRateCardMode(true)}
+                className={`text-xs px-2.5 py-1 rounded-r border-y border-r font-medium transition-colors ${
+                  useRateCardMode
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
+                }`}
+              >
+                Rate-card builder
+              </button>
+            </div>
+            <span className="text-slate-500">
+              {useRateCardMode
+                ? "(SaaS = base × tier multiplier, flat across targets; transaction fees absorb the rest)"
+                : "(SaaS scales with target & share %)"}
+            </span>
+          </div>
           <button
             type="button"
             onClick={() => setShowAssumptions(true)}
@@ -194,6 +301,8 @@ export function RepricingTab(props: RepricingTabProps) {
           client={activeClient}
           targetSaasSharePct={targetSaasShare}
           lendingPremium={lendingPremium}
+          useRateCardMode={useRateCardMode}
+          tierMonthlySaas={tierMonthlySaas}
           onBack={() => setView("list")}
           loanBps={props.loanBps}
           depositBps={props.depositBps}
@@ -212,6 +321,19 @@ export function RepricingTab(props: RepricingTabProps) {
           clients={clientsHydrated}
           targetSaasSharePct={targetSaasShare}
           lendingPremium={lendingPremium}
+          useRateCardMode={useRateCardMode}
+          tierMonthlySaas={tierMonthlySaas}
+          baseSaasFee={baseSaasFee}
+          setBaseSaasFee={(v) => setBaseSaasFeeOverride(v)}
+          tierMultipliers={tierMultipliers}
+          setTierMultiplier={(tierId, v) =>
+            setTierMultipliers((prev) => ({ ...prev, [tierId]: v }))
+          }
+          resetTierMultipliers={() => {
+            setTierMultipliers({ ...DEFAULT_TIER_MULTIPLIERS });
+            setBaseSaasFeeOverride(null);
+          }}
+          autoBaseSaasFee={autoBaseSaasFee}
           billingOption={tierBillingOption}
           setBillingOption={setTierBillingOption}
           onBack={() => setView("list")}
@@ -597,24 +719,43 @@ function ClientDetailView({
   client,
   targetSaasSharePct,
   lendingPremium,
+  useRateCardMode,
+  tierMonthlySaas,
   onBack,
   ...partialMath
 }: {
   client: ClientWithNcua;
   targetSaasSharePct: number;
   lendingPremium: number;
+  useRateCardMode: boolean;
+  tierMonthlySaas: Record<string, number>;
   onBack: () => void;
 } & Omit<RepricingMathProps, "lendingPremium">) {
   const mathProps: RepricingMathProps = { ...partialMath, lendingPremium };
   const tier = client.ncua ? tierForAssets(client.ncua.assets) : null;
   const mode = clientMode(client);
 
+  // In rate-card mode, SaaS = base × tier multiplier — same value at every
+  // revenue target. Otherwise live back-solve fills the SaaS slot.
+  const override = buildRateCardOverride(client, useRateCardMode, tierMonthlySaas);
+  const isLocked = override != null;
+
   const cells = REVENUE_TARGETS.map((mult) => {
     const targetRev = client.annualFee2025 * mult;
+    const r = computeBackSolves(client, targetRev, targetSaasSharePct, mathProps, override);
     return {
       mult,
       targetRev,
-      ...computeBackSolves(client, targetRev, targetSaasSharePct, mathProps),
+      lockedRedemption: isLocked,
+      lockedApplication: isLocked,
+      lockedClick: isLocked,
+      lockedOfferGen: isLocked,
+      lockedBps: isLocked,
+      redemption: r.redemption,
+      application: r.application,
+      click: r.click,
+      offerGen: r.offerGen,
+      bps: r.bps,
     };
   });
 
@@ -649,19 +790,28 @@ function ClientDetailView({
         </div>
       </Card>
 
+      {useRateCardMode && tier && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+          🔒 <b>Rate-card mode on.</b> SaaS for this client is fixed at{" "}
+          <b>${Math.round(tierMonthlySaas[tier.id] ?? 0).toLocaleString()}/mo</b> (base × {tier.label} multiplier),
+          flat across all revenue targets. Per-event prices and BPS rates absorb the difference.
+        </div>
+      )}
+
       <Card title="Recommended pricing — revenue targets × pricing models">
         <p className="text-sm text-slate-600 mb-4">
           Each cell shows the recommended SaaS fee + per-event price (or BPS rates + floor) needed to hit that
           revenue target with <b>{targetSaasSharePct}% of revenue from SaaS</b> (or floor for BPS).
         </p>
         <div className="overflow-x-auto -mx-1 px-1">
-          <table className="w-full text-xs min-w-[860px]">
+          <table className="w-full text-xs min-w-[1000px]">
             <thead>
               <tr className="border-b border-slate-200">
                 <th className="text-left py-2 font-medium text-slate-500 uppercase tracking-wider">Target</th>
                 <th className="text-left py-2 font-medium text-slate-500 uppercase tracking-wider">BPS</th>
                 <th className="text-left py-2 font-medium text-slate-500 uppercase tracking-wider">Per redemption</th>
                 <th className="text-left py-2 font-medium text-slate-500 uppercase tracking-wider">Per application</th>
+                <th className="text-left py-2 font-medium text-slate-500 uppercase tracking-wider">Per click</th>
                 <th className="text-left py-2 font-medium text-slate-500 uppercase tracking-wider">Per offer gen</th>
               </tr>
             </thead>
@@ -673,11 +823,12 @@ function ClientDetailView({
                     <div className="font-mono text-slate-500">{fmtUSDExact(c.targetRev)}</div>
                   </td>
                   <td className="py-3 pr-3">
-                    <BpsCell bps={c.bps} mode={mode} />
+                    <BpsCell bps={c.bps} mode={mode} locked={c.lockedBps} />
                   </td>
-                  <SaasEventCellWrap result={c.redemption} mode={mode} unit="redemption" />
-                  <SaasEventCellWrap result={c.application} mode={mode} unit="application" />
-                  <SaasEventCellWrap result={c.offerGen} mode={mode} unit="offer" />
+                  <SaasEventCellWrap result={c.redemption} mode={mode} unit="redemption" locked={c.lockedRedemption} />
+                  <SaasEventCellWrap result={c.application} mode={mode} unit="application" locked={c.lockedApplication} />
+                  <SaasEventCellWrap result={c.click} mode={mode} unit="click" locked={c.lockedClick} />
+                  <SaasEventCellWrap result={c.offerGen} mode={mode} unit="offer" locked={c.lockedOfferGen} />
                 </tr>
               ))}
             </tbody>
@@ -691,21 +842,31 @@ function ClientDetailView({
 // Compute back-solves for one client at one revenue target. Mode-aware:
 // lending-only zeroes deposit counts before back-solving (so the per-event
 // price floats up on lending alone); deposit-only does the inverse.
+//
+// Optional overrides — when provided, fix SaaS / floor at those values and
+// let per-event/bps prices absorb the gap. Used when the SaaS lock is on,
+// passing the tier+mode median computed at 100% target.
 function computeBackSolves(
   client: ClientWithNcua,
   targetRev: number,
   targetSaasSharePct: number,
   mathProps: RepricingMathProps,
+  overrides?: {
+    saasMonthly?: number;
+    floorMonthly?: number;
+  },
 ) {
   const mode = clientMode(client);
 
-  // Mode-filter the event counts
+  // Mode-filter the event counts (now includes clicks)
   const counts = filterCountsByMode(
     {
       redemptionsLoan: client.redemptionsLending,
       redemptionsDeposit: client.redemptionsDeposit,
       applicationsLoan: client.applicationsLending,
       applicationsDeposit: client.applicationsDeposit,
+      clicksLoan: client.clicksLending,
+      clicksDeposit: client.clicksDeposit,
       offersGenLoan: client.offersGeneratedLending,
       offersGenDeposit: client.offersGeneratedDeposit,
     },
@@ -718,6 +879,7 @@ function computeBackSolves(
     eventCountLoan: counts.redemptionsLoan,
     eventCountDeposit: counts.redemptionsDeposit,
     lendingPremium: mathProps.lendingPremium,
+    overrideMonthlySaas: overrides?.saasMonthly,
   });
   const application = backSolveSaasPerEvent({
     targetTotalRev: targetRev,
@@ -725,6 +887,15 @@ function computeBackSolves(
     eventCountLoan: counts.applicationsLoan,
     eventCountDeposit: counts.applicationsDeposit,
     lendingPremium: mathProps.lendingPremium,
+    overrideMonthlySaas: overrides?.saasMonthly,
+  });
+  const click = backSolveSaasPerEvent({
+    targetTotalRev: targetRev,
+    targetSaasSharePct,
+    eventCountLoan: counts.clicksLoan,
+    eventCountDeposit: counts.clicksDeposit,
+    lendingPremium: mathProps.lendingPremium,
+    overrideMonthlySaas: overrides?.saasMonthly,
   });
   const offerGen = backSolveSaasPerEvent({
     targetTotalRev: targetRev,
@@ -732,6 +903,7 @@ function computeBackSolves(
     eventCountLoan: counts.offersGenLoan,
     eventCountDeposit: counts.offersGenDeposit,
     lendingPremium: mathProps.lendingPremium,
+    overrideMonthlySaas: overrides?.saasMonthly,
   });
 
   // BPS back-solve: derives funded volume from the client's applications +
@@ -751,9 +923,32 @@ function computeBackSolves(
     avgLoanSize: mathProps.bpsAvgLoanSize,
     avgDepositSize: mathProps.bpsAvgDepositSize,
     lendingPremium: mathProps.lendingPremium,
+    overrideMonthlyFloor: overrides?.floorMonthly,
   });
 
-  return { redemption, application, offerGen, bps };
+  return { redemption, application, click, offerGen, bps };
+}
+
+/**
+ * Build the override payload for one client when rate-card mode is on.
+ * The effective SaaS / floor for that client = base × tier multiplier,
+ * applied uniformly regardless of revenue target or billing option.
+ *
+ * When rate-card mode is off, returns undefined (live back-solve takes over).
+ * When the client has no NCUA match, returns undefined (no tier to look up).
+ */
+function buildRateCardOverride(
+  client: ClientWithNcua,
+  useRateCardMode: boolean,
+  tierMonthlySaas: Record<string, number>,
+): { saasMonthly?: number; floorMonthly?: number } | undefined {
+  if (!useRateCardMode || !client.ncua) return undefined;
+  const tier = tierForAssets(client.ncua.assets);
+  const monthly = tierMonthlySaas[tier.id];
+  if (monthly == null) return undefined;
+  // Same number used for both per-event SaaS and BPS floor — they're the
+  // same lever conceptually (the base monthly fee Movemint charges).
+  return { saasMonthly: monthly, floorMonthly: monthly };
 }
 
 function filterCountsByMode<T extends Record<string, number>>(counts: T, mode: ClientMode): T {
@@ -814,14 +1009,16 @@ function SaasEventCellWrap({
   result,
   mode,
   unit,
+  locked,
 }: {
   result: ReturnType<typeof backSolveSaasPerEvent>;
   mode: ClientMode;
   unit: string;
+  locked?: boolean;
 }) {
   return (
     <td className="py-3 pr-3">
-      <SaasEventCell result={result} mode={mode} unit={unit} />
+      <SaasEventCell result={result} mode={mode} unit={unit} locked={locked} />
     </td>
   );
 }
@@ -830,10 +1027,12 @@ function SaasEventCell({
   result,
   mode,
   unit,
+  locked,
 }: {
   result: ReturnType<typeof backSolveSaasPerEvent>;
   mode: ClientMode;
   unit: string;
+  locked?: boolean;
 }) {
   if (result.feasibility === "no_events") {
     return (
@@ -842,8 +1041,11 @@ function SaasEventCell({
   }
   return (
     <div className="rounded-lg p-2 bg-emerald-50 border border-emerald-200">
-      <div className="font-mono text-slate-900 font-semibold">
-        ${result.recommendedMonthlySaas.toFixed(0)}/mo SaaS
+      <div className="font-mono text-slate-900 font-semibold flex items-center gap-1">
+        {locked && <span title="Locked at tier-median (100% target)">🔒</span>}
+        <span className={locked ? "text-slate-600" : ""}>
+          ${result.recommendedMonthlySaas.toFixed(0)}/mo SaaS
+        </span>
       </div>
       {(mode === "lending" || mode === "both") && result.pricePerEventLoan > 0 && (
         <div className="font-mono text-slate-900 mt-0.5">${result.pricePerEventLoan.toFixed(2)} loan</div>
@@ -856,7 +1058,15 @@ function SaasEventCell({
   );
 }
 
-function BpsCell({ bps, mode }: { bps: ReturnType<typeof backSolveBps>; mode: ClientMode }) {
+function BpsCell({
+  bps,
+  mode,
+  locked,
+}: {
+  bps: ReturnType<typeof backSolveBps>;
+  mode: ClientMode;
+  locked?: boolean;
+}) {
   if (bps.feasibility === "no_volume") {
     return (
       <div className="rounded-lg p-2 bg-slate-50 border border-slate-200 text-slate-400 italic">no funded volume</div>
@@ -864,8 +1074,11 @@ function BpsCell({ bps, mode }: { bps: ReturnType<typeof backSolveBps>; mode: Cl
   }
   return (
     <div className="rounded-lg p-2 bg-emerald-50 border border-emerald-200">
-      <div className="font-mono text-slate-900 font-semibold">
-        ${bps.recommendedMonthlyFloor.toFixed(0)}/mo floor
+      <div className="font-mono text-slate-900 font-semibold flex items-center gap-1">
+        {locked && <span title="Locked at tier-median (100% target)">🔒</span>}
+        <span className={locked ? "text-slate-600" : ""}>
+          ${bps.recommendedMonthlyFloor.toFixed(0)}/mo floor
+        </span>
       </div>
       {(mode === "lending" || mode === "both") && bps.recommendedLoanBps > 0 && (
         <div className="font-mono text-slate-900 mt-0.5">
@@ -890,6 +1103,14 @@ function TierSummaryView({
   clients,
   targetSaasSharePct,
   lendingPremium,
+  useRateCardMode,
+  tierMonthlySaas,
+  baseSaasFee,
+  setBaseSaasFee,
+  tierMultipliers,
+  setTierMultiplier,
+  resetTierMultipliers,
+  autoBaseSaasFee,
   billingOption,
   setBillingOption,
   onBack,
@@ -898,11 +1119,24 @@ function TierSummaryView({
   clients: ClientWithNcua[];
   targetSaasSharePct: number;
   lendingPremium: number;
+  useRateCardMode: boolean;
+  tierMonthlySaas: Record<string, number>;
+  baseSaasFee: number;
+  setBaseSaasFee: (v: number) => void;
+  tierMultipliers: Record<string, number>;
+  setTierMultiplier: (tierId: string, v: number) => void;
+  resetTierMultipliers: () => void;
+  autoBaseSaasFee: number | null;
   billingOption: BillingOption;
   setBillingOption: (b: BillingOption) => void;
   onBack: () => void;
 } & Omit<RepricingMathProps, "lendingPremium">) {
   const mathProps: RepricingMathProps = { ...partialMath, lendingPremium };
+  // Default expanded so the user sees it on first switch into rate-card mode.
+  // Collapsing hides the inputs but doesn't change any values — so toggling
+  // the targetSaasSharePct slider with the builder collapsed lets you watch
+  // the tier tables below recompute.
+  const [builderExpanded, setBuilderExpanded] = useState(true);
   const byTier = useMemo(() => {
     const grouped = new Map<string, ClientWithNcua[]>();
     SAAS_TIERS.forEach((t) => grouped.set(t.id, []));
@@ -962,6 +1196,126 @@ function TierSummaryView({
         )}
       </Card>
 
+      {/* Rate-card builder controls — only when in rate-card mode. Collapsible so
+          you can hide it and watch tier tables recompute as you slide other controls. */}
+      {useRateCardMode && (
+        <div className="bg-white p-4 md:p-6 rounded-xl border border-slate-200 shadow-sm">
+          <button
+            type="button"
+            onClick={() => setBuilderExpanded((v) => !v)}
+            className="w-full flex items-center justify-between gap-3 text-left"
+          >
+            <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              {builderExpanded ? (
+                <ChevronDown className="w-4 h-4 text-slate-400" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              )}
+              Rate-card builder
+            </h3>
+            {!builderExpanded && (
+              <span className="text-xs text-slate-500 font-mono">
+                Base ${Math.round(baseSaasFee).toLocaleString()}/mo · click to expand
+              </span>
+            )}
+          </button>
+          {builderExpanded && (
+          <div className="space-y-4 mt-4">
+            <p className="text-sm text-slate-600">
+              SaaS for each tier = <b>base × tier multiplier</b>, applied flat across every revenue target.
+              Per-event prices and BPS rates absorb whatever&apos;s needed to hit each target.
+            </p>
+            <div className="flex flex-wrap items-end gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-slate-600 font-medium">Base SaaS fee (anchor: $2B–$3B tier)</label>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-400 text-sm">$</span>
+                  <input
+                    type="number"
+                    value={Math.round(baseSaasFee)}
+                    onChange={(e) => setBaseSaasFee(Math.max(0, Number(e.target.value)))}
+                    step={250}
+                    min={0}
+                    className="w-32 px-2 py-1 border border-slate-300 rounded text-sm font-mono text-right"
+                  />
+                  <span className="text-xs text-slate-500">/mo</span>
+                  {autoBaseSaasFee != null && Math.abs(baseSaasFee - autoBaseSaasFee) > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setBaseSaasFee(autoBaseSaasFee)}
+                      className="text-[10px] text-blue-600 hover:text-blue-800 underline whitespace-nowrap"
+                      title={`Auto-suggested: $${Math.round(autoBaseSaasFee).toLocaleString()}/mo (median of middle-tier clients' back-solved SaaS at current target share)`}
+                    >
+                      reset to ${Math.round(autoBaseSaasFee).toLocaleString()}
+                    </button>
+                  )}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={resetTierMultipliers}
+                className="text-xs px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg font-medium transition-colors whitespace-nowrap"
+              >
+                Reset all multipliers
+              </button>
+            </div>
+
+            {/* Per-tier multiplier table */}
+            <div className="overflow-x-auto -mx-1 px-1">
+              <table className="w-full text-xs min-w-[600px]">
+                <thead>
+                  <tr className="border-b border-slate-200">
+                    <th className="text-left py-1 font-medium text-slate-500 uppercase tracking-wider">Tier</th>
+                    <th className="text-right py-1 font-medium text-slate-500 uppercase tracking-wider">Multiplier</th>
+                    <th className="text-right py-1 font-medium text-slate-500 uppercase tracking-wider">Effective SaaS / mo</th>
+                    <th className="text-right py-1 font-medium text-slate-500 uppercase tracking-wider">Annual</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {SAAS_TIERS.map((t) => {
+                    const mult = tierMultipliers[t.id] ?? 1;
+                    const monthly = baseSaasFee * mult;
+                    const isAnchor = t.id === MIDDLE_TIER_ID;
+                    return (
+                      <tr key={t.id} className="border-b border-slate-50 last:border-0">
+                        <td className="py-2 font-medium text-slate-800">
+                          {t.label}
+                          {isAnchor && (
+                            <span className="ml-2 text-[9px] uppercase tracking-wider text-blue-600 font-semibold">
+                              Anchor
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 text-right">
+                          <input
+                            type="number"
+                            value={mult}
+                            onChange={(e) =>
+                              setTierMultiplier(t.id, Math.max(0, Number(e.target.value)))
+                            }
+                            step={0.1}
+                            min={0}
+                            className="w-20 px-2 py-1 border border-slate-300 rounded text-xs font-mono text-right"
+                          />
+                          <span className="text-xs text-slate-500 ml-1">×</span>
+                        </td>
+                        <td className="py-2 text-right font-mono font-semibold text-slate-900">
+                          ${Math.round(monthly).toLocaleString()}
+                        </td>
+                        <td className="py-2 text-right font-mono text-slate-500">
+                          ${Math.round(monthly * 12).toLocaleString()}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          )}
+        </div>
+      )}
+
       {SAAS_TIERS.map((tier) => {
         const tierClients = byTier.get(tier.id) ?? [];
         return (
@@ -971,6 +1325,8 @@ function TierSummaryView({
             clients={tierClients}
             targetSaasSharePct={targetSaasSharePct}
             billingOption={billingOption}
+            useRateCardMode={useRateCardMode}
+            tierMonthlySaas={tierMonthlySaas}
             {...mathProps}
           />
         );
@@ -984,12 +1340,16 @@ function TierBlock({
   clients,
   targetSaasSharePct,
   billingOption,
+  useRateCardMode,
+  tierMonthlySaas,
   ...mathProps
 }: {
   tierLabel: string;
   clients: ClientWithNcua[];
   targetSaasSharePct: number;
   billingOption: BillingOption;
+  useRateCardMode: boolean;
+  tierMonthlySaas: Record<string, number>;
 } & RepricingMathProps) {
   const lendingClients = clients.filter((c) => clientMode(c) === "lending");
   const depositClients = clients.filter((c) => clientMode(c) === "deposit");
@@ -1023,6 +1383,8 @@ function TierBlock({
           mode="lending"
           targetSaasSharePct={targetSaasSharePct}
           billingOption={billingOption}
+          useRateCardMode={useRateCardMode}
+          tierMonthlySaas={tierMonthlySaas}
           {...mathProps}
         />
         <ModeColumn
@@ -1032,6 +1394,8 @@ function TierBlock({
           mode="deposit"
           targetSaasSharePct={targetSaasSharePct}
           billingOption={billingOption}
+          useRateCardMode={useRateCardMode}
+          tierMonthlySaas={tierMonthlySaas}
           {...mathProps}
         />
         <ModeColumn
@@ -1041,6 +1405,8 @@ function TierBlock({
           mode="both"
           targetSaasSharePct={targetSaasSharePct}
           billingOption={billingOption}
+          useRateCardMode={useRateCardMode}
+          tierMonthlySaas={tierMonthlySaas}
           {...mathProps}
         />
       </div>
@@ -1055,6 +1421,8 @@ function ModeColumn({
   mode,
   targetSaasSharePct,
   billingOption,
+  useRateCardMode,
+  tierMonthlySaas,
   ...mathProps
 }: {
   title: string;
@@ -1063,6 +1431,8 @@ function ModeColumn({
   mode: ClientMode;
   targetSaasSharePct: number;
   billingOption: BillingOption;
+  useRateCardMode: boolean;
+  tierMonthlySaas: Record<string, number>;
 } & RepricingMathProps) {
   void mode;
 
@@ -1110,7 +1480,15 @@ function ModeColumn({
         </thead>
         <tbody>
           {REVENUE_TARGETS.map((mult) => {
-            const summary = summarizeTierMode(clients, mult, targetSaasSharePct, billingOption, mathProps);
+            const summary = summarizeTierMode(
+              clients,
+              mult,
+              targetSaasSharePct,
+              billingOption,
+              mathProps,
+              useRateCardMode,
+              tierMonthlySaas,
+            );
             return (
               <tr key={mult} className="border-b border-slate-50 last:border-0 align-top">
                 <td className="py-2 pr-2 font-semibold text-slate-900">{(mult * 100).toFixed(0)}%</td>
@@ -1185,6 +1563,8 @@ function summarizeTierMode(
   targetSaasSharePct: number,
   billingOption: BillingOption,
   mathProps: RepricingMathProps,
+  useRateCardMode: boolean,
+  tierMonthlySaas: Record<string, number>,
 ): TierModeSummary {
   const monthlySaasValues: number[] = [];
   const perEventLoanValues: number[] = [];
@@ -1195,7 +1575,8 @@ function summarizeTierMode(
 
   for (const c of clients) {
     const targetRev = c.annualFee2025 * mult;
-    const r = computeBackSolves(c, targetRev, targetSaasSharePct, mathProps);
+    const overrides = buildRateCardOverride(c, useRateCardMode, tierMonthlySaas);
+    const r = computeBackSolves(c, targetRev, targetSaasSharePct, mathProps, overrides);
 
     // Pick the result for the active billing option
     const eventResult =
@@ -1203,9 +1584,11 @@ function summarizeTierMode(
         ? r.redemption
         : billingOption === "application"
           ? r.application
-          : billingOption === "offerGen"
-            ? r.offerGen
-            : null;
+          : billingOption === "click"
+            ? r.click
+            : billingOption === "offerGen"
+              ? r.offerGen
+              : null;
 
     if (eventResult && eventResult.feasibility === "ok") {
       monthlySaasValues.push(eventResult.recommendedMonthlySaas);

@@ -72,6 +72,24 @@ export const DEFAULT_SAAS_TIER_PRICES: SaasTierPrices = Object.fromEntries(
   SAAS_TIERS.map((t) => [t.id, t.defaultMonthly]),
 );
 
+// Per-tier multipliers used by the Repricing tab's "rate-card builder" mode.
+// Anchored at the middle tier (t4 = $2B–$3B) which defaults to 1×. Other
+// tiers scale relative to the base SaaS fee from there. These are starting
+// points; users edit them inline on each tier card.
+//
+// MIDDLE_TIER_ID is exported so consumers can identify the anchor tier.
+export const MIDDLE_TIER_ID = "t4";
+
+export const DEFAULT_TIER_MULTIPLIERS: Record<string, number> = {
+  t1: 0.4, // $0–$500M
+  t2: 0.6, // $500M–$1B
+  t3: 0.8, // $1B–$2B
+  t4: 1.0, // $2B–$3B (anchor)
+  t5: 1.2, // $3B–$4B
+  t6: 1.4, // $4B–$5B
+  t7: 1.7, // $5B+
+};
+
 export function tierForAssets(assets: number): SaasTier {
   for (const t of SAAS_TIERS) {
     if (assets >= t.minAssets && (t.maxAssets == null || assets < t.maxAssets)) return t;
@@ -95,13 +113,15 @@ export const DEFAULT_AVG_DEPOSIT_SIZE = 5_000; // avg new-deposit account balanc
 
 export const DEFAULT_APP_TO_FUNDED_RATIO = 2.5;       // applications per funded loan
 export const DEFAULT_OFFERS_PER_MEMBER_PER_YEAR = 12; // offers shown per member annually
+export const DEFAULT_CLICK_TO_APP_RATE = 0.20;        // 20% of clicks become applications
 
 // Pricing-model identifiers used to drive tab state and comparison aggregation.
-export type PricingModelId = "bps" | "redemption" | "application" | "offerGen";
+export type PricingModelId = "bps" | "redemption" | "application" | "offerGen" | "click";
 
 export const PRICING_MODEL_LABELS: Record<PricingModelId, string> = {
   bps: "BPS take-rate",
   redemption: "SaaS + per redemption",
   application: "SaaS + per application",
   offerGen: "SaaS + per offer generated",
+  click: "SaaS + per click",
 };

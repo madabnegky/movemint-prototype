@@ -28,6 +28,8 @@ export type ComparisonTabProps = {
   pricePerApplicationDeposit: number;
   pricePerOfferGenLoan: number;
   pricePerOfferGenDeposit: number;
+  pricePerClickLoan: number;
+  pricePerClickDeposit: number;
   eventCounts: EventCounts;
 };
 
@@ -49,6 +51,8 @@ export function ComparisonTab(props: ComparisonTabProps) {
     pricePerApplicationDeposit,
     pricePerOfferGenLoan,
     pricePerOfferGenDeposit,
+    pricePerClickLoan,
+    pricePerClickDeposit,
     eventCounts,
   } = props;
 
@@ -86,6 +90,13 @@ export function ComparisonTab(props: ComparisonTabProps) {
     eventCountLoan: eventCounts.offersGeneratedLoan,
     eventCountDeposit: eventCounts.offersGeneratedDeposit,
   });
+  const click = calcSaasPerEventRevenue({
+    monthlySaas,
+    pricePerEventLoan: pricePerClickLoan,
+    pricePerEventDeposit: pricePerClickDeposit,
+    eventCountLoan: eventCounts.clicksLoan,
+    eventCountDeposit: eventCounts.clicksDeposit,
+  });
 
   // For BPS, "SaaS share" = floor share if floor is active; otherwise 0.
   // BPS doesn't have a SaaS base — the floor is the closest analogue.
@@ -117,6 +128,15 @@ export function ComparisonTab(props: ComparisonTabProps) {
       total: application.totalRev,
       saasShare: application.saasShare,
       txnShare: 1 - application.saasShare,
+      saasLabel: "SaaS",
+      txnLabel: "Per event",
+    },
+    {
+      label: "SaaS + per click",
+      sublabel: `${formatPriceLabel(pricePerClickLoan)} loan / ${formatPriceLabel(pricePerClickDeposit)} deposit · ${formatCount(eventCounts.clicksTotal)} total clicks/yr`,
+      total: click.totalRev,
+      saasShare: click.saasShare,
+      txnShare: 1 - click.saasShare,
       saasLabel: "SaaS",
       txnLabel: "Per event",
     },

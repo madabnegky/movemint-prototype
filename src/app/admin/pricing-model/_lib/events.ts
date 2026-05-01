@@ -1,5 +1,11 @@
 import type { CU, LoanCategory, DepositCategory } from "./types";
-import { DEFAULT_AVG_LOAN_SIZE, DEFAULT_AVG_DEPOSIT_SIZE, DEFAULT_APP_TO_FUNDED_RATIO, DEFAULT_OFFERS_PER_MEMBER_PER_YEAR } from "./types";
+import {
+  DEFAULT_AVG_LOAN_SIZE,
+  DEFAULT_AVG_DEPOSIT_SIZE,
+  DEFAULT_APP_TO_FUNDED_RATIO,
+  DEFAULT_OFFERS_PER_MEMBER_PER_YEAR,
+  DEFAULT_CLICK_TO_APP_RATE,
+} from "./types";
 
 /**
  * Volume estimates by category. Originations and new-deposit dollar volumes,
@@ -33,9 +39,11 @@ export function deriveDepositVolumes(cu: CU, grossInflowPct: number): Record<Dep
 }
 
 /**
- * Event-counting model. Pricing models 2–4 charge per event; this computes
- * the count of events given current volume estimates and overrideable
- * conversion assumptions.
+ * Event-counting model. Pricing models charge per event; this computes the
+ * count of events given current volume estimates and overrideable conversion
+ * assumptions.
+ *
+ * Funnel: offers_generated → clicks → applications → redemptions
  *
  * Redemptions: a conversion (loan funded or new deposit account opened).
  *   loans:    origination_volume × penetration ÷ avg_loan_size
@@ -43,6 +51,10 @@ export function deriveDepositVolumes(cu: CU, grossInflowPct: number): Record<Dep
  *
  * Applications: started loan/deposit applications, regardless of funding.
  *   = redemptions × app_to_funded_ratio
+ *
+ * Clicks: members tapped/engaged with an offer (sit between offers and apps).
+ *   = applications ÷ click_to_app_rate
+ * (Equivalent to: clicks × click_to_app_rate = applications)
  *
  * Offers generated: offers shown to members. Largely independent of
  * loan/deposit volume — it's a function of member base × campaign cadence.
@@ -56,6 +68,7 @@ export type EventAssumptions = {
   avgDepositSize: number;                         // editable
   appToFundedRatio: number;                       // editable
   offersPerMemberPerYear: number;                 // editable
+  clickToAppRate: number;                         // 0..1 — fraction of clicks that become apps
   loanPenetrationPct: number;                     // shared with BPS tab
   depositPenetrationPct: number;                  // shared with BPS tab
 };
@@ -65,6 +78,7 @@ export const DEFAULT_EVENT_ASSUMPTIONS: Omit<EventAssumptions, "loanPenetrationP
   avgDepositSize: DEFAULT_AVG_DEPOSIT_SIZE,
   appToFundedRatio: DEFAULT_APP_TO_FUNDED_RATIO,
   offersPerMemberPerYear: DEFAULT_OFFERS_PER_MEMBER_PER_YEAR,
+  clickToAppRate: DEFAULT_CLICK_TO_APP_RATE,
 };
 
 /**
@@ -79,6 +93,9 @@ export type EventCounts = {
   applicationsLoan: number;
   applicationsDeposit: number;
   applicationsTotal: number;
+  clicksLoan: number;
+  clicksDeposit: number;
+  clicksTotal: number;
   offersGeneratedLoan: number;
   offersGeneratedDeposit: number;
   offersGeneratedTotal: number;
@@ -112,6 +129,13 @@ export function calcEventCounts(
   const applicationsDeposit = redemptionsDeposit * assumptions.appToFundedRatio;
   const applicationsTotal = applicationsLoan + applicationsDeposit;
 
+  // Clicks sit upstream of applications: only a fraction of clicks become
+  // applications (default 20%), so clicks are larger by 1/click_to_app_rate.
+  const ctaRate = assumptions.clickToAppRate > 0 ? assumptions.clickToAppRate : 1;
+  const clicksLoan = applicationsLoan / ctaRate;
+  const clicksDeposit = applicationsDeposit / ctaRate;
+  const clicksTotal = clicksLoan + clicksDeposit;
+
   // Offers generated scales with member count, not balance-sheet volume.
   // Split by module via each module's penetration: if loan pen=4% and deposit
   // pen=2%, offers split 4/(4+2)=67% lending, 33% deposit. If both modules
@@ -130,6 +154,9 @@ export function calcEventCounts(
     applicationsLoan,
     applicationsDeposit,
     applicationsTotal,
+    clicksLoan,
+    clicksDeposit,
+    clicksTotal,
     offersGeneratedLoan,
     offersGeneratedDeposit,
     offersGeneratedTotal,

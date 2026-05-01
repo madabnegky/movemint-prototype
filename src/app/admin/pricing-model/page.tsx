@@ -19,14 +19,15 @@ import { SaasPerEventTab } from "./_components/SaasPerEventTab";
 import { ComparisonTab } from "./_components/ComparisonTab";
 import { RepricingTab } from "./_components/RepricingTab";
 
-type TabId = "bps" | "redemption" | "application" | "offerGen" | "comparison" | "repricing";
+type TabId = "bps" | "redemption" | "application" | "click" | "offerGen" | "comparison" | "repricing";
 
 const TABS: { id: TabId; label: string; sublabel?: string }[] = [
   { id: "bps", label: "BPS take-rate", sublabel: "Pure transaction" },
   { id: "redemption", label: "SaaS + redemption", sublabel: "$ per conversion" },
   { id: "application", label: "SaaS + application", sublabel: "$ per app started" },
+  { id: "click", label: "SaaS + click", sublabel: "$ per click" },
   { id: "offerGen", label: "SaaS + offer generated", sublabel: "$ per impression" },
-  { id: "comparison", label: "Compare all 4", sublabel: "Side-by-side" },
+  { id: "comparison", label: "Compare all 5", sublabel: "Side-by-side" },
   { id: "repricing", label: "Repricing", sublabel: "Existing clients" },
 ];
 
@@ -62,6 +63,8 @@ export default function PricingModelPage() {
   const [pricePerApplicationDeposit, setPricePerApplicationDeposit] = useState<number>(0);
   const [pricePerOfferGenLoan, setPricePerOfferGenLoan] = useState<number>(0);
   const [pricePerOfferGenDeposit, setPricePerOfferGenDeposit] = useState<number>(0);
+  const [pricePerClickLoan, setPricePerClickLoan] = useState<number>(0);
+  const [pricePerClickDeposit, setPricePerClickDeposit] = useState<number>(0);
 
   // Event-count assumptions (shared across the 3 SaaS+event tabs)
   const [eventAssumptionsRaw, setEventAssumptionsRaw] = useState(DEFAULT_EVENT_ASSUMPTIONS);
@@ -282,6 +285,7 @@ export default function PricingModelPage() {
                   avgDepositSize: a.avgDepositSize,
                   appToFundedRatio: a.appToFundedRatio,
                   offersPerMemberPerYear: a.offersPerMemberPerYear,
+                  clickToAppRate: a.clickToAppRate,
                 })
               }
               eventCounts={eventCounts}
@@ -307,6 +311,33 @@ export default function PricingModelPage() {
                   avgDepositSize: a.avgDepositSize,
                   appToFundedRatio: a.appToFundedRatio,
                   offersPerMemberPerYear: a.offersPerMemberPerYear,
+                  clickToAppRate: a.clickToAppRate,
+                })
+              }
+              eventCounts={eventCounts}
+            />
+          )}
+
+          {activeTab === "click" && (
+            <SaasPerEventTab
+              selectedCu={selectedCu}
+              kind="click"
+              pricePerEventLoan={pricePerClickLoan}
+              setPricePerEventLoan={setPricePerClickLoan}
+              pricePerEventDeposit={pricePerClickDeposit}
+              setPricePerEventDeposit={setPricePerClickDeposit}
+              tierPrices={tierPrices}
+              setTierPrice={(id, v) => setTierPrices({ ...tierPrices, [id]: v })}
+              saasOverride={saasOverride}
+              setSaasOverride={setSaasOverride}
+              assumptions={eventAssumptions}
+              setAssumptions={(a) =>
+                setEventAssumptionsRaw({
+                  avgLoanSize: a.avgLoanSize,
+                  avgDepositSize: a.avgDepositSize,
+                  appToFundedRatio: a.appToFundedRatio,
+                  offersPerMemberPerYear: a.offersPerMemberPerYear,
+                  clickToAppRate: a.clickToAppRate,
                 })
               }
               eventCounts={eventCounts}
@@ -332,6 +363,7 @@ export default function PricingModelPage() {
                   avgDepositSize: a.avgDepositSize,
                   appToFundedRatio: a.appToFundedRatio,
                   offersPerMemberPerYear: a.offersPerMemberPerYear,
+                  clickToAppRate: a.clickToAppRate,
                 })
               }
               eventCounts={eventCounts}
@@ -356,6 +388,8 @@ export default function PricingModelPage() {
               pricePerApplicationDeposit={pricePerApplicationDeposit}
               pricePerOfferGenLoan={pricePerOfferGenLoan}
               pricePerOfferGenDeposit={pricePerOfferGenDeposit}
+              pricePerClickLoan={pricePerClickLoan}
+              pricePerClickDeposit={pricePerClickDeposit}
               eventCounts={eventCounts}
             />
           )}

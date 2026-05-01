@@ -10,9 +10,14 @@ type Props = {
   assumptions: EA;
   setAssumptions: (next: EA) => void;
   /** Event focus: which counts to highlight. Affects what's emphasized in the UI. */
-  focus: "redemption" | "application" | "offerGen";
+  focus: "redemption" | "application" | "offerGen" | "click";
   /** Live derived counts, for inline display. */
-  counts: { redemptionsTotal: number; applicationsTotal: number; offersGeneratedTotal: number };
+  counts: {
+    redemptionsTotal: number;
+    applicationsTotal: number;
+    clicksTotal: number;
+    offersGeneratedTotal: number;
+  };
   members: number;
 };
 
@@ -53,8 +58,8 @@ export function EventAssumptionsEditor({ assumptions, setAssumptions, focus, cou
           </div>
         </div>
 
-        {/* Avg deposit size */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-200">
+        {/* Other assumptions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
           <NumField
             label="Avg new-deposit account size"
             value={assumptions.avgDepositSize}
@@ -78,13 +83,22 @@ export function EventAssumptionsEditor({ assumptions, setAssumptions, focus, cou
             step={1}
             hint={`Members: ${fmtCount(members)} × this = annual offer volume`}
           />
+          <NumField
+            label="Click-to-application rate"
+            value={Math.round(assumptions.clickToAppRate * 1000) / 10}
+            onChange={(v) => update("clickToAppRate", Math.max(0.01, Math.min(100, v)) / 100)}
+            step={1}
+            hint="% of clicks that become applications. Industry: 15–30%."
+            suffix="%"
+          />
         </div>
 
         {/* Live count summary */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 grid grid-cols-3 gap-3">
-          <CountStat label="Redemptions / yr" value={counts.redemptionsTotal} active={focus === "redemption"} />
-          <CountStat label="Applications / yr" value={counts.applicationsTotal} active={focus === "application"} />
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 grid grid-cols-2 md:grid-cols-4 gap-3">
           <CountStat label="Offers gen / yr" value={counts.offersGeneratedTotal} active={focus === "offerGen"} />
+          <CountStat label="Clicks / yr" value={counts.clicksTotal} active={focus === "click"} />
+          <CountStat label="Applications / yr" value={counts.applicationsTotal} active={focus === "application"} />
+          <CountStat label="Redemptions / yr" value={counts.redemptionsTotal} active={focus === "redemption"} />
         </div>
       </div>
     </Card>

@@ -10,7 +10,7 @@ import { TieredSaasFee } from "./TieredSaasFee";
 import { EventAssumptionsEditor } from "./EventAssumptions";
 import { Card, Row } from "./primitives";
 
-type EventKind = "redemption" | "application" | "offerGen";
+type EventKind = "redemption" | "application" | "offerGen" | "click";
 
 const EVENT_LABELS: Record<EventKind, { title: string; one: string; description: string }> = {
   redemption: {
@@ -27,6 +27,11 @@ const EVENT_LABELS: Record<EventKind, { title: string; one: string; description:
     title: "SaaS + per-offer-generated",
     one: "offer generated",
     description: "Charge per offer rendered to a member, regardless of whether they engaged.",
+  },
+  click: {
+    title: "SaaS + per-click",
+    one: "click",
+    description: "Charge per click on an offer (intent signal between offer impression and application).",
   },
 };
 
@@ -222,6 +227,7 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
 function pickCounts(c: EventCounts, kind: EventKind): { loan: number; deposit: number } {
   if (kind === "redemption") return { loan: c.redemptionsLoan, deposit: c.redemptionsDeposit };
   if (kind === "application") return { loan: c.applicationsLoan, deposit: c.applicationsDeposit };
+  if (kind === "click") return { loan: c.clicksLoan, deposit: c.clicksDeposit };
   return { loan: c.offersGeneratedLoan, deposit: c.offersGeneratedDeposit };
 }
 

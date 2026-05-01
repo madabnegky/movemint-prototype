@@ -26,6 +26,8 @@ export type ExistingClient = {
   applicationsDeposit: number;
   offersGeneratedLending: number;
   offersGeneratedDeposit: number;
+  clicksLending: number;
+  clicksDeposit: number;
 };
 
 export type ClientWithNcua = ExistingClient & {
@@ -45,8 +47,10 @@ export type ClientWithNcua = ExistingClient & {
 export type ClientMode = "lending" | "deposit" | "both" | "none";
 
 export function clientMode(c: ExistingClient): ClientMode {
-  const lendingTotal = c.redemptionsLending + c.applicationsLending + c.offersGeneratedLending;
-  const depositTotal = c.redemptionsDeposit + c.applicationsDeposit + c.offersGeneratedDeposit;
+  const lendingTotal =
+    c.redemptionsLending + c.applicationsLending + c.offersGeneratedLending + c.clicksLending;
+  const depositTotal =
+    c.redemptionsDeposit + c.applicationsDeposit + c.offersGeneratedDeposit + c.clicksDeposit;
   if (lendingTotal === 0 && depositTotal === 0) return "none";
   if (depositTotal === 0) return "lending";
   if (lendingTotal === 0) return "deposit";
@@ -165,6 +169,8 @@ export const REQUIRED_CSV_COLUMNS = [
   "applications_deposit",
   "offers_generated_lending",
   "offers_generated_deposit",
+  "clicks_lending",
+  "clicks_deposit",
 ] as const;
 
 /**
@@ -279,6 +285,8 @@ export function parseCsv(text: string): CsvParseResult {
       applicationsDeposit: toNumber(row[idx.applications_deposit] ?? "0"),
       offersGeneratedLending: toNumber(row[idx.offers_generated_lending] ?? "0"),
       offersGeneratedDeposit: toNumber(row[idx.offers_generated_deposit] ?? "0"),
+      clicksLending: toNumber(row[idx.clicks_lending] ?? "0"),
+      clicksDeposit: toNumber(row[idx.clicks_deposit] ?? "0"),
     });
   }
 
@@ -294,10 +302,11 @@ function cryptoRandomId(): string {
 
 export function buildSampleCsv(): string {
   // Tiny realistic example to download as a starter file.
+  // Funnel: offers_generated → clicks → applications → redemptions
   const lines: string[] = [
     REQUIRED_CSV_COLUMNS.join(","),
-    `50377,"Morris Sheppard Texarkana FCU",48000,420,180,1100,520,8400,3600`,
-    `,"Anonymous Client (no NCUA match yet)",72000,650,300,1700,820,12000,5500`,
+    `50377,"Morris Sheppard Texarkana FCU",48000,420,180,1100,520,8400,3600,2200,1100`,
+    `,"Anonymous Client (no NCUA match yet)",72000,650,300,1700,820,12000,5500,3400,1650`,
   ];
   return lines.join("\n") + "\n";
 }

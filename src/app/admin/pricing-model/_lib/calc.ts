@@ -94,6 +94,15 @@ export type BackSolveSaasInput = {
    * deposit conversions. Only matters when both module counts are nonzero.
    */
   lendingPremium?: number;
+  /**
+   * Lock the recommended SaaS at this monthly value (and let per-event
+   * pricing absorb the difference between SaaS rev and target). When set,
+   * the targetSaasSharePct only determines per-event allocation if that
+   * value happens to match — typically used to freeze SaaS at a tier-median
+   * (computed at 100% target) so revenue growth flows entirely through
+   * transaction fees.
+   */
+  overrideMonthlySaas?: number;
 };
 
 export type BackSolveSaasOutput = {
@@ -107,10 +116,15 @@ export type BackSolveSaasOutput = {
 };
 
 export function backSolveSaasPerEvent(i: BackSolveSaasInput): BackSolveSaasOutput {
-  const targetSaasShare = i.targetSaasSharePct / 100;
-  const recommendedSaasRev = i.targetTotalRev * targetSaasShare;
-  const recommendedMonthlySaas = recommendedSaasRev / 12;
-  const eventRevTarget = i.targetTotalRev * (1 - targetSaasShare);
+  // If overrideMonthlySaas is provided, freeze SaaS at that value and let
+  // per-event pricing absorb the gap to target. Otherwise compute SaaS from
+  // the strategic mix (target × saasShare).
+  const recommendedMonthlySaas =
+    i.overrideMonthlySaas != null
+      ? i.overrideMonthlySaas
+      : (i.targetTotalRev * (i.targetSaasSharePct / 100)) / 12;
+  const recommendedSaasRev = recommendedMonthlySaas * 12;
+  const eventRevTarget = Math.max(0, i.targetTotalRev - recommendedSaasRev);
 
   const premium = i.lendingPremium ?? 1;
   const totalCount = i.eventCountLoan + i.eventCountDeposit;
@@ -181,6 +195,11 @@ export type BackSolveBpsInput = {
   avgDepositSize: number;      // $ — avg new-deposit account size
   /** Lending bps priced this many × deposit bps. Default 1. */
   lendingPremium?: number;
+  /**
+   * Lock the recommended floor at this monthly value (BPS analogue of
+   * overrideMonthlySaas — bps rates absorb the gap to target).
+   */
+  overrideMonthlyFloor?: number;
 };
 
 export type BackSolveBpsOutput = {
@@ -195,10 +214,14 @@ export type BackSolveBpsOutput = {
 };
 
 export function backSolveBps(i: BackSolveBpsInput): BackSolveBpsOutput {
-  const targetSaasShare = i.targetSaasSharePct / 100;
-  const recommendedFloorRev = i.targetTotalRev * targetSaasShare;
-  const recommendedMonthlyFloor = recommendedFloorRev / 12;
-  const bpsRevTarget = i.targetTotalRev * (1 - targetSaasShare);
+  // Mirror of backSolveSaasPerEvent: if overrideMonthlyFloor is provided,
+  // freeze the floor and let bps rates absorb the gap to target.
+  const recommendedMonthlyFloor =
+    i.overrideMonthlyFloor != null
+      ? i.overrideMonthlyFloor
+      : (i.targetTotalRev * (i.targetSaasSharePct / 100)) / 12;
+  const recommendedFloorRev = recommendedMonthlyFloor * 12;
+  const bpsRevTarget = Math.max(0, i.targetTotalRev - recommendedFloorRev);
   const premium = i.lendingPremium ?? 1;
 
   const loanFundedVolume = i.applicationsLoan * i.loanFundingRate * i.avgLoanSize;
