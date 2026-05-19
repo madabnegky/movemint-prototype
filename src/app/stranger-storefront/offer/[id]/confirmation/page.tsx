@@ -18,14 +18,24 @@ export default function StrangerConfirmationPage() {
     const lastName = searchParams.get('lastName') || '';
     const phone = searchParams.get('phone') || '';
     const email = searchParams.get('email') || '';
+    const dateOfBirth = searchParams.get('dateOfBirth') || '';
+    const address = searchParams.get('address') || '';
+    const city = searchParams.get('city') || '';
+    const state = searchParams.get('state') || '';
+    const zip = searchParams.get('zip') || '';
     const offerTitle = searchParams.get('offerTitle') || offer?.title || '';
 
-    // Build the membership application URL with prefill data
+    // Build the membership application URL with full prefill data
     const membershipParams = new URLSearchParams();
     if (firstName) membershipParams.set('firstName', firstName);
     if (lastName) membershipParams.set('lastName', lastName);
     if (phone) membershipParams.set('phone', phone);
     if (email) membershipParams.set('email', email);
+    if (dateOfBirth) membershipParams.set('dateOfBirth', dateOfBirth);
+    if (address) membershipParams.set('address', address);
+    if (city) membershipParams.set('city', city);
+    if (state) membershipParams.set('state', state);
+    if (zip) membershipParams.set('zip', zip);
     membershipParams.set('fromOffer', offerId);
     membershipParams.set('offerTitle', offerTitle);
     const membershipUrl = `/stranger-storefront/apply/membership?${membershipParams.toString()}`;
@@ -220,6 +230,8 @@ export default function StrangerConfirmationPage() {
 
                             <Link
                                 href={membershipUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="mt-6 w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#143C67] text-white text-[13px] font-bold tracking-wider uppercase rounded-full hover:bg-[#0f2d4d] transition-colors"
                             >
                                 Open Your Membership

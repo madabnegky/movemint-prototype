@@ -29,6 +29,11 @@ interface ApplicationData {
     lastName: string;
     phone: string;
     email: string;
+    dateOfBirth: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
     agreedToTerms: boolean;
     agreedToESign: boolean;
 }
@@ -70,6 +75,11 @@ export default function StrangerApplyPage() {
         lastName: '',
         phone: '',
         email: '',
+        dateOfBirth: '',
+        address: '',
+        city: '',
+        state: '',
+        zip: '',
         agreedToTerms: false,
         agreedToESign: false,
     });
@@ -122,6 +132,11 @@ export default function StrangerApplyPage() {
         if (applicationData.lastName) prefillParams.set('lastName', applicationData.lastName);
         if (applicationData.phone) prefillParams.set('phone', applicationData.phone);
         if (applicationData.email) prefillParams.set('email', applicationData.email);
+        if (applicationData.dateOfBirth) prefillParams.set('dateOfBirth', applicationData.dateOfBirth);
+        if (applicationData.address) prefillParams.set('address', applicationData.address);
+        if (applicationData.city) prefillParams.set('city', applicationData.city);
+        if (applicationData.state) prefillParams.set('state', applicationData.state);
+        if (applicationData.zip) prefillParams.set('zip', applicationData.zip);
         prefillParams.set('fromOffer', offer.id);
         prefillParams.set('offerTitle', offer.title);
 
@@ -479,7 +494,8 @@ export default function StrangerApplyPage() {
                         </div>
 
                         <div className="p-6 lg:p-8">
-                            <h1 className="text-xl font-semibold text-[#374151] mb-6">Contact Information</h1>
+                            <h1 className="text-xl font-semibold text-[#374151] mb-2">Contact Information</h1>
+                            <p className="text-[13px] text-[#677178] mb-6">This information will be pre-filled into your membership application.</p>
 
                             <div className="bg-[#F9FAFB] rounded-xl p-6 space-y-5">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -493,14 +509,40 @@ export default function StrangerApplyPage() {
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-[13px] text-[#677178] mb-2">Phone Number</label>
-                                    <input type="tel" value={applicationData.phone} onChange={(e) => updateField('phone', e.target.value)} placeholder="Enter your phone number" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-[13px] text-[#677178] mb-2">Phone Number</label>
+                                        <input type="tel" value={applicationData.phone} onChange={(e) => updateField('phone', e.target.value)} placeholder="Enter your phone number" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[13px] text-[#677178] mb-2">Date of Birth</label>
+                                        <input type="text" value={applicationData.dateOfBirth} onChange={(e) => updateField('dateOfBirth', e.target.value)} placeholder="MM/DD/YYYY" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                    </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-[13px] text-[#677178] mb-2">Email Address</label>
                                     <input type="email" value={applicationData.email} onChange={(e) => updateField('email', e.target.value)} placeholder="Enter your email address" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-[13px] text-[#677178] mb-2">Street Address</label>
+                                    <input type="text" value={applicationData.address} onChange={(e) => updateField('address', e.target.value)} placeholder="123 Main St" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                    <div className="col-span-2 sm:col-span-1">
+                                        <label className="block text-[13px] text-[#677178] mb-2">City</label>
+                                        <input type="text" value={applicationData.city} onChange={(e) => updateField('city', e.target.value)} placeholder="City" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[13px] text-[#677178] mb-2">State</label>
+                                        <input type="text" value={applicationData.state} onChange={(e) => updateField('state', e.target.value)} placeholder="CA" maxLength={2} className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px] uppercase" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[13px] text-[#677178] mb-2">ZIP Code</label>
+                                        <input type="text" value={applicationData.zip} onChange={(e) => updateField('zip', e.target.value)} placeholder="12345" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-[15px]" />
+                                    </div>
                                 </div>
                             </div>
 

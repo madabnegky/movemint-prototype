@@ -29,6 +29,8 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/context/StoreContext";
 
 type MembershipStep =
+    | "landing"
+    | "before-you-begin"
     | "eligibility"
     | "identity"
     | "details"
@@ -119,13 +121,18 @@ function MembershipApplicationContent() {
     const prefillLastName = searchParams.get('lastName') || '';
     const prefillPhone = searchParams.get('phone') || '';
     const prefillEmail = searchParams.get('email') || '';
+    const prefillDOB = searchParams.get('dateOfBirth') || '';
+    const prefillAddress = searchParams.get('address') || '';
+    const prefillCity = searchParams.get('city') || '';
+    const prefillState = searchParams.get('state') || '';
+    const prefillZip = searchParams.get('zip') || '';
     const fromOffer = searchParams.get('fromOffer') || '';
     const fromOfferTitle = searchParams.get('offerTitle') || '';
 
     // If coming from an offer redemption, show context banner
     const hasPrefill = !!fromOffer;
 
-    const [currentStep, setCurrentStep] = useState<MembershipStep>("eligibility");
+    const [currentStep, setCurrentStep] = useState<MembershipStep>("landing");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [data, setData] = useState<ApplicationData>({
         eligibilityReason: "",
@@ -140,11 +147,11 @@ function MembershipApplicationContent() {
         email: prefillEmail,
         phone: prefillPhone,
         ssn: "",
-        dateOfBirth: "",
-        address: "",
-        city: "",
-        state: "",
-        zip: "",
+        dateOfBirth: prefillDOB,
+        address: prefillAddress,
+        city: prefillCity,
+        state: prefillState,
+        zip: prefillZip,
         employmentStatus: "",
         employerName: "",
         jobTitle: "",
@@ -166,11 +173,13 @@ function MembershipApplicationContent() {
         setData((prev) => ({ ...prev, [field]: value }));
     };
 
-    const stepIndex = STEPS.findIndex((s) => s.key === currentStep);
+    const stepIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStep));
 
     const goNext = () => {
+        if (currentStep === "landing") { setCurrentStep("before-you-begin"); return; }
+        if (currentStep === "before-you-begin") { setCurrentStep("eligibility"); return; }
         const idx = STEPS.findIndex((s) => s.key === currentStep);
-        if (idx < STEPS.length - 1) {
+        if (idx >= 0 && idx < STEPS.length - 1) {
             setCurrentStep(STEPS[idx + 1].key);
         } else if (currentStep === "review") {
             handleSubmit();
@@ -178,9 +187,9 @@ function MembershipApplicationContent() {
     };
 
     const goBack = () => {
-        if (currentStep === "confirmation") {
-            return;
-        }
+        if (currentStep === "confirmation") return;
+        if (currentStep === "before-you-begin") { setCurrentStep("landing"); return; }
+        if (currentStep === "eligibility") { setCurrentStep("before-you-begin"); return; }
         const idx = STEPS.findIndex((s) => s.key === currentStep);
         if (idx > 0) {
             setCurrentStep(STEPS[idx - 1].key);
@@ -218,6 +227,159 @@ function MembershipApplicationContent() {
     };
 
     const confirmationNumber = `CU-MEM-${Date.now().toString().slice(-6)}`;
+
+    // ── Landing Screen ──
+    if (currentStep === "landing") {
+        return (
+            <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30] flex flex-col">
+                <Nav />
+                <main className="flex-1 flex items-center justify-center px-6 py-12">
+                    <div className="w-full max-w-[860px]">
+                        {hasPrefill && (
+                            <div className="mb-6 bg-[#F0F7FF] border border-[#BFDBFE] rounded-xl p-4 flex items-start gap-3">
+                                <CheckCircle className="w-5 h-5 text-[#143C67] shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="text-[13px] font-medium text-[#1e3a5f]">
+                                        Your {fromOfferTitle} application has been submitted!
+                                    </p>
+                                    <p className="text-[12px] text-[#3b6a9a] mt-0.5">
+                                        Complete your membership application to finalize your offer. Your details have been pre-filled.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
+                            <div className="flex flex-col md:flex-row min-h-[340px]">
+                                {/* Left — gradient image panel */}
+                                <div className="md:w-[45%] bg-gradient-to-br from-[#143C67] via-[#1e5a9e] to-[#3b82c4] flex items-center justify-center p-12">
+                                    <div className="w-28 h-28 rounded-full border-[3px] border-white/40 flex items-center justify-center">
+                                        <DollarSign className="w-16 h-16 text-white" strokeWidth={1} />
+                                    </div>
+                                </div>
+
+                                {/* Right — content */}
+                                <div className="md:w-[55%] p-8 lg:p-12 flex flex-col justify-center">
+                                    <h1 className="text-[28px] lg:text-[32px] font-semibold text-[#262C30] leading-tight mb-8">
+                                        New Membership<br />Application
+                                    </h1>
+                                    <div className="flex flex-col sm:flex-row gap-3">
+                                        <button
+                                            onClick={goNext}
+                                            className="flex items-center justify-center gap-2 px-6 py-3 bg-[#143C67] text-white text-[14px] font-semibold rounded-full hover:bg-[#0f2d4d] transition-colors"
+                                        >
+                                            <span className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold">+</span>
+                                            New Member
+                                        </button>
+                                        <button
+                                            onClick={() => {}}
+                                            className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-[#262C30] text-[14px] font-medium rounded-full hover:border-gray-400 transition-colors"
+                                        >
+                                            <Users className="w-4 h-4 text-[#677178]" />
+                                            Existing Member
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer className="px-8 py-4 flex items-end justify-between">
+                    <div className="border-2 border-[#262C30] rounded p-2 text-center">
+                        <div className="text-[10px] font-bold text-[#262C30] leading-tight">NCUA</div>
+                        <div className="text-[8px] text-[#677178] mt-0.5 max-w-[120px] leading-tight">
+                            Your savings federally insured to at least $250,000
+                        </div>
+                    </div>
+                    <button className="flex items-center gap-1.5 px-4 py-2 border border-gray-300 rounded-full text-[12px] text-[#677178] hover:border-gray-400 transition-colors">
+                        <span className="w-4 h-4 rounded-full border border-[#677178] flex items-center justify-center text-[9px] font-bold">?</span>
+                        Help
+                    </button>
+                </footer>
+                <ProtoNav />
+            </div>
+        );
+    }
+
+    // ── Before You Begin ──
+    if (currentStep === "before-you-begin") {
+        return (
+            <div className="min-h-screen bg-[#E8EBED] font-sans text-[#262C30] flex flex-col">
+                <nav className="bg-white px-6 lg:px-8 h-14 flex items-center justify-between border-b border-gray-200">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={goBack}
+                            className="flex items-center gap-1 text-[13px] font-medium text-[#677178] hover:text-[#262C30] transition-colors"
+                        >
+                            <ChevronLeft className="w-4 h-4" />
+                            Back
+                        </button>
+                        <div className="h-5 w-px bg-gray-200" />
+                        <Link href="/stranger-storefront" className="flex items-center gap-2">
+                            <div className="w-7 h-7 bg-[#143C67] rounded flex items-center justify-center">
+                                <div className="grid grid-cols-2 gap-[2px] w-3.5 h-3.5">
+                                    <div className="bg-white rounded-[1px]"></div>
+                                    <div className="bg-white rounded-[1px]"></div>
+                                    <div className="bg-white rounded-[1px]"></div>
+                                    <div className="bg-white/50 rounded-[1px]"></div>
+                                </div>
+                            </div>
+                            <span className="text-[15px] font-semibold text-[#143C67]">Credit Union</span>
+                        </Link>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[12px] text-[#677178]">
+                        <Lock className="w-3.5 h-3.5" />
+                        <span>Secure Application</span>
+                    </div>
+                </nav>
+
+                <main className="flex-1 max-w-[700px] mx-auto w-full px-6 py-10">
+                    <h1 className="text-[26px] font-semibold text-[#262C30] mb-1">Before You Begin</h1>
+                    <p className="text-[14px] text-[#677178] mb-8">Please be prepared to provide the following:</p>
+
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                        {[
+                            { icon: FileText, label: "Social Security Number (SSN)\nor Tax Identification Number (TIN)" },
+                            { icon: Shield, label: "US Passport or State\nDriver's License or ID" },
+                            { icon: Phone, label: "Mobile Phone for OTP\nand Selfie" },
+                            { icon: Mail, label: "Email Address" },
+                        ].map(({ icon: Icon, label }) => (
+                            <div key={label} className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col items-center text-center gap-3">
+                                <Icon className="w-7 h-7 text-[#143C67]" />
+                                <span className="text-[13px] text-[#374151] whitespace-pre-line leading-snug">{label}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <p className="text-[13px] text-[#374151] mb-6 leading-relaxed">
+                        This credit union will pull ChexSystems and a soft credit inquiry for background checks.
+                        If you have a ChexSystems and/or a credit freeze, you must temporarily release them to apply.
+                    </p>
+
+                    <div className="border-2 border-[#262C30] rounded p-3 mb-8 inline-flex items-center gap-3">
+                        <div className="text-center">
+                            <div className="text-[11px] font-bold text-[#262C30] leading-tight">NCUA</div>
+                            <div className="text-[8px] text-[#677178] mt-0.5 max-w-[140px] leading-tight">
+                                Your savings federally insured to at least $250,000 and backed by the full faith and credit of the US Government
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="sticky bottom-6">
+                        <button
+                            onClick={goNext}
+                            className="w-full flex items-center justify-center gap-2 py-4 bg-[#143C67] text-white text-[14px] font-semibold rounded-full hover:bg-[#0f2d4d] transition-colors shadow-lg"
+                        >
+                            <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">→</span>
+                            Continue
+                        </button>
+                    </div>
+                </main>
+                <ProtoNav />
+            </div>
+        );
+    }
 
     // ── Confirmation Page ──
     if (currentStep === "confirmation") {
