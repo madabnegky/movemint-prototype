@@ -266,3 +266,203 @@ export function backSolveBps(i: BackSolveBpsInput): BackSolveBpsOutput {
     feasibility: "ok",
   };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ROI Calculator — CU perspective
+// Models incremental interest income the CU earns from Movemint-driven
+// originations vs. the fully-loaded cost (bureau + marketing + Movemint fee).
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type RoiLoanProduct = {
+  label: string;
+  // From NCUA / user override
+  totalMembers: number;          // CU member count
+  pctMembersWithOffers: number;  // % of members who receive offers (0-100)
+  responseRate: number;          // acceptance/response rate (0-100)
+  avgLoanSize: number;           // $ per funded loan
+  avgYieldPct: number;           // annual interest rate on the loan (%)
+  avgTermMonths: number;         // average loan term in months
+  organicVolume: number;         // $ originated without Movemint (baseline)
+};
+
+export type RoiDepositProduct = {
+  label: string;
+  totalMembers: number;
+  pctMembersWithOffers: number;
+  responseRate: number;
+  avgAccountSize: number;        // $ per new deposit account
+  deploymentYieldPct: number;    // CU deploys funds at this yield (%)
+  avgRatePaidPct: number;        // CU pays members this rate (%)
+  organicVolume: number;         // new deposit $ opened without Movemint
+};
+
+export type RoiCosts = {
+  bureauCostPerCampaign: number;    // default $30,000
+  marketingCostPerCampaign: number; // default $20,000
+  campaignsPerYear: number;         // default 4
+  movemintAnnualFee: number;        // Movemint fee (standalone input)
+};
+
+export type RoiScenarioResult = {
+  responseRate: number;           // the rate used for this scenario (%)
+
+  // Loans
+  loanOffersGenerated: number;
+  loanIncrementalFunded: number;  // count of loans
+  loanIncrementalVolume: number;  // $ volume
+  loanInterestIncome: number;     // annual interest income $
+
+  // Deposits
+  depositOffersGenerated: number;
+  depositIncrementalAccounts: number;
+  depositIncrementalVolume: number;
+  depositNetSpreadIncome: number; // annual net spread income $
+
+  // Totals
+  totalIncrementalIncome: number;
+  totalCosts: number;
+  netRoi: number;                 // income - costs
+  roiMultiple: number;            // income / costs (or 0 if costs=0)
+};
+
+export type RoiCalcInput = {
+  loanProducts: RoiLoanProduct[];
+  depositProducts: RoiDepositProduct[];
+  costs: RoiCosts;
+  // Three response rate scenarios — computed separately for each
+  scenarioRates: [number, number, number]; // e.g. [1, 2, 4]
+};
+
+export type RoiCalcOutput = {
+  conservative: RoiScenarioResult;
+  base: RoiScenarioResult;
+  optimistic: RoiScenarioResult;
+  // Per-product drill-down (using base rate)
+  loanBreakdown: Array<{
+    label: string;
+    offersGenerated: number;
+    incrementalFunded: number;
+    incrementalVolume: number;
+    interestIncome: number;
+    organicVolume: number;
+  }>;
+  depositBreakdown: Array<{
+    label: string;
+    offersGenerated: number;
+    incrementalAccounts: number;
+    incrementalVolume: number;
+    netSpreadIncome: number;
+    organicVolume: number;
+  }>;
+};
+
+function calcScenario(
+  loanProducts: RoiLoanProduct[],
+  depositProducts: RoiDepositProduct[],
+  costs: RoiCosts,
+  responseRatePct: number,
+): RoiScenarioResult {
+  const rr = responseRatePct / 100;
+
+  let loanOffersGenerated = 0;
+  let loanIncrementalFunded = 0;
+  let loanIncrementalVolume = 0;
+  let loanInterestIncome = 0;
+
+  for (const p of loanProducts) {
+    const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
+    const funded = offers * rr;
+    const vol = funded * p.avgLoanSize;
+    // Simple interest income: principal × annual rate × (term / 12)
+    // Approximates total interest earned over the life of the loan.
+    const income = vol * (p.avgYieldPct / 100) * (p.avgTermMonths / 12);
+    loanOffersGenerated += offers;
+    loanIncrementalFunded += funded;
+    loanIncrementalVolume += vol;
+    loanInterestIncome += income;
+  }
+
+  let depositOffersGenerated = 0;
+  let depositIncrementalAccounts = 0;
+  let depositIncrementalVolume = 0;
+  let depositNetSpreadIncome = 0;
+
+  for (const p of depositProducts) {
+    const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
+    const accounts = offers * rr;
+    const vol = accounts * p.avgAccountSize;
+    const netSpreadPct = (p.deploymentYieldPct - p.avgRatePaidPct) / 100;
+    const income = vol * netSpreadPct; // annual net spread income
+    depositOffersGenerated += offers;
+    depositIncrementalAccounts += accounts;
+    depositIncrementalVolume += vol;
+    depositNetSpreadIncome += income;
+  }
+
+  const totalIncrementalIncome = loanInterestIncome + depositNetSpreadIncome;
+  const totalCosts =
+    costs.bureauCostPerCampaign * costs.campaignsPerYear +
+    costs.marketingCostPerCampaign * costs.campaignsPerYear +
+    costs.movemintAnnualFee;
+  const netRoi = totalIncrementalIncome - totalCosts;
+  const roiMultiple = totalCosts > 0 ? totalIncrementalIncome / totalCosts : 0;
+
+  return {
+    responseRate: responseRatePct,
+    loanOffersGenerated,
+    loanIncrementalFunded,
+    loanIncrementalVolume,
+    loanInterestIncome,
+    depositOffersGenerated,
+    depositIncrementalAccounts,
+    depositIncrementalVolume,
+    depositNetSpreadIncome,
+    totalIncrementalIncome,
+    totalCosts,
+    netRoi,
+    roiMultiple,
+  };
+}
+
+export function calcRoi(input: RoiCalcInput): RoiCalcOutput {
+  const [r1, r2, r3] = input.scenarioRates;
+  const conservative = calcScenario(input.loanProducts, input.depositProducts, input.costs, r1);
+  const base = calcScenario(input.loanProducts, input.depositProducts, input.costs, r2);
+  const optimistic = calcScenario(input.loanProducts, input.depositProducts, input.costs, r3);
+
+  // Per-product drill-down uses the base response rate
+  const baseRr = r2 / 100;
+
+  const loanBreakdown = input.loanProducts.map((p) => {
+    const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
+    const funded = offers * baseRr;
+    const vol = funded * p.avgLoanSize;
+    const income = vol * (p.avgYieldPct / 100) * (p.avgTermMonths / 12);
+    return {
+      label: p.label,
+      offersGenerated: offers,
+      incrementalFunded: funded,
+      incrementalVolume: vol,
+      interestIncome: income,
+      organicVolume: p.organicVolume,
+    };
+  });
+
+  const depositBreakdown = input.depositProducts.map((p) => {
+    const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
+    const accounts = offers * baseRr;
+    const vol = accounts * p.avgAccountSize;
+    const netSpreadPct = (p.deploymentYieldPct - p.avgRatePaidPct) / 100;
+    const income = vol * netSpreadPct;
+    return {
+      label: p.label,
+      offersGenerated: offers,
+      incrementalAccounts: accounts,
+      incrementalVolume: vol,
+      netSpreadIncome: income,
+      organicVolume: p.organicVolume,
+    };
+  });
+
+  return { conservative, base, optimistic, loanBreakdown, depositBreakdown };
+}

@@ -18,8 +18,10 @@ import { BpsTab } from "./_components/BpsTab";
 import { SaasPerEventTab } from "./_components/SaasPerEventTab";
 import { ComparisonTab } from "./_components/ComparisonTab";
 import { RepricingTab } from "./_components/RepricingTab";
+import { RoiTab } from "./_components/RoiTab";
+import { tierForAssets } from "./_lib/types";
 
-type TabId = "bps" | "redemption" | "application" | "click" | "offerGen" | "comparison" | "repricing";
+type TabId = "bps" | "redemption" | "application" | "click" | "offerGen" | "comparison" | "repricing" | "roi";
 
 const TABS: { id: TabId; label: string; sublabel?: string }[] = [
   { id: "bps", label: "BPS take-rate", sublabel: "Pure transaction" },
@@ -29,6 +31,7 @@ const TABS: { id: TabId; label: string; sublabel?: string }[] = [
   { id: "offerGen", label: "SaaS + offer generated", sublabel: "$ per impression" },
   { id: "comparison", label: "Compare all 5", sublabel: "Side-by-side" },
   { id: "repricing", label: "Repricing", sublabel: "Existing clients" },
+  { id: "roi", label: "ROI Calculator", sublabel: "CU perspective" },
 ];
 
 export default function PricingModelPage() {
@@ -231,13 +234,13 @@ export default function PricingModelPage() {
       </div>
 
       {/* Prospective-modeling tabs need a selected CU */}
-      {activeTab !== "repricing" && !selectedCu && (
+      {activeTab !== "repricing" && activeTab !== "roi" && !selectedCu && (
         <div className="bg-white p-8 md:p-12 rounded-xl border border-dashed border-slate-300 text-center text-slate-500">
           Select a credit union above to begin modeling, or switch to the <b>Repricing</b> tab to work with uploaded client data.
         </div>
       )}
 
-      {selectedCu && (
+      {selectedCu && activeTab !== "roi" && (
         <>
           {/* Tab content */}
           {activeTab === "bps" && (
@@ -432,6 +435,27 @@ export default function PricingModelPage() {
           tierPrices={tierPrices}
           eventAssumptions={eventAssumptions}
           depositChurnGrossup={depositChurnGrossup}
+        />
+      )}
+
+      {/* ROI Calculator — requires a CU selection */}
+      {activeTab === "roi" && !selectedCu && (
+        <div className="text-center py-20 text-slate-500">
+          <p className="text-lg font-medium mb-1">Select a credit union above</p>
+          <p className="text-sm">The ROI calculator seeds defaults from NCUA data for the selected CU.</p>
+        </div>
+      )}
+      {activeTab === "roi" && selectedCu && (
+        <RoiTab
+          cu={selectedCu}
+          loanVolumes={loanVolumes}
+          movemintAnnualFee={
+            (() => {
+              const tier = tierForAssets(selectedCu.assets);
+              const monthly = saasOverride ?? (tierPrices[tier.id] ?? tier.defaultMonthly);
+              return monthly * 12;
+            })()
+          }
         />
       )}
     </div>
