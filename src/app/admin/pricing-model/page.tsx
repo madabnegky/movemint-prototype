@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import ncuaData from "@/data/ncua-cus.json";
+import fdicData from "@/data/fdic-banks.json";
 
-import type { CU, LoanCategory, DepositCategory, LoanTakeRates, DepositTakeRates, SaasTierPrices } from "./_lib/types";
+import type { CU, Institution, InstitutionType, LoanCategory, DepositCategory, LoanTakeRates, DepositTakeRates, SaasTierPrices } from "./_lib/types";
 import {
   DEFAULT_LOAN_BPS,
   DEFAULT_DEPOSIT_BPS,
@@ -37,7 +38,8 @@ const TABS: { id: TabId; label: string; sublabel?: string }[] = [
 export default function PricingModelPage() {
   const [activeTab, setActiveTab] = useState<TabId>("bps");
 
-  const [selectedCu, setSelectedCu] = useState<CU | null>(null);
+  const [selectedCu, setSelectedCu] = useState<Institution | null>(null);
+  const [filterType, setFilterType] = useState<"all" | "credit-union" | "bank">("all");
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -80,16 +82,26 @@ export default function PricingModelPage() {
     [eventAssumptionsRaw, loanPenetration, depositPenetration],
   );
 
-  // ---------- CU search ----------
+  // ---------- Combined search index ----------
+  const combinedInstitutions = useMemo<Institution[]>(() => {
+    const cus: Institution[] = ncuaData.cus.map((c) => ({ ...c, cuType: "credit-union" }));
+    const banks: Institution[] = fdicData.banks.map((b) => ({ ...b, cuType: "bank" }));
+    return [...cus, ...banks];
+  }, []);
+
   const filteredCus = useMemo(() => {
-    if (!search) return ncuaData.cus.slice(0, 50);
+    let list = combinedInstitutions;
+    if (filterType !== "all") {
+      list = list.filter((item) => item.cuType === filterType);
+    }
+    if (!search) return list.slice(0, 50);
     const q = search.toLowerCase();
-    return ncuaData.cus
+    return list
       .filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase() === q)
       .slice(0, 50);
-  }, [search]);
+  }, [search, filterType, combinedInstitutions]);
 
-  function selectCu(cu: CU) {
+  function selectCu(cu: Institution) {
     setSelectedCu(cu);
     // Reset all per-CU overrides on switch
     setLoanOverrides({});
@@ -152,14 +164,39 @@ export default function PricingModelPage() {
         </p>
       </div>
 
-      {/* CU selector */}
+      {/* Institution selector */}
       <div className="bg-white p-4 md:p-6 rounded-xl border border-slate-200 shadow-sm relative">
-        <label className="text-sm font-semibold text-slate-700 mb-2 block">Credit Union</label>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
+          <label className="text-sm font-semibold text-slate-700">Select Prospective Client</label>
+          <div className="flex rounded-lg bg-slate-100 p-0.5 border border-slate-200 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => setFilterType("all")}
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${filterType === "all" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterType("credit-union")}
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${filterType === "credit-union" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+            >
+              Credit Unions
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterType("bank")}
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${filterType === "bank" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+            >
+              Banks
+            </button>
+          </div>
+        </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Search by name or state (e.g. 'Navy', 'CA')…"
+            placeholder="Search by bank or credit union name or state…"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -183,9 +220,14 @@ export default function PricingModelPage() {
                   }}
                   className="w-full text-left px-4 py-2 hover:bg-slate-50 border-b border-slate-100 last:border-0"
                 >
-                  <div className="text-sm font-medium text-slate-900">{cu.name}</div>
-                  <div className="text-xs text-slate-500">
-                    {cu.state} · {fmtUSD(cu.assets)} assets · {cu.members.toLocaleString()} members
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm font-medium text-slate-900">{cu.name}</div>
+                    <span className={`text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded ${cu.cuType === "bank" ? "bg-emerald-100 text-emerald-800" : "bg-blue-100 text-blue-800"}`}>
+                      {cu.cuType === "bank" ? "Bank" : "CU"}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-0.5">
+                    {cu.state} · {fmtUSD(cu.assets)} assets · {cu.cuType === "bank" ? `${cu.members.toLocaleString()} customers` : `${cu.members.toLocaleString()} members`}
                   </div>
                 </button>
               ))}
@@ -196,9 +238,9 @@ export default function PricingModelPage() {
         {selectedCu && (
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
             <Stat label="Assets" value={fmtUSD(selectedCu.assets)} />
-            <Stat label="Members" value={selectedCu.members.toLocaleString()} />
+            <Stat label={selectedCu.cuType === "bank" ? "Customers" : "Members"} value={selectedCu.members.toLocaleString()} />
             <Stat label="2025 originations" value={fmtUSD(selectedCu.originations.total)} />
-            <Stat label="Total shares" value={fmtUSD(selectedCu.shares.total)} />
+            <Stat label={selectedCu.cuType === "bank" ? "Total deposits" : "Total shares"} value={fmtUSD(selectedCu.shares.total)} />
           </div>
         )}
       </div>
@@ -401,22 +443,18 @@ export default function PricingModelPage() {
           <Card title="Methodology &amp; data caveats" tone="muted">
             <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
               <p>
-                <b>Source:</b> NCUA 5300 Call Report, {ncuaData.meta.sourceQuarter.toUpperCase()} (published{" "}
-                {new Date(ncuaData.meta.generatedAt).toLocaleDateString()}). Public, free, refreshed quarterly.
+                <b>Source:</b> {selectedCu?.cuType === "bank" ? "FDIC Call Reports" : "NCUA 5300 Call Report, " + ncuaData.meta.sourceQuarter.toUpperCase()} (published{" "}
+                {new Date(selectedCu?.cuType === "bank" ? fdicData.meta.generatedAt : ncuaData.meta.generatedAt).toLocaleDateString()}). Public, free, refreshed quarterly.
               </p>
               <p>
-                <b>Loan originations:</b> NCUA reports a single total YTD origination figure per credit union (Acct_031B), not
-                category-level flows. Category breakdowns are <i>estimated</i> by allocating that total proportionally to each
-                category&apos;s share of outstanding loan balances. Calibrate against actual book during sales conversations.
+                <b>Loan originations:</b> {selectedCu?.cuType === "bank" ? "FDIC reports commercial, real estate, and consumer loan balances outstanding. Trailing 12-month loan origination flow is estimated using standard amortizing turnover and payout assumptions." : "NCUA reports a single total YTD origination figure per credit union (Acct_031B), not category-level flows. Category breakdowns are estimated by allocating that total proportionally to each category's share of outstanding loan balances."} Calibrate against actual book during sales conversations.
               </p>
               <p>
-                <b>Deposit volume:</b> NCUA reports balances by type, but not gross inflows. We estimate annual new-deposit
-                volume as <code className="px-1 bg-slate-100 rounded text-xs">share balance × gross-inflow factor</code>{" "}
-                (default 18%).
+                <b>Deposit volume:</b> {selectedCu?.cuType === "bank" ? "Total deposits are prefilled from FDIC reports. Category-level breakdowns (checking, savings, CDs) are derived using standard retail bank portfolio averages." : "NCUA reports balances by type, but not gross inflows. We estimate annual new-deposit volume as share balance × gross-inflow factor (default 18%)."}
               </p>
               <p>
                 <b>Event counts:</b> redemptions = volume × penetration ÷ avg ticket size. Applications = redemptions ×
-                application-to-funded ratio (default 2.5×). Offers generated = members × offers per year × blended penetration.
+                application-to-funded ratio (default 2.5×). Offers generated = {selectedCu?.cuType === "bank" ? "customers" : "members"} × offers per year × blended penetration.
                 All ratios are editable.
               </p>
             </div>
@@ -438,15 +476,16 @@ export default function PricingModelPage() {
         />
       )}
 
-      {/* ROI Calculator — requires a CU selection */}
+      {/* ROI Calculator — requires selection */}
       {activeTab === "roi" && !selectedCu && (
         <div className="text-center py-20 text-slate-500">
-          <p className="text-lg font-medium mb-1">Select a credit union above</p>
-          <p className="text-sm">The ROI calculator seeds defaults from NCUA data for the selected CU.</p>
+          <p className="text-lg font-medium mb-1">Select a credit union or bank above</p>
+          <p className="text-sm">The ROI calculator seeds defaults from call report data for the selected institution.</p>
         </div>
       )}
       {activeTab === "roi" && selectedCu && (
         <RoiTab
+          key={selectedCu.cu}
           cu={selectedCu}
           loanVolumes={loanVolumes}
           movemintAnnualFee={

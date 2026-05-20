@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import type { CU, LoanCategory } from "../_lib/types";
+import type { Institution, LoanCategory } from "../_lib/types";
 import { DEFAULT_AVG_LOAN_SIZE } from "../_lib/types";
 import {
   calcRoi,
@@ -246,7 +246,7 @@ export function RoiTab({
   loanVolumes,
   movemintAnnualFee,
 }: {
-  cu: CU;
+  cu: Institution;
   loanVolumes: Record<LoanCategory, number>;
   movemintAnnualFee: number;
 }) {
@@ -285,9 +285,9 @@ export function RoiTab({
   );
 
   // ── Deposit product rows ──────────────────────────────────────────────────
-  const [depositRows, setDepositRows] = useState<DepositInputRow[]>([
+  const [depositRows, setDepositRows] = useState<DepositInputRow[]>(() => [
     {
-      label: "Share Savings / Money Market",
+      label: cu.cuType === "bank" ? "Savings / Money Market" : "Share Savings / Money Market",
       totalMembers: cu.members,
       pctMembersWithOffers: 20,
       responseRate: 2,
@@ -298,7 +298,7 @@ export function RoiTab({
       enabled: true,
     },
     {
-      label: "Checking / Drafts",
+      label: cu.cuType === "bank" ? "Checking Accounts" : "Checking / Drafts",
       totalMembers: cu.members,
       pctMembersWithOffers: 15,
       responseRate: 2,
@@ -309,7 +309,7 @@ export function RoiTab({
       enabled: true,
     },
     {
-      label: "Certificates (CDs)",
+      label: cu.cuType === "bank" ? "CDs" : "Certificates (CDs)",
       totalMembers: cu.members,
       pctMembersWithOffers: 15,
       responseRate: 2,
@@ -355,7 +355,7 @@ export function RoiTab({
       {/* ── CU Context Bar ─────────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-6 text-sm">
         <div>
-          <div className="text-xs uppercase tracking-wider text-slate-500">Credit Union</div>
+          <div className="text-xs uppercase tracking-wider text-slate-500">{cu.cuType === "bank" ? "Bank" : "Credit Union"}</div>
           <div className="font-semibold text-slate-900 mt-0.5">{cu.name}</div>
         </div>
         <div>
@@ -363,7 +363,7 @@ export function RoiTab({
           <div className="font-semibold text-slate-900 mt-0.5">{fmtUSD(cu.assets)}</div>
         </div>
         <div>
-          <div className="text-xs uppercase tracking-wider text-slate-500">Members</div>
+          <div className="text-xs uppercase tracking-wider text-slate-500">{cu.cuType === "bank" ? "Customers" : "Members"}</div>
           <div className="font-semibold text-slate-900 mt-0.5">{fmtCount(cu.members)}</div>
         </div>
         <div>
@@ -379,7 +379,7 @@ export function RoiTab({
         <div className="flex items-center gap-2 mb-4">
           <h2 className="text-sm font-semibold text-slate-700">Response Rate Scenarios</h2>
           <HelpPopover title="Response Rate">
-            <p>The percentage of members who receive an offer and actually accept/fund it. Industry benchmarks: 1% conservative, 2% base, 4% optimistic.</p>
+            <p>The percentage of {cu.cuType === "bank" ? "customers" : "members"} who receive an offer and actually accept/fund it. Industry benchmarks: 1% conservative, 2% base, 4% optimistic.</p>
           </HelpPopover>
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -452,7 +452,7 @@ export function RoiTab({
         >
           <div>
             <h2 className="text-sm font-semibold text-slate-700">Loan Product Parameters</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Configure each loan product — seeded from NCUA data</p>
+            <p className="text-xs text-slate-400 mt-0.5">Configure each loan product — seeded from {cu.cuType === "bank" ? "FDIC" : "NCUA"} data</p>
           </div>
           {showLoanInputs ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
         </button>
@@ -478,7 +478,7 @@ export function RoiTab({
                 {row.enabled && (
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                     <NumField
-                      label="Members w/ Offers (%)"
+                      label={cu.cuType === "bank" ? "Customers w/ Offers (%)" : "Members w/ Offers (%)"}
                       value={row.pctMembersWithOffers}
                       onChange={(v) => updateLoan(idx, { pctMembersWithOffers: v })}
                       suffix="%"
@@ -496,7 +496,7 @@ export function RoiTab({
                       onChange={(v) => updateLoan(idx, { avgYieldPct: v })}
                       suffix="%"
                       step={0.1}
-                      hint="NCUA avg rate baseline"
+                      hint={`${cu.cuType === "bank" ? "FDIC" : "NCUA"} avg rate baseline`}
                     />
                     <NumField
                       label="Avg Term (mo)"
@@ -552,7 +552,7 @@ export function RoiTab({
                 {row.enabled && (
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                     <NumField
-                      label="Members w/ Offers (%)"
+                      label={cu.cuType === "bank" ? "Customers w/ Offers (%)" : "Members w/ Offers (%)"}
                       value={row.pctMembersWithOffers}
                       onChange={(v) => updateDeposit(idx, { pctMembersWithOffers: v })}
                       suffix="%"
@@ -570,15 +570,15 @@ export function RoiTab({
                       onChange={(v) => updateDeposit(idx, { deploymentYieldPct: v })}
                       suffix="%"
                       step={0.1}
-                      hint="How CU deploys the funds"
+                      hint={`How ${cu.cuType === "bank" ? "bank" : "CU"} deploys the funds`}
                     />
                     <NumField
-                      label="Rate Paid to Member (%)"
+                      label={cu.cuType === "bank" ? "Rate Paid to Customer (%)" : "Rate Paid to Member (%)"}
                       value={row.avgRatePaidPct}
                       onChange={(v) => updateDeposit(idx, { avgRatePaidPct: v })}
                       suffix="%"
                       step={0.1}
-                      hint="From NCUA avg deposit rate"
+                      hint={`From ${cu.cuType === "bank" ? "FDIC" : "NCUA"} avg deposit rate`}
                     />
                     <NumField
                       label="Organic Volume ($)"
@@ -597,7 +597,7 @@ export function RoiTab({
 
       {/* ── 3-Column Scenario Results ──────────────────────────────────── */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-700 mb-3">ROI Scenarios — CU Perspective</h2>
+        <h2 className="text-sm font-semibold text-slate-700 mb-3">ROI Scenarios — {cu.cuType === "bank" ? "Bank" : "CU"} Perspective</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <ScenarioColumn label="Conservative" result={result.conservative} />
           <ScenarioColumn label="Base Case" result={result.base} highlight />
@@ -708,7 +708,7 @@ export function RoiTab({
       </div>
 
       <p className="text-xs text-slate-400">
-        Interest income is calculated as: funded volume × annual yield × (avg term / 12 months). Deposit income is: new balance × (deployment yield − rate paid to member). All figures are estimates based on NCUA call report data and configurable assumptions. Not a guarantee of future results.
+        Interest income is calculated as: funded volume × annual yield × (avg term / 12 months). Deposit income is: new balance × (deployment yield − rate paid to {cu.cuType === "bank" ? "customer" : "member"}). All figures are estimates based on {cu.cuType === "bank" ? "FDIC" : "NCUA"} call report data and configurable assumptions. Not a guarantee of future results.
       </p>
     </div>
   );

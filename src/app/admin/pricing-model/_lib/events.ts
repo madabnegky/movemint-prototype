@@ -1,4 +1,4 @@
-import type { CU, LoanCategory, DepositCategory } from "./types";
+import type { CU, Institution, LoanCategory, DepositCategory } from "./types";
 import {
   DEFAULT_AVG_LOAN_SIZE,
   DEFAULT_AVG_DEPOSIT_SIZE,
@@ -16,7 +16,7 @@ export type VolumeMix = {
   deposits: Record<DepositCategory, number>; // estimated new-deposit $ per category, full year
 };
 
-export function deriveLoanVolumes(cu: CU): Record<LoanCategory, number> {
+export function deriveLoanVolumes(cu: Institution): Record<LoanCategory, number> {
   return {
     firstMortgage: cu.originations.firstMortgageEst,
     heloc: cu.originations.helocEst,
@@ -27,7 +27,7 @@ export function deriveLoanVolumes(cu: CU): Record<LoanCategory, number> {
   };
 }
 
-export function deriveDepositVolumes(cu: CU, grossInflowPct: number): Record<DepositCategory, number> {
+export function deriveDepositVolumes(cu: Institution, grossInflowPct: number): Record<DepositCategory, number> {
   const f = grossInflowPct / 100;
   return {
     drafts: cu.shares.drafts * f,

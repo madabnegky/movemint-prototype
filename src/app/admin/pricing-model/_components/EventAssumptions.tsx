@@ -19,10 +19,12 @@ type Props = {
     offersGeneratedTotal: number;
   };
   members: number;
+  institutionType?: string;
 };
 
-export function EventAssumptionsEditor({ assumptions, setAssumptions, focus, counts, members }: Props) {
+export function EventAssumptionsEditor({ assumptions, setAssumptions, focus, counts, members, institutionType }: Props) {
   const update = <K extends keyof EA>(k: K, v: EA[K]) => setAssumptions({ ...assumptions, [k]: v });
+  const isBank = institutionType === "bank";
 
   return (
     <Card title="Event-count assumptions">
@@ -77,11 +79,11 @@ export function EventAssumptionsEditor({ assumptions, setAssumptions, focus, cou
             suffix="×"
           />
           <NumField
-            label="Offers per member per year"
+            label={isBank ? "Offers per customer per year" : "Offers per member per year"}
             value={assumptions.offersPerMemberPerYear}
             onChange={(v) => update("offersPerMemberPerYear", v)}
             step={1}
-            hint={`Members: ${fmtCount(members)} × this = annual offer volume`}
+            hint={`${isBank ? "Customers" : "Members"}: ${fmtCount(members)} × this = annual offer volume`}
           />
           <NumField
             label="Click-to-application rate"

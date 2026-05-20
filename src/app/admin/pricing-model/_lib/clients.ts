@@ -1,5 +1,6 @@
 import ncuaData from "@/data/ncua-cus.json";
-import type { CU } from "./types";
+import fdicData from "@/data/fdic-banks.json";
+import type { CU, Institution } from "./types";
 
 /**
  * Existing-client record. Sourced from CSV upload, persisted in localStorage,
@@ -31,7 +32,7 @@ export type ExistingClient = {
 };
 
 export type ClientWithNcua = ExistingClient & {
-  ncua: CU | null;
+  ncua: Institution | null;
 };
 
 /**
@@ -138,10 +139,14 @@ export function clearClients() {
  * Hydrate a list of clients with their NCUA data (or null if no match).
  * Pre-builds a Map keyed by CU number so repeated lookups are O(1).
  */
-let _ncuaIndex: Map<string, CU> | null = null;
-function ncuaIndex(): Map<string, CU> {
+let _ncuaIndex: Map<string, Institution> | null = null;
+function ncuaIndex(): Map<string, Institution> {
   if (!_ncuaIndex) {
-    _ncuaIndex = new Map(ncuaData.cus.map((c) => [c.cu, c]));
+    const combined: Institution[] = [
+      ...ncuaData.cus.map((c) => ({ ...c, cuType: "credit-union" as const })),
+      ...fdicData.banks.map((b) => ({ ...b, cuType: "bank" as const })),
+    ];
+    _ncuaIndex = new Map(combined.map((c) => [c.cu, c]));
   }
   return _ncuaIndex;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import type { CU, LoanTakeRates, DepositTakeRates, SaasTierPrices, LoanCategory, DepositCategory } from "../_lib/types";
+import type { Institution, LoanTakeRates, DepositTakeRates, SaasTierPrices, LoanCategory, DepositCategory } from "../_lib/types";
 import type { EventCounts } from "../_lib/events";
 import { tierForAssets } from "../_lib/types";
 import { calcBpsRevenue, calcSaasPerEventRevenue } from "../_lib/calc";
@@ -8,7 +8,7 @@ import { fmtUSDExact } from "../_lib/format";
 import { Card } from "./primitives";
 
 export type ComparisonTabProps = {
-  selectedCu: CU;
+  selectedCu: Institution;
 
   // BPS inputs
   loanVolumes: Record<LoanCategory, number>;
@@ -219,12 +219,12 @@ export function ComparisonTab(props: ComparisonTabProps) {
           </li>
           <li>
             <b>Strategic mix (60–80% SaaS):</b> models in this band give predictable, recurring revenue you can forecast against.
-            Models below 60% SaaS make you too dependent on member activity; above 80% leave money on the table when usage is high.
+            Models below 60% SaaS make you too dependent on {selectedCu.cuType === "bank" ? "customer" : "member"} activity; above 80% leave money on the table when usage is high.
           </li>
           <li>
             <b>BPS</b> makes sense when usage is high and predictable. <b>Per-redemption</b> aligns price with realized customer
             value. <b>Per-application</b> spreads risk earlier in the funnel. <b>Per-offer-generated</b> works for clients with
-            heavy member bases and low conversion expectations.
+            heavy {selectedCu.cuType === "bank" ? "customer" : "member"} bases and low conversion expectations.
           </li>
         </ul>
       </Card>

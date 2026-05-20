@@ -21,6 +21,7 @@ export type TieredSaasFeeProps = {
   onChangeTierPrice: (tierId: string, monthly: number) => void;
   override: number | null;
   onChangeOverride: (monthly: number | null) => void;
+  cuType?: string;
 };
 
 export function TieredSaasFee({
@@ -29,17 +30,19 @@ export function TieredSaasFee({
   onChangeTierPrice,
   override,
   onChangeOverride,
+  cuType,
 }: TieredSaasFeeProps) {
   const activeTier = tierForAssets(selectedAssets);
   const activeTierPrice = tierPrices[activeTier.id] ?? activeTier.defaultMonthly;
   const effectiveMonthly = override ?? activeTierPrice;
+  const isBank = cuType === "bank";
 
   return (
     <Card title="Tiered SaaS base fee">
       <div className="space-y-4">
         {/* Active tier callout */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-          <div className="text-xs uppercase tracking-wider text-blue-700 font-medium mb-1">Selected CU</div>
+          <div className="text-xs uppercase tracking-wider text-blue-700 font-medium mb-1">Selected {isBank ? "Bank" : "CU"}</div>
           <div className="text-sm text-slate-900">
             <b>{fmtUSDExact(selectedAssets)}</b> in assets — falls in tier <b>{activeTier.label}</b>
           </div>
@@ -75,7 +78,7 @@ export function TieredSaasFee({
             </div>
           </div>
           {override != null && (
-            <div className="text-[11px] text-slate-500 mt-1">Overriding tier price for this CU only.</div>
+            <div className="text-[11px] text-slate-500 mt-1">Overriding tier price for this client only.</div>
           )}
         </div>
 

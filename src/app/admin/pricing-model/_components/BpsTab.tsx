@@ -1,13 +1,13 @@
 "use client";
 
-import type { CU, LoanCategory, DepositCategory, LoanTakeRates, DepositTakeRates } from "../_lib/types";
+import type { Institution, LoanCategory, DepositCategory, LoanTakeRates, DepositTakeRates } from "../_lib/types";
 import { LOAN_LABELS, DEPOSIT_LABELS } from "../_lib/types";
 import { fmtUSD, fmtUSDExact } from "../_lib/format";
 import { calcBpsRevenue } from "../_lib/calc";
 import { Card, Row, SliderInput, NumberInput, HelpPopover } from "./primitives";
 
 export type BpsTabProps = {
-  selectedCu: CU;
+  selectedCu: Institution;
 
   loanPenetration: number;
   setLoanPenetration: (v: number) => void;
@@ -110,9 +110,9 @@ export function BpsTab(props: BpsTabProps) {
               step={0.1}
               suffix="%"
             />
-            <SliderInput
+             <SliderInput
               label="Deposit gross-inflow factor"
-              hint="Annual new-deposit volume estimated as: share balance × this factor."
+              hint={`Annual new-deposit volume estimated as: ${selectedCu.cuType === "bank" ? "deposit" : "share"} balance × this factor.`}
               value={depositChurnGrossup}
               onChange={setDepositChurnGrossup}
               min={5}
@@ -122,12 +122,12 @@ export function BpsTab(props: BpsTabProps) {
               help={
                 <HelpPopover title="What is the deposit gross-inflow factor?">
                   <p>
-                    NCUA tells us a credit union&apos;s deposit <i>balance</i> at year-end (a stock), but not how much new
+                    {selectedCu.cuType === "bank" ? "FDIC" : "NCUA"} tells us a {selectedCu.cuType === "bank" ? "bank" : "credit union"}&apos;s deposit <i>balance</i> at year-end (a stock), but not how much new
                     money <i>flowed in</i> during the year (the flow). Pricing needs the flow.
                   </p>
                   <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 font-mono text-xs leading-relaxed">
                     annual new-deposit volume
-                    <br />= share balance × gross-inflow factor
+                    <br />= {selectedCu.cuType === "bank" ? "deposit" : "share"} balance × gross-inflow factor
                   </div>
                   <p>
                     For <b>{selectedCu.name}</b> at the current setting:
@@ -137,7 +137,7 @@ export function BpsTab(props: BpsTabProps) {
                     <br />= {fmtUSDExact(selectedCu.shares.total * (depositChurnGrossup / 100))} estimated new-deposit volume
                   </div>
                   <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2.5">
-                    <b>This is the most uncertain assumption in the model.</b> Calibrate against the CU&apos;s actual gross
+                    <b>This is the most uncertain assumption in the model.</b> Calibrate against the {selectedCu.cuType === "bank" ? "bank" : "CU"}&apos;s actual gross
                     deposit inflows from internal reporting when possible.
                   </p>
                 </HelpPopover>
@@ -176,11 +176,12 @@ export function BpsTab(props: BpsTabProps) {
                   setLoanOverrides(next);
                 }}
                 penetration={loanPenetration}
+                cuType={selectedCu.cuType}
               />
             ))}
           </div>
         </Card>
-
+ 
         <Card
           title={`Deposit module — take rates (basis points on estimated new-deposit volume)${
             depositPenetration === 0 ? " · DISABLED (deposit penetration = 0%)" : ""
@@ -203,6 +204,7 @@ export function BpsTab(props: BpsTabProps) {
                   setDepositOverrides(next);
                 }}
                 penetration={depositPenetration}
+                cuType={selectedCu.cuType}
               />
             ))}
           </div>
@@ -283,6 +285,7 @@ function BpsRow({
   override,
   onChangeOverride,
   penetration,
+  cuType,
 }: {
   label: string;
   bps: number;
@@ -291,6 +294,7 @@ function BpsRow({
   override: number | undefined;
   onChangeOverride: (v: number | null) => void;
   penetration: number;
+  cuType?: string;
 }) {
   const isOverridden = override != null;
   const volume = isOverridden ? override : estimate;
@@ -309,7 +313,7 @@ function BpsRow({
         className={`w-20 px-2 py-1 border rounded text-sm font-mono text-right focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           isOverridden ? "border-blue-400 bg-blue-50" : "border-slate-300"
         }`}
-        title={isOverridden ? "Override active" : "NCUA-estimated"}
+        title={isOverridden ? "Override active" : `${cuType === "bank" ? "FDIC" : "NCUA"}-estimated`}
       />
       <span className="text-xs text-slate-400">M</span>
       {isOverridden && (

@@ -1,6 +1,7 @@
 "use client";
 
-import type { CU } from "../_lib/types";
+import { useMemo } from "react";
+import type { Institution } from "../_lib/types";
 import type { SaasTierPrices } from "../_lib/types";
 import type { EventAssumptions, EventCounts } from "../_lib/events";
 import { calcSaasPerEventRevenue } from "../_lib/calc";
@@ -36,7 +37,7 @@ const EVENT_LABELS: Record<EventKind, { title: string; one: string; description:
 };
 
 export type SaasPerEventTabProps = {
-  selectedCu: CU;
+  selectedCu: Institution;
   kind: EventKind;
   pricePerEventLoan: number;
   setPricePerEventLoan: (v: number) => void;
@@ -66,7 +67,16 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
     setAssumptions,
     eventCounts,
   } = props;
-  const labels = EVENT_LABELS[kind];
+  const isBank = selectedCu.cuType === "bank";
+  const labels = useMemo(() => {
+    const orig = EVENT_LABELS[kind];
+    return {
+      ...orig,
+      description: kind === "offerGen"
+        ? `Charge per offer rendered to a ${isBank ? "customer" : "member"}, regardless of whether they engaged.`
+        : orig.description
+    };
+  }, [kind, isBank]);
 
   const counts = pickCounts(eventCounts, kind);
   const eventCountTotal = counts.loan + counts.deposit;
@@ -125,6 +135,7 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
           onChangeTierPrice={props.setTierPrice}
           override={saasOverride}
           onChangeOverride={setSaasOverride}
+          cuType={selectedCu.cuType}
         />
 
         <Card title={`Price per ${labels.one} — by module`}>
@@ -166,6 +177,7 @@ export function SaasPerEventTab(props: SaasPerEventTabProps) {
           focus={kind}
           counts={eventCounts}
           members={selectedCu.members}
+          institutionType={selectedCu.cuType}
         />
       </div>
 

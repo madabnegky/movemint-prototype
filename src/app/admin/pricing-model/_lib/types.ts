@@ -2,6 +2,12 @@ import ncuaData from "@/data/ncua-cus.json";
 
 export type CU = (typeof ncuaData.cus)[number];
 
+export type InstitutionType = "credit-union" | "bank";
+
+export type Institution = CU & {
+  cuType?: InstitutionType;
+};
+
 export type LoanCategory = "firstMortgage" | "heloc" | "auto" | "creditCard" | "unsecured" | "commercial";
 export type DepositCategory = "drafts" | "regular" | "mma" | "cds" | "ira";
 
