@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useStore } from "@/context/StoreContext";
+import { useStore, DEFAULT_OFFERS } from "@/context/StoreContext";
 import type { Offer, MemberProfile } from "@/context/StoreContext";
 import { evaluateCampaignProduct, generateOfferFromCampaignProduct, aggregateOffersFromAllCampaigns, GeneratedOffer } from "@/lib/ruleEvaluator";
 
@@ -126,12 +126,32 @@ export function useStorefront(): StorefrontData {
 
     // Build sections with their offers
     const sections: StorefrontSection[] = useMemo(() => {
+        // For Low Credit Member, if Credit Mountain is enabled, ONLY show the Credit Mountain tile (with no other offers)
+        const isLowCredit = selectedProfile?.id === 'low-credit' || (selectedProfile?.attributes?.creditScore !== undefined && selectedProfile.attributes.creditScore < 650);
+        if (isLowCredit && showCreditMountainSection) {
+            return [{
+                name: CREDIT_MOUNTAIN_SECTION,
+                offers: [], // Empty offers so only the tile shows
+                isCreditMountain: true
+            }];
+        }
+
         // For Credit Mountain Graduates, only show the Credit Mountain section
         if (isCreditMountainGraduate && showCreditMountainSection) {
-            const creditMountainOffers = offers.filter(o =>
+            let creditMountainOffers = offers.filter(o =>
                 !o.isRedeemed &&
                 o.section === CREDIT_MOUNTAIN_SECTION
             );
+
+            // Ensure the Personal Loan offer is present even if the scenario cleared it
+            const hasPersonalLoan = creditMountainOffers.some(o => o.id === 'demo-10');
+            if (!hasPersonalLoan) {
+                const defaultPersonalLoan = DEFAULT_OFFERS.find(o => o.id === 'demo-10');
+                if (defaultPersonalLoan) {
+                    creditMountainOffers = [...creditMountainOffers, defaultPersonalLoan];
+                }
+            }
+
             return [{
                 name: CREDIT_MOUNTAIN_SECTION,
                 offers: creditMountainOffers,

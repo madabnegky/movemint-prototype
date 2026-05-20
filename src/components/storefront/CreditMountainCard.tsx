@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/context/StoreContext";
 
 interface CreditMountainCardProps {
     className?: string;
@@ -17,6 +18,10 @@ const CREDIT_MOUNTAIN_URL = "/credit-mountain";
 
 export function CreditMountainCard({ className, variant = "card", showSectionHeader = false }: CreditMountainCardProps) {
     const [hasVisited, setHasVisited] = useState(false);
+    const { selectedProfileId, memberProfiles } = useStore();
+
+    const selectedProfile = memberProfiles.find(p => p.id === selectedProfileId);
+    const isCreditMountainGraduate = selectedProfile?.id === 'credit-mountain-graduate' || !!(selectedProfile?.attributes?.usedCreditMountain && selectedProfile?.attributes?.creditScoreImproved);
 
     // Check localStorage on mount to see if user has visited
     useEffect(() => {
@@ -34,7 +39,7 @@ export function CreditMountainCard({ className, variant = "card", showSectionHea
         window.open(CREDIT_MOUNTAIN_URL, "_blank", "noopener,noreferrer");
     };
 
-    const headline = hasVisited ? "Visit Your AI Credit Coach" : "Meet Your AI Credit Coach";
+    const headline = (hasVisited || isCreditMountainGraduate) ? "Visit Your AI Credit Coach" : "Meet Your AI Credit Coach";
     const description = "Get personalized guidance to improve your credit score and unlock better financial opportunities.";
 
     // Card variant - standard offer card size

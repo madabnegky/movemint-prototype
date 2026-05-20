@@ -1065,7 +1065,7 @@ const DEFAULT_MEMBER_PROFILES: MemberProfile[] = [
     },
 ];
 
-const DEFAULT_OFFERS: Offer[] = [
+export const DEFAULT_OFFERS: Offer[] = [
     {
         id: "demo-1",
         title: "New Auto Loan",
