@@ -8,6 +8,7 @@ import {
   calcRoi,
   type RoiLoanProduct,
   type RoiDepositProduct,
+  type RoiNiiProduct,
   type RoiCosts,
   type RoiScenarioResult,
 } from "../_lib/calc";
@@ -55,6 +56,7 @@ const LOAN_KEYS: LoanCategory[] = [
 
 type LoanInputRow = RoiLoanProduct & { enabled: boolean };
 type DepositInputRow = RoiDepositProduct & { enabled: boolean };
+type NiiInputRow = RoiNiiProduct;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -96,6 +98,11 @@ function ScenarioColumn({
         <MetricRow
           label="Deposit spread income"
           value={fmtUSD(result.depositNetSpreadIncome)}
+          highlight={highlight}
+        />
+        <MetricRow
+          label="Non-Interest Income (NII)"
+          value={fmtUSD(result.niiIncome)}
           highlight={highlight}
         />
         <div className={`border-t ${highlight ? "border-emerald-700" : "border-slate-100"} pt-2`}>
@@ -321,21 +328,52 @@ export function RoiTab({
     },
   ]);
 
+  // ── Non-Interest Income (NII) product rows ─────────────────────────────────
+  const [niiRows, setNiiRows] = useState<NiiInputRow[]>(() => [
+    {
+      label: "GAP (Guaranteed Asset Protection)",
+      attachmentRatePct: 20,
+      avgFee: 450,
+      enabled: true,
+    },
+    {
+      label: "MRC (Mechanical Repair Coverage)",
+      attachmentRatePct: 15,
+      avgFee: 600,
+      enabled: true,
+    },
+    {
+      label: "Debt Protection",
+      attachmentRatePct: 10,
+      avgFee: 350,
+      enabled: true,
+    },
+    {
+      label: "Credit Insurance",
+      attachmentRatePct: 8,
+      avgFee: 200,
+      enabled: true,
+    },
+  ]);
+
   // ── Expand/collapse ───────────────────────────────────────────────────────
   const [showLoanDrilldown, setShowLoanDrilldown] = useState(false);
   const [showDepositDrilldown, setShowDepositDrilldown] = useState(false);
+  const [showNiiDrilldown, setShowNiiDrilldown] = useState(false);
   const [showLoanInputs, setShowLoanInputs] = useState(true);
   const [showDepositInputs, setShowDepositInputs] = useState(true);
+  const [showNiiInputs, setShowNiiInputs] = useState(true);
 
   // ── Calculation ───────────────────────────────────────────────────────────
   const result = useMemo(() =>
     calcRoi({
       loanProducts: loanRows.filter((r) => r.enabled),
       depositProducts: depositRows.filter((r) => r.enabled),
+      niiProducts: niiRows,
       costs,
       scenarioRates,
     }),
-    [loanRows, depositRows, costs, scenarioRates]
+    [loanRows, depositRows, niiRows, costs, scenarioRates]
   );
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -344,6 +382,9 @@ export function RoiTab({
   }
   function updateDeposit(idx: number, patch: Partial<DepositInputRow>) {
     setDepositRows((rows) => rows.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
+  }
+  function updateNii(idx: number, patch: Partial<NiiInputRow>) {
+    setNiiRows((rows) => rows.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
   }
   function updateCost(patch: Partial<RoiCosts>) {
     setCosts((c) => ({ ...c, ...patch }));
@@ -595,6 +636,62 @@ export function RoiTab({
         )}
       </div>
 
+      {/* ── NII Product Inputs ─────────────────────────────────────────── */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <button
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors"
+          onClick={() => setShowNiiInputs((v) => !v)}
+        >
+          <div>
+            <h2 className="text-sm font-semibold text-slate-700">Non-Interest Income (NII) Parameters</h2>
+            <p className="text-xs text-slate-400 mt-0.5">Configure attachment rates and net fee revenue for ancillary products</p>
+          </div>
+          {showNiiInputs ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        {showNiiInputs && (
+          <div className="px-5 pb-5 space-y-6 border-t border-slate-100">
+            {niiRows.map((row, idx) => (
+              <div key={row.label}>
+                <div className="flex items-center gap-3 mt-5 mb-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={row.enabled}
+                      onChange={(e) => updateNii(idx, { enabled: e.target.checked })}
+                      className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    />
+                    <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wide">
+                      {row.label}
+                    </span>
+                  </label>
+                  {!row.enabled && <span className="text-xs text-slate-400 italic">excluded</span>}
+                </div>
+                {row.enabled && (
+                  <div className="grid grid-cols-2 gap-3 max-w-md">
+                    <NumField
+                      label="Attachment Rate (%)"
+                      value={row.attachmentRatePct}
+                      onChange={(v) => updateNii(idx, { attachmentRatePct: v })}
+                      suffix="%"
+                      step={1}
+                      hint="% of funded loans"
+                    />
+                    <NumField
+                      label="Avg Net Fee ($)"
+                      value={row.avgFee}
+                      onChange={(v) => updateNii(idx, { avgFee: v })}
+                      prefix="$"
+                      hint="Net fee to institution"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* ── 3-Column Scenario Results ──────────────────────────────────── */}
       <div>
         <h2 className="text-sm font-semibold text-slate-700 mb-3">ROI Scenarios — {cu.cuType === "bank" ? "Bank" : "CU"} Perspective</h2>
@@ -707,8 +804,66 @@ export function RoiTab({
         )}
       </div>
 
+      {/* ── NII Drill-Down ─────────────────────────────────────────────── */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <button
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors"
+          onClick={() => setShowNiiDrilldown((v) => !v)}
+        >
+          <div>
+            <h2 className="text-sm font-semibold text-slate-700">Non-Interest Income (NII) Breakdown</h2>
+            <p className="text-xs text-slate-400 mt-0.5">Per-product detail at the base response rate · Based on funded loans</p>
+          </div>
+          {showNiiDrilldown ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        {showNiiDrilldown && (
+          <div className="overflow-x-auto border-t border-slate-100">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="bg-slate-50 text-slate-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left font-semibold">Product</th>
+                  <th className="px-4 py-3 text-right font-semibold">Status</th>
+                  <th className="px-4 py-3 text-right font-semibold">Attachment Rate</th>
+                  <th className="px-4 py-3 text-right font-semibold">Avg Net Fee</th>
+                  <th className="px-4 py-3 text-right font-semibold">Estimated Units Sold</th>
+                  <th className="px-4 py-3 text-right font-semibold">Total NII Revenue</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {result.niiBreakdown.map((row) => (
+                  <tr key={row.label} className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-700">{row.label}</td>
+                    <td className="px-4 py-3 text-right">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${row.enabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-400"}`}>
+                        {row.enabled ? "Active" : "Excluded"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right font-mono text-slate-600">{row.attachmentRatePct}%</td>
+                    <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtUSD(row.avgFee)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(row.unitsSold)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-emerald-700 font-semibold">{fmtUSD(row.revenue)}</td>
+                  </tr>
+                ))}
+                <tr className="bg-slate-50 font-semibold">
+                  <td className="px-4 py-3 text-slate-700" colSpan={2}>Total</td>
+                  <td className="px-4 py-3 text-right font-mono text-slate-400">—</td>
+                  <td className="px-4 py-3 text-right font-mono text-slate-400">—</td>
+                  <td className="px-4 py-3 text-right font-mono text-slate-600">
+                    {fmtCount(result.niiBreakdown.reduce((sum, r) => sum + r.unitsSold, 0))}
+                  </td>
+                  <td className="px-4 py-3 text-right font-mono text-emerald-700">
+                    {fmtUSD(result.base.niiIncome)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       <p className="text-xs text-slate-400">
-        Interest income is calculated as: funded volume × annual yield × (avg term / 12 months). Deposit income is: new balance × (deployment yield − rate paid to {cu.cuType === "bank" ? "customer" : "member"}). All figures are estimates based on {cu.cuType === "bank" ? "FDIC" : "NCUA"} call report data and configurable assumptions. Not a guarantee of future results.
+        Interest income is calculated as: funded volume × annual yield × (avg term / 12 months). Deposit income is: new balance × (deployment yield − rate paid to {cu.cuType === "bank" ? "customer" : "member"}). Non-interest income (NII) products attach to funded loans: units sold = funded loans × attachment rate. All figures are estimates based on {cu.cuType === "bank" ? "FDIC" : "NCUA"} call report data and configurable assumptions. Not a guarantee of future results.
       </p>
     </div>
   );

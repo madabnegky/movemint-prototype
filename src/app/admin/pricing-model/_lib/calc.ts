@@ -296,6 +296,13 @@ export type RoiDepositProduct = {
   organicVolume: number;         // new deposit $ opened without Movemint
 };
 
+export type RoiNiiProduct = {
+  label: string;
+  attachmentRatePct: number;     // % of funded loans that purchase this NII product (0-100)
+  avgFee: number;                // average net commission/fee revenue per product
+  enabled: boolean;
+};
+
 export type RoiCosts = {
   bureauCostPerCampaign: number;    // default $30,000
   marketingCostPerCampaign: number; // default $20,000
@@ -318,6 +325,9 @@ export type RoiScenarioResult = {
   depositIncrementalVolume: number;
   depositNetSpreadIncome: number; // annual net spread income $
 
+  // NII
+  niiIncome: number;              // total Non-Interest Income $
+
   // Totals
   totalIncrementalIncome: number;
   totalCosts: number;
@@ -328,6 +338,7 @@ export type RoiScenarioResult = {
 export type RoiCalcInput = {
   loanProducts: RoiLoanProduct[];
   depositProducts: RoiDepositProduct[];
+  niiProducts: RoiNiiProduct[];
   costs: RoiCosts;
   // Three response rate scenarios — computed separately for each
   scenarioRates: [number, number, number]; // e.g. [1, 2, 4]
@@ -354,11 +365,20 @@ export type RoiCalcOutput = {
     netSpreadIncome: number;
     organicVolume: number;
   }>;
+  niiBreakdown: Array<{
+    label: string;
+    attachmentRatePct: number;
+    avgFee: number;
+    unitsSold: number;
+    revenue: number;
+    enabled: boolean;
+  }>;
 };
 
 function calcScenario(
   loanProducts: RoiLoanProduct[],
   depositProducts: RoiDepositProduct[],
+  niiProducts: RoiNiiProduct[],
   costs: RoiCosts,
   responseRatePct: number,
 ): RoiScenarioResult {
@@ -399,7 +419,16 @@ function calcScenario(
     depositNetSpreadIncome += income;
   }
 
-  const totalIncrementalIncome = loanInterestIncome + depositNetSpreadIncome;
+  let niiIncome = 0;
+  for (const p of niiProducts) {
+    if (p.enabled) {
+      const units = loanIncrementalFunded * (p.attachmentRatePct / 100);
+      const revenue = units * p.avgFee;
+      niiIncome += revenue;
+    }
+  }
+
+  const totalIncrementalIncome = loanInterestIncome + depositNetSpreadIncome + niiIncome;
   const totalCosts =
     costs.bureauCostPerCampaign * costs.campaignsPerYear +
     costs.marketingCostPerCampaign * costs.campaignsPerYear +
@@ -417,6 +446,7 @@ function calcScenario(
     depositIncrementalAccounts,
     depositIncrementalVolume,
     depositNetSpreadIncome,
+    niiIncome,
     totalIncrementalIncome,
     totalCosts,
     netRoi,
@@ -426,9 +456,9 @@ function calcScenario(
 
 export function calcRoi(input: RoiCalcInput): RoiCalcOutput {
   const [r1, r2, r3] = input.scenarioRates;
-  const conservative = calcScenario(input.loanProducts, input.depositProducts, input.costs, r1);
-  const base = calcScenario(input.loanProducts, input.depositProducts, input.costs, r2);
-  const optimistic = calcScenario(input.loanProducts, input.depositProducts, input.costs, r3);
+  const conservative = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r1);
+  const base = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r2);
+  const optimistic = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r3);
 
   // Per-product drill-down uses the base response rate
   const baseRr = r2 / 100;
@@ -464,5 +494,26 @@ export function calcRoi(input: RoiCalcInput): RoiCalcOutput {
     };
   });
 
-  return { conservative, base, optimistic, loanBreakdown, depositBreakdown };
+  // Calculate NII at the base rate for the breakdown
+  let baseLoanIncrementalFunded = 0;
+  for (const p of input.loanProducts) {
+    const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
+    const funded = offers * baseRr;
+    baseLoanIncrementalFunded += funded;
+  }
+
+  const niiBreakdown = input.niiProducts.map((p) => {
+    const units = p.enabled ? baseLoanIncrementalFunded * (p.attachmentRatePct / 100) : 0;
+    const revenue = units * p.avgFee;
+    return {
+      label: p.label,
+      attachmentRatePct: p.attachmentRatePct,
+      avgFee: p.avgFee,
+      unitsSold: units,
+      revenue,
+      enabled: p.enabled,
+    };
+  });
+
+  return { conservative, base, optimistic, loanBreakdown, depositBreakdown, niiBreakdown };
 }
