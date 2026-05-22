@@ -68,8 +68,8 @@ export function useStorefront(): StorefrontData {
     // Feature flag checks
     const showCreditMountainSection = featureFlags.storefront_creditMountain;
 
-    // Don't show featured carousel when Credit Mountain feature is enabled
-    const showFeaturedCarousel = !featureFlags.storefront_creditMountain;
+    // Don't show featured carousel when Credit Mountain or Showcase Mode is enabled
+    const showFeaturedCarousel = !featureFlags.storefront_creditMountain && !featureFlags.storefront_trustageShowcase;
 
     // Generate offers based on mode (demo vs live)
     const generatedOffers: GeneratedOffer[] = useMemo(() => {
@@ -107,6 +107,9 @@ export function useStorefront(): StorefrontData {
 
     // Build featured offers list
     const featuredOffers = useMemo(() => {
+        // If Showcase Mode is enabled, no featured offers
+        if (featureFlags.storefront_trustageShowcase) return [];
+
         // If Credit Mountain feature is enabled, no featured offers
         if (!showFeaturedCarousel) return [];
 
@@ -122,10 +125,22 @@ export function useStorefront(): StorefrontData {
         return offers
             .filter(o => o.isFeatured && !o.isRedeemed)
             .sort((a, b) => (a.isRedeemed ? 1 : 0) - (b.isRedeemed ? 1 : 0));
-    }, [showFeaturedCarousel, isCreditMountainGraduate, selectedProfile, generatedOffers, offers]);
+    }, [showFeaturedCarousel, isCreditMountainGraduate, selectedProfile, generatedOffers, offers, featureFlags.storefront_trustageShowcase]);
 
     // Build sections with their offers
     const sections: StorefrontSection[] = useMemo(() => {
+        // TruStage Showcase Mode: Show ONLY Insurance & Protection category containing all active offers in that section
+        if (featureFlags.storefront_trustageShowcase && featureFlags.storefront_trustageInsurance) {
+            const trustageOffers = offers.filter(o =>
+                !o.isRedeemed &&
+                o.section === "Insurance & Protection"
+            );
+            return [{
+                name: "Insurance & Protection",
+                offers: trustageOffers
+            }];
+        }
+
         // For Low Credit Member, if Credit Mountain is enabled, ONLY show the Credit Mountain tile (with no other offers)
         const isLowCredit = selectedProfile?.id === 'low-credit' || (selectedProfile?.attributes?.creditScore !== undefined && selectedProfile.attributes.creditScore < 650);
         if (isLowCredit && showCreditMountainSection) {
@@ -256,7 +271,7 @@ export function useStorefront(): StorefrontData {
         }
 
         return result;
-    }, [isCreditMountainGraduate, showCreditMountainSection, selectedProfile, generatedOffers, offers]);
+    }, [isCreditMountainGraduate, showCreditMountainSection, selectedProfile, generatedOffers, offers, featureFlags.storefront_trustageShowcase, featureFlags.storefront_trustageInsurance]);
 
     // Check if we have any offers to display
     const hasOffers = featuredOffers.length > 0 || sections.some(s => s.offers.length > 0) || showCreditMountainSection;

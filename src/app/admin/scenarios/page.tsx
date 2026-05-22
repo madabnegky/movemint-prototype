@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useStore, Offer, StorefrontConfig, FeatureFlags } from "@/context/StoreContext";
+import { useStore, Offer, StorefrontConfig, FeatureFlags, DEFAULT_OFFERS } from "@/context/StoreContext";
 import { Play, RotateCcw, Check, AlertCircle, Car, Home, CreditCard, Shield, Mountain } from "lucide-react";
 import Link from "next/link";
 
@@ -17,6 +17,33 @@ interface Scenario {
 }
 
 const SCENARIOS: Scenario[] = [
+    {
+        id: 'trustage-showcase',
+        name: 'TruStage™ Insurance Showcase',
+        description: 'Isolate the storefront to display ONLY the complete 9-product Member Protection & Insurance suite.',
+        icon: Shield,
+        config: {
+            userName: 'Cameron',
+            welcomeMessage: "Protect what matters most. Explore our comprehensive suite of members-only insurance and loan protection products.",
+            footerDisclaimer: 'TruStage® insurance products and programs are made available through TruStage Insurance Agency, LLC and issued by a number of licensed insurance companies. Loan protection products are voluntary and not required to obtain credit.',
+            theme: 'galaxy',
+        },
+        offers: DEFAULT_OFFERS.filter(offer => [
+            "demo-trustage-addd",
+            "demo-trustage-auto",
+            "demo-trustage-home",
+            "demo-trustage-life-term",
+            "demo-trustage-life-whole",
+            "demo-6", // GAP Plus
+            "demo-mrc",
+            "demo-credit-insurance",
+            "demo-debt-protection"
+        ].includes(offer.id)),
+        featureFlags: {
+            storefront_trustageInsurance: true,
+            storefront_trustageShowcase: true,
+        }
+    },
     {
         id: 'auto-focus',
         name: 'Auto Loans Focus',
@@ -332,11 +359,13 @@ export default function ScenariosPage() {
         const sections = [...new Set(scenario.offers.map(o => o.section))];
         localStorage.setItem('movemint_sections', JSON.stringify(sections));
 
-        // Apply feature flags - reset Credit Mountain unless scenario explicitly enables it
+        // Apply feature flags - reset Credit Mountain and TruStage flags unless scenario explicitly enables them
         const currentFlags = JSON.parse(localStorage.getItem('movemint_feature_flags') || '{}');
         const updatedFlags = {
             ...currentFlags,
             storefront_creditMountain: false,
+            storefront_trustageShowcase: false,
+            storefront_trustageInsurance: false,
             ...(scenario.featureFlags || {}),
         };
         localStorage.setItem('movemint_feature_flags', JSON.stringify(updatedFlags));

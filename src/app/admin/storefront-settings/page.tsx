@@ -166,28 +166,30 @@ export default function StorefrontSettingsPage() {
                         <div className={`p-4 rounded-xl border bg-white transition-all ${featureFlags.storefront_trustageInsurance ? 'border-emerald-200 shadow-sm' : 'border-slate-200 opacity-60'}`}>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">AD&D Benefit</span>
+                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">AD&D Insurance</span>
                             </div>
                             <h3 className="font-semibold text-slate-900 text-sm">Complimentary AD&D</h3>
-                            <p className="text-xs text-slate-500 mt-1">Generates a $1,000 complimentary policy activation offer for all members with custom buy-up limits.</p>
+                            <p className="text-xs text-slate-500 mt-1">Generates a $1,000 complimentary policy activation offer for members with custom buy-up limits.</p>
                         </div>
                         <div className={`p-4 rounded-xl border bg-white transition-all ${featureFlags.storefront_trustageInsurance ? 'border-emerald-200 shadow-sm' : 'border-slate-200 opacity-60'}`}>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">Auto & Home</span>
+                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">Auto & Home Suite</span>
                             </div>
-                            <h3 className="font-semibold text-slate-900 text-sm">Discounted Auto & Home</h3>
-                            <p className="text-xs text-slate-500 mt-1">Generates exclusive group-discount quote offers to help members save money on vehicle and home policies.</p>
+                            <h3 className="font-semibold text-slate-900 text-sm">Separated Auto & Home</h3>
+                            <p className="text-xs text-slate-500 mt-1">Generates two separate premium offers for Auto (15% avg. discount) and Home (10% avg. discount) quotes.</p>
                         </div>
                         <div className={`p-4 rounded-xl border bg-white transition-all ${featureFlags.storefront_trustageInsurance ? 'border-emerald-200 shadow-sm' : 'border-slate-200 opacity-60'}`}>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
-                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">Life Insurance</span>
+                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">Life Insurance Suite</span>
                             </div>
-                            <h3 className="font-semibold text-slate-900 text-sm">Budget-Friendly Life</h3>
-                            <p className="text-xs text-slate-500 mt-1">Generates budget-friendly Term or Whole Life protection offers viewable on the storefront.</p>
+                            <h3 className="font-semibold text-slate-900 text-sm">Term & Whole Life</h3>
+                            <p className="text-xs text-slate-500 mt-1">Generates low-cost Term Life (starting at $8/mo) and cash-value-building Whole Life permanent policies.</p>
                         </div>
                     </div>
+
+
                 </div>
             </div>
 

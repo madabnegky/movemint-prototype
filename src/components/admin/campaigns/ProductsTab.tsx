@@ -43,9 +43,12 @@ const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
     "gap": "GAP Coverage",
     "mrc": "MRC",
     "debt-protection": "Debt Protection",
+    "credit-insurance": "Credit Insurance",
     "personal-loan": "Personal Loan",
     "trustage-addd": "TruStage™ AD&D Insurance",
-    "trustage-autohome": "TruStage™ Auto & Home Insurance",
+    "trustage-auto": "TruStage™ Auto Insurance",
+    "trustage-home": "TruStage™ Home Insurance",
+    "trustage-whole-life": "TruStage™ Whole Life Insurance",
     // Deposit products
     "savings": "Savings Account",
     "checking": "Checking Account",

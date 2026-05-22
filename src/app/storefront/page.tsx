@@ -324,30 +324,32 @@ export default function StorefrontPage() {
                 <HeroCarousel />
 
                 {/* Filter Categories */}
-                <div className="mb-12 flex flex-col gap-2">
-                    <div className="text-[16px] leading-5 text-greyscale-08">
-                        Filter Categories
+                {sections.length > 1 && (
+                    <div className="mb-12 flex flex-col gap-2">
+                        <div className="text-[16px] leading-5 text-greyscale-08">
+                            Filter Categories
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4">
+                            {["All", ...sectionNames].map((name) => {
+                                const isActive = activeCategory === name;
+                                return (
+                                    <button
+                                        key={name}
+                                        onClick={() => setActiveCategory(name)}
+                                        className={cn(
+                                            "px-4 py-2.5 rounded-chip text-[16px] leading-5 transition-colors whitespace-nowrap",
+                                            isActive
+                                                ? "bg-contrast-black text-white"
+                                                : "bg-contrast-white text-contrast-black border border-greyscale-07 hover:border-contrast-black"
+                                        )}
+                                    >
+                                        {name}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-4">
-                        {["All", ...sectionNames].map((name) => {
-                            const isActive = activeCategory === name;
-                            return (
-                                <button
-                                    key={name}
-                                    onClick={() => setActiveCategory(name)}
-                                    className={cn(
-                                        "px-4 py-2.5 rounded-chip text-[16px] leading-5 transition-colors whitespace-nowrap",
-                                        isActive
-                                            ? "bg-contrast-black text-white"
-                                            : "bg-contrast-white text-contrast-black border border-greyscale-07 hover:border-contrast-black"
-                                    )}
-                                >
-                                    {name}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
+                )}
 
                 {/* Offer Sections */}
                 <div className="flex flex-col gap-12">

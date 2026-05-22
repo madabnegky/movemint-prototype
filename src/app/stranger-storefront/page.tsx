@@ -41,23 +41,32 @@ export default function StrangerStorefrontPage() {
     const publicOffers = useMemo(() => {
         const configMap = new Map(strangerOffers.map(so => [so.offerId, so]));
         return offers
-            .filter((o) => configMap.has(o.id) && !o.isRedeemed)
+            .filter((o) => (configMap.has(o.id) || (featureFlags.storefront_trustageInsurance && o.section === "Insurance & Protection")) && !o.isRedeemed)
             .map((o) => {
-                const config = configMap.get(o.id)!;
+                const config = configMap.get(o.id);
                 return {
                     ...o,
-                    variant: config.variant,
-                    isFeatured: config.isFeatured,
+                    variant: config?.variant || 'ita',
+                    isFeatured: config?.isFeatured || false,
                 };
             });
-    }, [offers, strangerOffers]);
+    }, [offers, strangerOffers, featureFlags.storefront_trustageInsurance]);
 
     // Split into featured and section offers
     const featuredOffers = useMemo(() => {
+        if (featureFlags.storefront_trustageShowcase) return [];
         return publicOffers.filter((o) => o.isFeatured);
-    }, [publicOffers]);
+    }, [publicOffers, featureFlags.storefront_trustageShowcase]);
 
     const sections = useMemo(() => {
+        if (featureFlags.storefront_trustageShowcase && featureFlags.storefront_trustageInsurance) {
+            const trustageOffers = publicOffers.filter(o => o.section === "Insurance & Protection");
+            return [{
+                name: "Insurance & Protection",
+                offers: trustageOffers
+            }];
+        }
+
         const sectionMap = new Map<string, Offer[]>();
         for (const offer of publicOffers) {
             const section = offer.section || "Other Offers";
@@ -68,11 +77,14 @@ export default function StrangerStorefrontPage() {
         }
 
         const sectionOrder = [
+            "Your Prequalified Offers",
             "Auto Loans & Offers",
             "Home Loans & Offers",
             "Credit Cards",
             "Savings & Deposits",
+            "Retirement & Savings",
             "Special Offers",
+            "Insurance & Protection"
         ];
 
         return Array.from(sectionMap.entries())
@@ -82,7 +94,7 @@ export default function StrangerStorefrontPage() {
                 return (aIdx === -1 ? 999 : aIdx) - (bIdx === -1 ? 999 : bIdx);
             })
             .map(([name, sectionOffers]) => ({ name, offers: sectionOffers }));
-    }, [publicOffers]);
+    }, [publicOffers, featureFlags.storefront_trustageShowcase, featureFlags.storefront_trustageInsurance]);
 
     const sectionNames = sections.map((s) => s.name);
 
@@ -386,7 +398,7 @@ export default function StrangerStorefrontPage() {
                 )}
 
                 {/* Filter Categories */}
-                {sections.length > 0 && (
+                {sections.length > 1 && (
                     <div className="mb-8">
                         <div className="text-[10px] font-medium text-[#677178] uppercase tracking-wider mb-2">
                             Filter Categories

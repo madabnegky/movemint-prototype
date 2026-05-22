@@ -36,8 +36,11 @@ export type ProductType =
     | 'gap'
     | 'mrc'
     | 'debt-protection'
+    | 'credit-insurance'
     | 'trustage-addd'
-    | 'trustage-autohome'
+    | 'trustage-auto'
+    | 'trustage-home'
+    | 'trustage-whole-life'
     // Deposit products
     | 'savings'
     | 'checking'
@@ -333,6 +336,7 @@ export interface FeatureFlags {
     storefront_animatedCards: boolean;         // Card hover animations
     storefront_creditMountain: boolean;        // Show Credit Mountain AI Coach when no preapprovals
     storefront_trustageInsurance: boolean;     // Enable TruStage™ Insurance Module
+    storefront_trustageShowcase: boolean;      // Filter storefront to show ONLY TruStage products
 
     // Landing page features
     landing_showTestimonials: boolean;         // Testimonials section
@@ -770,6 +774,7 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
     storefront_animatedCards: true,
     storefront_creditMountain: false,
     storefront_trustageInsurance: false,
+    storefront_trustageShowcase: false,
 
     // Landing page features
     landing_showTestimonials: false,
@@ -987,24 +992,38 @@ const DEFAULT_PRODUCTS: Product[] = [
         isActive: true
     },
     {
-        id: "product-trustage-autohome",
-        name: "TruStage™ Auto & Home Insurance",
-        type: "trustage-autohome",
-        description: "Credit union members could save money with exclusive group discounts on auto and homeowners insurance.",
-        imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+        id: "product-trustage-auto",
+        name: "TruStage™ Auto Insurance",
+        type: "trustage-auto",
+        description: "Credit union members could save money with exclusive group discounts on auto insurance from trusted carriers.",
+        imageUrl: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
         attributes: [
             { label: "Group Discount", value: "Up to 15%" },
-            { label: "Average Savings", value: "$612/yr" }
+            { label: "Average Savings", value: "$509/yr" }
         ],
         createdAt: "2025-02-22",
         updatedAt: "2025-02-22",
         isActive: true
     },
     {
-        id: "product-trustage-life",
-        name: "TruStage™ Life Insurance",
+        id: "product-trustage-home",
+        name: "TruStage™ Home Insurance",
+        type: "trustage-home",
+        description: "Protect your home and personal property with exclusive member-only group discounts.",
+        imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Group Discount", value: "Up to 10%" },
+            { label: "Average Savings", value: "$162/yr" }
+        ],
+        createdAt: "2025-02-22",
+        updatedAt: "2025-02-22",
+        isActive: true
+    },
+    {
+        id: "product-trustage-life-term",
+        name: "TruStage™ Term Life Insurance",
         type: "term-life",
-        description: "Help protect the people who matter most with Term or Whole Life Insurance policies built for member budgets.",
+        description: "Help protect your family's financial future for a set period with affordable term life policies.",
         imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80",
         attributes: [
             { label: "Policies start at", value: "$8.00/mo." },
@@ -1012,6 +1031,60 @@ const DEFAULT_PRODUCTS: Product[] = [
         ],
         createdAt: "2025-02-22",
         updatedAt: "2025-02-22",
+        isActive: true
+    },
+    {
+        id: "product-trustage-life-whole",
+        name: "TruStage™ Whole Life Insurance",
+        type: "trustage-whole-life",
+        description: "Permanent life insurance coverage with cash value that builds over time and premiums that never increase.",
+        imageUrl: "https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Policies start at", value: "$15.00/mo." },
+            { label: "Benefit", value: "Permanent" }
+        ],
+        createdAt: "2025-05-22",
+        updatedAt: "2025-05-22",
+        isActive: true
+    },
+    {
+        id: "product-mrc",
+        name: "Mechanical Repair Coverage (MRC)",
+        type: "mrc",
+        description: "Help cover unexpected vehicle repair costs that standard auto insurance doesn't cover.",
+        imageUrl: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Deductibles", value: "$0 - $250" },
+            { label: "Includes", value: "Roadside Assist" }
+        ],
+        createdAt: "2025-05-22",
+        updatedAt: "2025-05-22",
+        isActive: true
+    },
+    {
+        id: "product-credit-insurance",
+        name: "Credit Insurance",
+        type: "credit-insurance",
+        description: "Ensure your loan balances are covered or payments made if you become sick, disabled, or pass away.",
+        imageUrl: "https://images.unsplash.com/photo-1542884748-2b87b36c6b90?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Protects up to", value: "Full Loan Balance" }
+        ],
+        createdAt: "2025-05-22",
+        updatedAt: "2025-05-22",
+        isActive: true
+    },
+    {
+        id: "product-debt-protection",
+        name: "Debt Protection",
+        type: "debt-protection",
+        description: "Voluntary payment protection that can cancel or suspend your loan payments in the event of job loss or disability.",
+        imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Peace of Mind", value: "Guaranteed" }
+        ],
+        createdAt: "2025-05-22",
+        updatedAt: "2025-05-22",
         isActive: true
     }
 ];
@@ -1217,7 +1290,7 @@ export const DEFAULT_OFFERS: Offer[] = [
         title: "GAP Plus Coverage",
         variant: 'protection',
         productType: 'gap',
-        section: "Special Offers",
+        section: "Insurance & Protection",
         isFeatured: false,
         description: "If your vehicle is deemed a total loss due to an accident or is stolen, GAP Plus addresses the difference between what insurance will pay and what you owe.",
         attributes: [],
@@ -1356,6 +1429,7 @@ export const DEFAULT_OFFERS: Offer[] = [
         productType: 'trustage-addd',
         section: "Insurance & Protection",
         isFeatured: false,
+        description: "Activate your credit union member-only $1,000 complimentary Accidental Death & Dismemberment policy, and view competitive higher limit options.",
         attributes: [
             { label: "Complimentary", value: "$1,000" },
             { label: "Additional", value: "Up to $300,000" }
@@ -1364,32 +1438,107 @@ export const DEFAULT_OFFERS: Offer[] = [
         ctaText: "Activate Now"
     },
     {
-        id: "demo-trustage-autohome",
-        title: "TruStage™ Auto & Home",
+        id: "demo-trustage-auto",
+        title: "TruStage™ Auto Insurance",
         variant: 'ita',
-        productType: 'trustage-autohome',
+        productType: 'trustage-auto',
         section: "Insurance & Protection",
         isFeatured: false,
+        description: "Credit union members could save money with exclusive group discounts on auto insurance from trusted carriers.",
         attributes: [
             { label: "Group Discount", value: "Up to 15%" },
-            { label: "Average Savings", value: "$612/yr" }
+            { label: "Average Savings", value: "$509/yr" }
         ],
-        imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
-        ctaText: "Get a Quote"
+        imageUrl: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Get Auto Quote"
     },
     {
-        id: "demo-trustage-life",
-        title: "TruStage™ Life Insurance",
+        id: "demo-trustage-home",
+        title: "TruStage™ Home Insurance",
+        variant: 'ita',
+        productType: 'trustage-home',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        description: "Protect your home and personal property with exclusive member-only group discounts.",
+        attributes: [
+            { label: "Group Discount", value: "Up to 10%" },
+            { label: "Average Savings", value: "$162/yr" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Get Home Quote"
+    },
+    {
+        id: "demo-trustage-life-term",
+        title: "TruStage™ Term Life Insurance",
         variant: 'ita',
         productType: 'term-life',
         section: "Insurance & Protection",
         isFeatured: false,
+        description: "Help protect your family's financial future for a set period with affordable term life policies.",
         attributes: [
             { label: "Policies start at", value: "$8.00/mo." },
             { label: "Coverage", value: "Up to $100,000" }
         ],
         imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80",
-        ctaText: "Explore Coverage"
+        ctaText: "Get Term Quote"
+    },
+    {
+        id: "demo-trustage-life-whole",
+        title: "TruStage™ Whole Life Insurance",
+        variant: 'ita',
+        productType: 'trustage-whole-life',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        description: "Permanent life insurance coverage with cash value that builds over time and premiums that never increase.",
+        attributes: [
+            { label: "Policies start at", value: "$15.00/mo." },
+            { label: "Benefit", value: "Permanent" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Explore Whole Life"
+    },
+    {
+        id: "demo-mrc",
+        title: "Mechanical Repair Coverage (MRC)",
+        variant: 'protection',
+        productType: 'mrc',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        description: "Help cover unexpected vehicle repair costs that standard auto insurance doesn't cover.",
+        attributes: [
+            { label: "Deductibles", value: "$0 - $250" },
+            { label: "Includes", value: "Roadside Assist" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Learn More"
+    },
+    {
+        id: "demo-credit-insurance",
+        title: "Credit Insurance",
+        variant: 'protection',
+        productType: 'credit-insurance',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        description: "Ensure your loan balances are covered or payments made if you become sick, disabled, or pass away.",
+        attributes: [
+            { label: "Protects up to", value: "Full Loan Balance" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1542884748-2b87b36c6b90?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Get Protected"
+    },
+    {
+        id: "demo-debt-protection",
+        title: "Payment Protection Plan",
+        variant: 'protection',
+        productType: 'debt-protection',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        description: "Voluntary payment protection that can cancel or suspend your loan payments in the event of job loss or disability.",
+        attributes: [
+            { label: "Peace of Mind", value: "Guaranteed" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Get Protected"
     }
 ];
 
