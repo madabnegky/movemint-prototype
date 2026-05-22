@@ -80,6 +80,8 @@ export function Q2ComposableWidget() {
         agreedToESign: false
     });
 
+    const OFFERS_PER_PAGE = 4;
+
     // Build carousel pages from useStorefront data
     const carouselPages: CarouselPage[] = useMemo(() => {
         const pages: CarouselPage[] = [];
@@ -89,37 +91,52 @@ export function Q2ComposableWidget() {
             pages.push({ type: 'featured', offer });
         });
 
-        // Add each section as its own page
+        // Add each section, splitting into pages of OFFERS_PER_PAGE
         sections.forEach(section => {
             if (section.isCreditMountain) {
                 pages.push({ type: 'credit-mountain', sectionName: section.name, offers: section.offers });
             } else if (section.offers.length > 0) {
-                pages.push({ type: 'section', sectionName: section.name, offers: section.offers });
+                const chunks = [];
+                for (let i = 0; i < section.offers.length; i += OFFERS_PER_PAGE) {
+                    chunks.push(section.offers.slice(i, i + OFFERS_PER_PAGE));
+                }
+                chunks.forEach((chunk, chunkIdx) => {
+                    const label = chunks.length > 1
+                        ? `${section.name} (${chunkIdx + 1}/${chunks.length})`
+                        : section.name;
+                    pages.push({ type: 'section', sectionName: label, offers: chunk });
+                });
             }
         });
 
         return pages;
     }, [featuredOffers, sections]);
 
-    // Get unique section names for dropdown
+    // Get unique base section names for dropdown (strip " (N/M)" suffix)
     const sectionNames = useMemo(() => {
-        const sections: string[] = [];
-        carouselPages.forEach((page, index) => {
-            if (page.type === 'section' && page.sectionName) {
-                sections.push(page.sectionName);
-            } else if (page.type === 'credit-mountain' && page.sectionName) {
-                sections.push(page.sectionName);
+        const seen = new Set<string>();
+        const names: string[] = [];
+        carouselPages.forEach((page) => {
+            if ((page.type === 'section' || page.type === 'credit-mountain') && page.sectionName) {
+                const base = page.sectionName.replace(/ \(\d+\/\d+\)$/, '');
+                if (!seen.has(base)) {
+                    seen.add(base);
+                    names.push(base);
+                }
             }
         });
-        return sections;
+        return names;
     }, [carouselPages]);
 
-    // Get section page index map for dropdown navigation
+    // Map base section name → first page index for that section
     const sectionPageIndexMap = useMemo(() => {
         const map: Record<string, number> = {};
         carouselPages.forEach((page, index) => {
             if ((page.type === 'section' || page.type === 'credit-mountain') && page.sectionName) {
-                map[page.sectionName] = index;
+                const base = page.sectionName.replace(/ \(\d+\/\d+\)$/, '');
+                if (!(base in map)) {
+                    map[base] = index;
+                }
             }
         });
         return map;
@@ -282,20 +299,29 @@ export function Q2ComposableWidget() {
     if (totalPages === 0) {
         if (showCreditMountainSection) {
             return (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="px-4 py-3 border-b border-gray-100">
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">MARKETPLACE</h3>
+                <div className="bg-[#fbfbfb] rounded-[20px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.06)] overflow-hidden">
+                    <div className="px-[16px] py-[12px] border-b border-[#e6eaeb]">
+                        <h3 className="text-[12px] leading-[20px] tracking-[0.5px] text-[#576975] uppercase"
+                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                            DSF WIDGET
+                        </h3>
                     </div>
-                    <div className="p-4">
+                    <div className="p-[16px]">
                         <CreditMountainCard variant="widget" />
                     </div>
                 </div>
             );
         }
         return (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">MARKETPLACE</h3>
-                <p className="text-gray-400 text-sm">No offers available</p>
+            <div className="bg-[#fbfbfb] rounded-[20px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.06)] p-[16px]">
+                <h3 className="text-[12px] leading-[20px] tracking-[0.5px] text-[#576975] uppercase mb-[16px]"
+                    style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                    DSF WIDGET
+                </h3>
+                <p className="text-[14px] leading-[20px] text-[#9ba7ae]"
+                    style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                    No offers available
+                </p>
             </div>
         );
     }
@@ -311,32 +337,37 @@ export function Q2ComposableWidget() {
                     <PrequalificationCard variant="compact" />
                 )}
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-[#fbfbfb] rounded-[20px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.06)] overflow-hidden">
                     {/* Header with MARKETPLACE title and section dropdown */}
-                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">MARKETPLACE</h3>
+                    <div className="px-[16px] py-[12px] border-b border-[#e6eaeb] flex items-center justify-between">
+                        <h3 className="text-[12px] leading-[20px] tracking-[0.5px] text-[#576975] uppercase"
+                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                            DSF WIDGET
+                        </h3>
 
                         {/* Section dropdown - only show if multiple sections exist */}
                         {sectionNames.length > 1 && (
                             <div className="relative">
                                 <button
                                     onClick={() => setSectionDropdownOpen(!sectionDropdownOpen)}
-                                    className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="flex items-center gap-[4px] text-[12px] leading-[16px] text-[#576975] hover:text-[#262c30] transition-colors"
+                                    style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}
                                 >
                                     <span>Jump to section</span>
                                     <ChevronDown className={cn(
-                                        "w-4 h-4 transition-transform",
+                                        "w-[14px] h-[14px] transition-transform",
                                         sectionDropdownOpen && "rotate-180"
                                     )} />
                                 </button>
 
                                 {sectionDropdownOpen && (
-                                    <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[180px]">
+                                    <div className="absolute right-0 top-full mt-1 bg-[#fbfbfb] border border-[#e6eaeb] rounded-[12px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.06)] z-20 min-w-[180px]">
                                         {sectionNames.map((section) => (
                                             <button
                                                 key={section}
                                                 onClick={() => jumpToSection(section)}
-                                                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
+                                                className="w-full text-left px-[12px] py-[8px] text-[13px] leading-[18px] text-[#262c30] hover:bg-[#f3f5f5] first:rounded-t-[12px] last:rounded-b-[12px]"
+                                                style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}
                                             >
                                                 {section}
                                             </button>
@@ -348,150 +379,202 @@ export function Q2ComposableWidget() {
                     </div>
 
                     {/* Main Content Area */}
-                    <div className="p-4">
+                    <div>
                         {/* Featured Offer Page */}
                         {currentPage.type === 'featured' && currentPage.offer && (
-                            <div>
-                                {/* Hero Image */}
-                                <div className="rounded-lg overflow-hidden mb-4">
+                            <div className="flex flex-col">
+                                {/* Hero Image — flush, no padding */}
+                                <div className="overflow-hidden">
                                     <img
                                         src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
                                         alt={currentPage.offer.title}
-                                        className="w-full h-40 object-cover"
+                                        className="w-full h-[152px] object-cover"
                                     />
                                 </div>
 
-                                {/* Badge */}
-                                <div className="mb-2">
-                                    {currentPage.offer.variant === 'preapproved' && (
-                                        <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-green-500 text-white">
-                                            YOU&apos;RE PREAPPROVED
-                                        </span>
-                                    )}
-                                    {currentPage.offer.variant === 'prequalified' && (
-                                        <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-green-500 text-white">
-                                            YOU&apos;RE PREQUALIFIED
-                                        </span>
-                                    )}
-                                    {currentPage.offer.variant === 'ita' && (
-                                        <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-purple-500 text-white">
-                                            APPLY NOW
-                                        </span>
-                                    )}
-                                    {(currentPage.offer.variant === 'wildcard' || currentPage.offer.variant === 'protection') && (
-                                        <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-gray-500 text-white">
-                                            SPECIAL OFFER
-                                        </span>
-                                    )}
-                                </div>
+                                <div className="px-[16px] pt-[16px] pb-[16px] flex flex-col gap-[8px]">
+                                    {/* Title */}
+                                    <h4 className="text-[22px] leading-[26px] tracking-[-1px] text-[#262c30] overflow-hidden text-ellipsis whitespace-nowrap"
+                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
+                                        {currentPage.offer.featuredHeadline || currentPage.offer.title}
+                                    </h4>
 
-                                {/* Title */}
-                                <h4 className="text-lg font-semibold text-gray-900 mb-1">
-                                    {currentPage.offer.featuredHeadline || currentPage.offer.title}
-                                </h4>
+                                    {/* Description */}
+                                    <p className="text-[14px] leading-[20px] text-[#262c30] line-clamp-3"
+                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                        {currentPage.offer.featuredDescription || currentPage.offer.description}
+                                    </p>
 
-                                {/* Description */}
-                                <p className="text-sm text-gray-600 mb-3">
-                                    {currentPage.offer.featuredDescription || currentPage.offer.description}
-                                </p>
-
-                                {/* Attributes */}
-                                {currentPage.offer.attributes && currentPage.offer.attributes.length > 0 && (
-                                    <div className="flex gap-6 mb-4">
-                                        {currentPage.offer.attributes.slice(0, 2).map((attr, idx) => (
-                                            <div key={idx}>
-                                                <div className="text-xs text-gray-500 mb-0.5">{attr.label}</div>
-                                                <div className="text-lg font-bold text-gray-900">
-                                                    {attr.value}
-                                                    {attr.subtext && (
-                                                        <span className="text-xs font-normal text-gray-500 ml-1">
-                                                            {attr.subtext}
+                                    {/* Hero Values Row */}
+                                    {currentPage.offer.attributes && currentPage.offer.attributes.length > 0 && (
+                                        <div className="flex gap-[32px] pt-[4px]">
+                                            {currentPage.offer.attributes.slice(0, 2).map((attr, idx) => (
+                                                <div key={idx} className="flex flex-col gap-[4px]">
+                                                    <span className="text-[14px] leading-[20px] text-[#576975]"
+                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                                        {attr.label}
+                                                    </span>
+                                                    <div className="flex items-end gap-[4px]">
+                                                        <span className="text-[18px] leading-[26px] tracking-[-1px] text-[#262c30]"
+                                                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
+                                                            {attr.value}
                                                         </span>
-                                                    )}
+                                                        {attr.subtext && (
+                                                            <span className="text-[12px] leading-[16px] text-[#262c30] mb-[2px]"
+                                                                style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                                                {attr.subtext}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* CTA + Disclosure */}
+                                    <div className="flex flex-col gap-[16px] pt-[8px]">
+                                        <button
+                                            onClick={() => handleReviewOffer(currentPage.offer!)}
+                                            className="w-full py-[16px] bg-[#0079c1] hover:bg-[#006aab] text-[#fbfbfb] text-[16px] leading-[20px] text-center rounded-[100px] transition-colors"
+                                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400, fontFeatureSettings: "'ss03' 1" }}>
+                                            REVIEW OFFER
+                                        </button>
+                                        <button
+                                            onClick={() => handleReviewOffer(currentPage.offer!)}
+                                            className="w-full text-[14px] leading-[20px] text-[#262c30] text-center underline"
+                                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                                            Details &amp; disclosures
+                                        </button>
                                     </div>
-                                )}
-
-                                {/* CTA Button */}
-                                <button
-                                    onClick={() => handleReviewOffer(currentPage.offer!)}
-                                    className="block w-full py-3 bg-gray-700 hover:bg-gray-800 text-white text-center text-sm font-semibold rounded-lg transition-colors"
-                                >
-                                    REVIEW OFFER
-                                </button>
-
-                                {/* Details Link */}
-                                <div className="text-center mt-2">
-                                    <button
-                                        onClick={() => handleReviewOffer(currentPage.offer!)}
-                                        className="text-xs text-blue-600 hover:underline"
-                                    >
-                                        Details & disclosures
-                                    </button>
                                 </div>
                             </div>
                         )}
 
-                        {/* Section Page with Grouped Offers */}
+                        {/* Section Page — Small Storefront Cards */}
                         {currentPage.type === 'section' && currentPage.offers && (
-                            <div>
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">
-                                    {currentPage.sectionName}
+                            <div className="px-[16px] pt-[16px] pb-[8px] flex flex-col gap-[8px]">
+                                <h4 className="text-[14px] leading-[20px] tracking-[0.25px] text-[#262c30] uppercase"
+                                    style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
+                                    {currentPage.sectionName?.replace(/ \(\d+\/\d+\)$/, '')}
                                 </h4>
 
-                                <div className="space-y-2">
-                                    {currentPage.offers.map((offer) => (
-                                        <button
-                                            key={offer.id}
-                                            onClick={() => handleReviewOffer(offer)}
-                                            className={cn(
-                                                "w-full text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border-l-4 transition-colors",
-                                                getBorderColor(offer.variant)
-                                            )}
-                                        >
-                                            <div className="flex items-start justify-between gap-2">
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        {getVariantBadge(offer.variant)}
-                                                    </div>
-                                                    <h5 className="text-sm font-medium text-gray-900 truncate">
-                                                        {offer.title}
-                                                    </h5>
-                                                    <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">
-                                                        {offer.description}
-                                                    </p>
-                                                    {offer.attributes?.[0] && (
-                                                        <div className="text-xs text-gray-600 mt-1">
-                                                            {offer.attributes[0].label && (
-                                                                <span className="text-gray-500 mr-1">{offer.attributes[0].label}</span>
-                                                            )}
-                                                            <span className="font-semibold text-gray-900">{offer.attributes[0].value}</span>
-                                                        </div>
+                                <div className="flex flex-col gap-[8px]">
+                                    {currentPage.offers.map((offer) => {
+                                        const tagBg =
+                                            offer.variant === 'preapproved' || offer.variant === 'prequalified' ? 'bg-[#269b78]' :
+                                            offer.variant === 'ita' ? 'bg-[#8a55fb]' :
+                                            offer.variant === 'redeemed' ? 'bg-[#c8ced1]' :
+                                            'bg-[#262c30]';
+                                        const tagText =
+                                            offer.variant === 'preapproved' ? "You're preapproved!" :
+                                            offer.variant === 'prequalified' ? "You're prequalified!" :
+                                            offer.variant === 'ita' ? 'APPLY NOW' :
+                                            offer.variant === 'redeemed' ? 'REDEEMED' :
+                                            'SPECIAL OFFER';
+                                        const tagTextColor = offer.variant === 'redeemed' ? 'text-[#576975]' : 'text-[#fbfbfb]';
+
+                                        const attr0 = offer.attributes?.[0];
+                                        const attr1 = offer.attributes?.[1];
+
+                                        return (
+                                            <button
+                                                key={offer.id}
+                                                onClick={() => handleReviewOffer(offer)}
+                                                className="w-full text-left bg-[#fbfbfb] rounded-[20px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.06)] overflow-clip flex flex-col hover:brightness-[0.98] transition-all"
+                                            >
+                                                {/* Tag */}
+                                                <div className="pb-[8px]">
+                                                    <span className={cn(
+                                                        "inline-flex items-center px-[16px] py-[2px] rounded-tl-[20px] rounded-br-[20px] text-[12px] leading-[20px] tracking-[0.5px] uppercase",
+                                                        tagBg, tagTextColor
                                                     )}
+                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                                                        {tagText}
+                                                    </span>
                                                 </div>
-                                                <ChevronRight className="w-4 h-4 text-gray-400 shrink-0 mt-1" />
-                                            </div>
-                                        </button>
-                                    ))}
+
+                                                {/* Title + Values row */}
+                                                <div className="px-[16px] pb-[8px] flex gap-[8px] items-start w-full">
+                                                    <div className="flex-1 min-w-0 flex flex-col">
+                                                        <p className="text-[18px] leading-[26px] tracking-[-1px] text-[#262c30] truncate"
+                                                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400, fontFeatureSettings: "'ss03' 1" }}>
+                                                            {offer.title}
+                                                        </p>
+                                                        <div className="flex gap-[4px] items-start">
+                                                            {/* attr0 */}
+                                                            {attr0 && (
+                                                                <div className="flex flex-col w-[100px]">
+                                                                    <span className="text-[14px] leading-[20px] text-[#576975]"
+                                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                                                        {attr0.label}
+                                                                    </span>
+                                                                    <div className="flex items-end gap-[4px]">
+                                                                        <span className="text-[18px] leading-[normal] tracking-[-1px] text-[#262c30]"
+                                                                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
+                                                                            {attr0.value}
+                                                                        </span>
+                                                                        {attr0.subtext && (
+                                                                            <span className="text-[12px] leading-[16px] text-[#262c30] mb-[1px]"
+                                                                                style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                                                                {attr0.subtext}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            {/* attr1 */}
+                                                            {attr1 && (
+                                                                <div className="flex flex-col w-[100px]">
+                                                                    <span className="text-[14px] leading-[20px] text-[#576975]"
+                                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                                                        {attr1.label}
+                                                                    </span>
+                                                                    <div className="flex items-end gap-[4px]">
+                                                                        <span className="text-[18px] leading-[normal] tracking-[-1px] text-[#262c30]"
+                                                                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
+                                                                            {attr1.value}
+                                                                        </span>
+                                                                        {attr1.subtext && (
+                                                                            <span className="text-[12px] leading-[16px] text-[#262c30] mb-[1px]"
+                                                                                style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400 }}>
+                                                                                {attr1.subtext}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Learn More */}
+                                                <div className="px-[16px] pb-[8px] w-full text-center">
+                                                    <span className="text-[14px] leading-[20px] text-[#262c30] underline"
+                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                                                        Learn More
+                                                    </span>
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
 
                         {/* Credit Mountain Page */}
                         {currentPage.type === 'credit-mountain' && (
-                            <div>
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                            <div className="px-[16px] pt-[16px] pb-[8px]">
+                                <h4 className="text-[14px] leading-[20px] tracking-[0.25px] text-[#262c30] uppercase mb-[12px]"
+                                    style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
                                     {CREDIT_MOUNTAIN_SECTION}
                                 </h4>
                                 <CreditMountainCard variant="widget" />
 
-                                {/* Show offers in Credit Mountain section (e.g., Personal Loan ITA for graduates) */}
                                 {currentPage.offers && currentPage.offers.length > 0 && (
-                                    <div className="mt-4 space-y-2">
+                                    <div className="mt-[12px] flex flex-col gap-[8px]">
                                         {isCreditMountainGraduate && (
-                                            <p className="text-xs text-green-600 font-medium">
+                                            <p className="text-[12px] leading-[16px] text-[#269b78]"
+                                                style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
                                                 Your improved credit has unlocked new opportunities!
                                             </p>
                                         )}
@@ -499,33 +582,25 @@ export function Q2ComposableWidget() {
                                             <button
                                                 key={offer.id}
                                                 onClick={() => handleReviewOffer(offer as Offer)}
-                                                className={cn(
-                                                    "w-full text-left p-3 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-lg border border-green-200 transition-colors"
-                                                )}
+                                                className="w-full text-left bg-[#fbfbfb] rounded-[20px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.06)] overflow-clip flex flex-col hover:brightness-[0.98] transition-all"
                                             >
-                                                <div className="flex items-start justify-between gap-2">
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-500 text-white uppercase">
-                                                                New Opportunity
-                                                            </span>
-                                                        </div>
-                                                        <h5 className="text-sm font-medium text-gray-900">
-                                                            {offer.title}
-                                                        </h5>
-                                                        <p className="text-xs text-gray-600 line-clamp-2 mt-0.5">
-                                                            {offer.description}
-                                                        </p>
-                                                        {offer.attributes?.[0] && (
-                                                            <div className="text-xs text-gray-700 mt-1">
-                                                                {offer.attributes[0].label && (
-                                                                    <span className="text-gray-500 mr-1">{offer.attributes[0].label}</span>
-                                                                )}
-                                                                <span className="font-semibold">{offer.attributes[0].value}</span>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <ChevronRight className="w-4 h-4 text-green-600 shrink-0 mt-1" />
+                                                <div className="pb-[8px]">
+                                                    <span className="inline-flex items-center px-[16px] py-[2px] rounded-tl-[20px] rounded-br-[20px] bg-[#269b78] text-[#fbfbfb] text-[12px] leading-[20px] tracking-[0.5px] uppercase"
+                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                                                        New Opportunity
+                                                    </span>
+                                                </div>
+                                                <div className="px-[16px] pb-[8px]">
+                                                    <p className="text-[18px] leading-[26px] tracking-[-1px] text-[#262c30] truncate"
+                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400, fontFeatureSettings: "'ss03' 1" }}>
+                                                        {offer.title}
+                                                    </p>
+                                                </div>
+                                                <div className="px-[16px] pb-[8px] w-full text-center">
+                                                    <span className="text-[14px] leading-[20px] text-[#262c30] underline"
+                                                        style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500 }}>
+                                                        Learn More
+                                                    </span>
                                                 </div>
                                             </button>
                                         ))}
@@ -535,41 +610,45 @@ export function Q2ComposableWidget() {
                         )}
                     </div>
 
-                    {/* Footer with carousel controls and storefront link */}
-                    <div className="px-4 py-3 border-t border-gray-100">
-                        {/* Carousel Navigation */}
-                        <div className="flex items-center justify-between mb-3">
+                    {/* Footer — carousel nav + storefront link */}
+                    <div className="px-[16px] pt-[16px] pb-[16px] flex flex-col gap-[16px] items-center">
+                        {/* Prev / counter / Next */}
+                        <div className="flex items-center gap-[16px]">
                             <button
                                 onClick={goToPrevPage}
-                                className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                                className="w-[40px] h-[40px] rounded-full border border-[#9ba7ae] flex items-center justify-center hover:bg-[#f3f5f5] transition-colors"
                                 aria-label="Previous page"
                             >
-                                <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                <ChevronLeft className="w-[16px] h-[16px] text-[#262c30]" />
                             </button>
 
-                            <span className="text-sm text-gray-500">
-                                {currentPageIndex + 1} of {totalPages}
+                            <span className="text-[14px] leading-[20px] tracking-[0.25px] text-[#262c30] text-center"
+                                style={{ fontFamily: "'GT America', sans-serif", fontWeight: 500, fontFeatureSettings: "'ss03' 1" }}>
+                                {currentPageIndex + 1} out of {totalPages}
                             </span>
 
                             <button
                                 onClick={goToNextPage}
-                                className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                                className="w-[40px] h-[40px] rounded-full border border-[#262c30] bg-[#262c30] flex items-center justify-center hover:bg-[#3a4348] transition-colors"
                                 aria-label="Next page"
                             >
-                                <ChevronRight className="w-5 h-5 text-gray-600" />
+                                <ChevronRight className="w-[16px] h-[16px] text-[#fbfbfb]" />
                             </button>
                         </div>
 
-                        {/* Want to see more + Go to Storefront */}
-                        <div className="text-center">
-                            <p className="text-xs text-gray-500 mb-2">Want to see more?</p>
-                            <Link
-                                href="/storefront"
-                                className="inline-block px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white text-xs font-semibold rounded-lg transition-colors uppercase"
-                            >
-                                Go to Storefront
-                            </Link>
-                        </div>
+                        {/* Want to see more */}
+                        <p className="text-[16px] leading-[20px] text-[#262c30]"
+                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400, fontFeatureSettings: "'ss03' 1" }}>
+                            Want to see more?
+                        </p>
+
+                        {/* Go to Storefront */}
+                        <Link
+                            href="/storefront"
+                            className="w-full flex items-center justify-center px-[32px] py-[8px] border border-[#677178] rounded-[100px] text-[14px] leading-[20px] tracking-[0.25px] text-[#262c30] hover:bg-[#f3f5f5] transition-colors"
+                            style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400, fontFeatureSettings: "'ss03' 1" }}>
+                            GO TO STOREFRONT
+                        </Link>
                     </div>
                 </div>
             </div>
