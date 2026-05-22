@@ -66,6 +66,8 @@ const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
     "mrc": "MRC",
     "debt-protection": "Debt Protection",
     "personal-loan": "Personal Loan",
+    "trustage-addd": "TruStage™ AD&D Insurance",
+    "trustage-autohome": "TruStage™ Auto & Home Insurance",
     // Deposit products
     "savings": "Savings Account",
     "checking": "Checking Account",

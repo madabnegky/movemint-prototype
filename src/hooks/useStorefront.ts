@@ -184,7 +184,7 @@ export function useStorefront(): StorefrontData {
             }
 
             for (const [name, sectionOffers] of sectionMap) {
-                if (name !== prequalSection && name !== CREDIT_MOUNTAIN_SECTION) {
+                if (name !== prequalSection && name !== CREDIT_MOUNTAIN_SECTION && name !== "Insurance & Protection") {
                     result.push({ name, offers: sectionOffers });
                 }
             }
@@ -205,6 +205,7 @@ export function useStorefront(): StorefrontData {
             for (const offer of offers) {
                 if (offer.isFeatured || offer.isRedeemed) continue;
                 if (offer.section === CREDIT_MOUNTAIN_SECTION) continue; // Handled separately
+                if (offer.section === "Insurance & Protection") continue; // Handled separately
 
                 const section = offer.section || "Other Offers";
                 if (!sectionMap.has(section)) {
@@ -238,6 +239,20 @@ export function useStorefront(): StorefrontData {
                 offers: creditMountainOffers,
                 isCreditMountain: true
             });
+        }
+
+        // Add TruStage Insurance section if enabled
+        if (featureFlags.storefront_trustageInsurance) {
+            const trustageOffers = offers.filter(o =>
+                !o.isRedeemed &&
+                o.section === "Insurance & Protection"
+            );
+            if (trustageOffers.length > 0) {
+                result.push({
+                    name: "Insurance & Protection",
+                    offers: trustageOffers
+                });
+            }
         }
 
         return result;

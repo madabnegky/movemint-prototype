@@ -17,6 +17,8 @@ const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
     'mrc': 'MRC',
     'debt-protection': 'Debt Protection',
     'personal-loan': 'Personal Loan',
+    'trustage-addd': 'TruStage™ AD&D Insurance',
+    'trustage-autohome': 'TruStage™ Auto & Home Insurance',
     // Deposit products
     'savings': 'Savings Account',
     'checking': 'Checking Account',
@@ -37,6 +39,8 @@ const PRODUCT_TYPES: ProductType[] = [
     'gap',
     'mrc',
     'debt-protection',
+    'trustage-addd',
+    'trustage-autohome',
     // Deposit products
     'savings',
     'checking',

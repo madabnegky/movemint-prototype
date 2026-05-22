@@ -44,6 +44,12 @@ const FLAG_SECTIONS: FlagSection[] = [
                 label: "Credit Mountain",
                 description: "Show AI Credit Coach when member has no preapproved offers (bypasses No Offers message)",
                 icon: <Mountain className="w-5 h-5" />
+            },
+            {
+                key: "storefront_trustageInsurance",
+                label: "TruStage™ Insurance Module",
+                description: "Generate and display TruStage™ member-discounted insurance offers (AD&D, Auto & Home, Life) on the storefront",
+                icon: <Sparkles className="w-5 h-5" />
             }
         ]
     },

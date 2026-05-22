@@ -6,7 +6,7 @@ import { Check, Eye } from "lucide-react";
 import Link from "next/link";
 
 export default function StorefrontSettingsPage() {
-    const { storefrontConfig, updateStorefrontConfig } = useStore();
+    const { storefrontConfig, updateStorefrontConfig, featureFlags, updateFeatureFlags } = useStore();
     const [saved, setSaved] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -135,6 +135,58 @@ export default function StorefrontSettingsPage() {
                                 <div className="text-xs text-slate-500">{theme.description}</div>
                             </button>
                         ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* TruStage™ Insurance Module */}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <div>
+                        <h2 className="font-semibold text-slate-900">TruStage™ Insurance Integration</h2>
+                        <p className="text-xs text-slate-500 mt-0.5">Offer members-only preapproved and invited insurance products on the storefront</p>
+                    </div>
+                    {/* Toggle Switch */}
+                    <button
+                        type="button"
+                        onClick={() => updateFeatureFlags({ storefront_trustageInsurance: !featureFlags.storefront_trustageInsurance })}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 ${
+                            featureFlags.storefront_trustageInsurance ? 'bg-emerald-600' : 'bg-slate-200'
+                        }`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                featureFlags.storefront_trustageInsurance ? 'translate-x-6' : 'translate-x-1'
+                            }`}
+                        />
+                    </button>
+                </div>
+                <div className="p-6 bg-slate-50/50">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className={`p-4 rounded-xl border bg-white transition-all ${featureFlags.storefront_trustageInsurance ? 'border-emerald-200 shadow-sm' : 'border-slate-200 opacity-60'}`}>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">AD&D Benefit</span>
+                            </div>
+                            <h3 className="font-semibold text-slate-900 text-sm">Complimentary AD&D</h3>
+                            <p className="text-xs text-slate-500 mt-1">Generates a $1,000 complimentary policy activation offer for all members with custom buy-up limits.</p>
+                        </div>
+                        <div className={`p-4 rounded-xl border bg-white transition-all ${featureFlags.storefront_trustageInsurance ? 'border-emerald-200 shadow-sm' : 'border-slate-200 opacity-60'}`}>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">Auto & Home</span>
+                            </div>
+                            <h3 className="font-semibold text-slate-900 text-sm">Discounted Auto & Home</h3>
+                            <p className="text-xs text-slate-500 mt-1">Generates exclusive group-discount quote offers to help members save money on vehicle and home policies.</p>
+                        </div>
+                        <div className={`p-4 rounded-xl border bg-white transition-all ${featureFlags.storefront_trustageInsurance ? 'border-emerald-200 shadow-sm' : 'border-slate-200 opacity-60'}`}>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                                <span className="font-bold text-slate-800 text-xs uppercase tracking-wider">Life Insurance</span>
+                            </div>
+                            <h3 className="font-semibold text-slate-900 text-sm">Budget-Friendly Life</h3>
+                            <p className="text-xs text-slate-500 mt-1">Generates budget-friendly Term or Whole Life protection offers viewable on the storefront.</p>
+                        </div>
                     </div>
                 </div>
             </div>

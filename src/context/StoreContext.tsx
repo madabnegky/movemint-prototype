@@ -36,6 +36,8 @@ export type ProductType =
     | 'gap'
     | 'mrc'
     | 'debt-protection'
+    | 'trustage-addd'
+    | 'trustage-autohome'
     // Deposit products
     | 'savings'
     | 'checking'
@@ -330,6 +332,7 @@ export interface FeatureFlags {
     storefront_showBadges: boolean;            // Show variant badges on cards
     storefront_animatedCards: boolean;         // Card hover animations
     storefront_creditMountain: boolean;        // Show Credit Mountain AI Coach when no preapprovals
+    storefront_trustageInsurance: boolean;     // Enable TruStage™ Insurance Module
 
     // Landing page features
     landing_showTestimonials: boolean;         // Testimonials section
@@ -398,6 +401,7 @@ const DEFAULT_SECTIONS = [
     "Credit Cards",
     "Savings & Deposits",
     "Retirement & Savings",
+    "Insurance & Protection",
     "Credit Monitoring & Coaching",
     "Special Offers"
 ];
@@ -765,6 +769,7 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
     storefront_showBadges: true,
     storefront_animatedCards: true,
     storefront_creditMountain: false,
+    storefront_trustageInsurance: false,
 
     // Landing page features
     landing_showTestimonials: false,
@@ -965,6 +970,48 @@ const DEFAULT_PRODUCTS: Product[] = [
         ],
         createdAt: "2025-01-20",
         updatedAt: "2025-01-20",
+        isActive: true
+    },
+    {
+        id: "product-trustage-addd",
+        name: "TruStage™ AD&D Insurance",
+        type: "trustage-addd",
+        description: "Activate your credit union member-only $1,000 complimentary Accidental Death & Dismemberment policy, and view competitive higher limit options.",
+        imageUrl: "https://images.unsplash.com/photo-1518152006812-edab29b069ac?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Complimentary", value: "$1,000" },
+            { label: "Additional", value: "Up to $300,000" }
+        ],
+        createdAt: "2025-02-22",
+        updatedAt: "2025-02-22",
+        isActive: true
+    },
+    {
+        id: "product-trustage-autohome",
+        name: "TruStage™ Auto & Home Insurance",
+        type: "trustage-autohome",
+        description: "Credit union members could save money with exclusive group discounts on auto and homeowners insurance.",
+        imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Group Discount", value: "Up to 15%" },
+            { label: "Average Savings", value: "$612/yr" }
+        ],
+        createdAt: "2025-02-22",
+        updatedAt: "2025-02-22",
+        isActive: true
+    },
+    {
+        id: "product-trustage-life",
+        name: "TruStage™ Life Insurance",
+        type: "term-life",
+        description: "Help protect the people who matter most with Term or Whole Life Insurance policies built for member budgets.",
+        imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80",
+        attributes: [
+            { label: "Policies start at", value: "$8.00/mo." },
+            { label: "Coverage", value: "Up to $100,000" }
+        ],
+        createdAt: "2025-02-22",
+        updatedAt: "2025-02-22",
         isActive: true
     }
 ];
@@ -1301,6 +1348,48 @@ export const DEFAULT_OFFERS: Offer[] = [
         ],
         imageUrl: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
         ctaText: "Apply Now"
+    },
+    {
+        id: "demo-trustage-addd",
+        title: "TruStage™ AD&D Insurance",
+        variant: 'preapproved',
+        productType: 'trustage-addd',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        attributes: [
+            { label: "Complimentary", value: "$1,000" },
+            { label: "Additional", value: "Up to $300,000" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1518152006812-edab29b069ac?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Activate Now"
+    },
+    {
+        id: "demo-trustage-autohome",
+        title: "TruStage™ Auto & Home",
+        variant: 'ita',
+        productType: 'trustage-autohome',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        attributes: [
+            { label: "Group Discount", value: "Up to 15%" },
+            { label: "Average Savings", value: "$612/yr" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Get a Quote"
+    },
+    {
+        id: "demo-trustage-life",
+        title: "TruStage™ Life Insurance",
+        variant: 'ita',
+        productType: 'term-life',
+        section: "Insurance & Protection",
+        isFeatured: false,
+        attributes: [
+            { label: "Policies start at", value: "$8.00/mo." },
+            { label: "Coverage", value: "Up to $100,000" }
+        ],
+        imageUrl: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80",
+        ctaText: "Explore Coverage"
     }
 ];
 
@@ -1361,7 +1450,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
         const savedProducts = localStorage.getItem("movemint_products");
         if (savedProducts) {
-            setProducts(JSON.parse(savedProducts));
+            const parsed = JSON.parse(savedProducts) as Product[];
+            const savedIds = new Set(parsed.map(p => p.id));
+            const missingDefaults = DEFAULT_PRODUCTS.filter(p => !savedIds.has(p.id));
+            setProducts([...parsed, ...missingDefaults]);
         } else {
             setProducts(DEFAULT_PRODUCTS);
         }
