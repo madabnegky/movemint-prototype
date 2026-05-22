@@ -315,7 +315,8 @@ export type RoiScenarioResult = {
 
   // Loans
   loanOffersGenerated: number;
-  loanIncrementalFunded: number;  // count of loans
+  loanRedemptions: number;        // count of started loan applications (offers * responseRate)
+  loanIncrementalFunded: number;  // count of funded loans (redemptions * fundingRate)
   loanIncrementalVolume: number;  // $ volume
   loanInterestIncome: number;     // annual interest income $
 
@@ -339,6 +340,7 @@ export type RoiCalcInput = {
   loanProducts: RoiLoanProduct[];
   depositProducts: RoiDepositProduct[];
   niiProducts: RoiNiiProduct[];
+  loanFundingRatePct: number;      // % of started apps that fund
   costs: RoiCosts;
   // Three response rate scenarios — computed separately for each
   scenarioRates: [number, number, number]; // e.g. [1, 2, 4]
@@ -352,7 +354,8 @@ export type RoiCalcOutput = {
   loanBreakdown: Array<{
     label: string;
     offersGenerated: number;
-    incrementalFunded: number;
+    redemptions: number;            // started apps
+    incrementalFunded: number;      // funded loans
     incrementalVolume: number;
     interestIncome: number;
     organicVolume: number;
@@ -381,22 +384,27 @@ function calcScenario(
   niiProducts: RoiNiiProduct[],
   costs: RoiCosts,
   responseRatePct: number,
+  loanFundingRatePct: number,
 ): RoiScenarioResult {
   const rr = responseRatePct / 100;
+  const fr = loanFundingRatePct / 100;
 
   let loanOffersGenerated = 0;
+  let loanRedemptions = 0;
   let loanIncrementalFunded = 0;
   let loanIncrementalVolume = 0;
   let loanInterestIncome = 0;
 
   for (const p of loanProducts) {
     const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
-    const funded = offers * rr;
+    const redemptions = offers * rr;
+    const funded = redemptions * fr;
     const vol = funded * p.avgLoanSize;
     // Simple interest income: principal × annual rate × (term / 12)
     // Approximates total interest earned over the life of the loan.
     const income = vol * (p.avgYieldPct / 100) * (p.avgTermMonths / 12);
     loanOffersGenerated += offers;
+    loanRedemptions += redemptions;
     loanIncrementalFunded += funded;
     loanIncrementalVolume += vol;
     loanInterestIncome += income;
@@ -439,6 +447,7 @@ function calcScenario(
   return {
     responseRate: responseRatePct,
     loanOffersGenerated,
+    loanRedemptions,
     loanIncrementalFunded,
     loanIncrementalVolume,
     loanInterestIncome,
@@ -456,21 +465,24 @@ function calcScenario(
 
 export function calcRoi(input: RoiCalcInput): RoiCalcOutput {
   const [r1, r2, r3] = input.scenarioRates;
-  const conservative = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r1);
-  const base = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r2);
-  const optimistic = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r3);
+  const conservative = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r1, input.loanFundingRatePct);
+  const base = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r2, input.loanFundingRatePct);
+  const optimistic = calcScenario(input.loanProducts, input.depositProducts, input.niiProducts, input.costs, r3, input.loanFundingRatePct);
 
   // Per-product drill-down uses the base response rate
   const baseRr = r2 / 100;
+  const baseFr = input.loanFundingRatePct / 100;
 
   const loanBreakdown = input.loanProducts.map((p) => {
     const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
-    const funded = offers * baseRr;
+    const redemptions = offers * baseRr;
+    const funded = redemptions * baseFr;
     const vol = funded * p.avgLoanSize;
     const income = vol * (p.avgYieldPct / 100) * (p.avgTermMonths / 12);
     return {
       label: p.label,
       offersGenerated: offers,
+      redemptions,
       incrementalFunded: funded,
       incrementalVolume: vol,
       interestIncome: income,
@@ -498,7 +510,8 @@ export function calcRoi(input: RoiCalcInput): RoiCalcOutput {
   let baseLoanIncrementalFunded = 0;
   for (const p of input.loanProducts) {
     const offers = p.totalMembers * (p.pctMembersWithOffers / 100);
-    const funded = offers * baseRr;
+    const redemptions = offers * baseRr;
+    const funded = redemptions * baseFr;
     baseLoanIncrementalFunded += funded;
   }
 

@@ -143,6 +143,10 @@ function ScenarioColumn({
           <span className="font-mono">{fmtCount(result.loanOffersGenerated)}</span>
         </div>
         <div className="flex justify-between">
+          <span>Platform redemptions</span>
+          <span className="font-mono">{fmtCount(result.loanRedemptions)}</span>
+        </div>
+        <div className="flex justify-between">
           <span>Loans funded</span>
           <span className="font-mono">{fmtCount(result.loanIncrementalFunded)}</span>
         </div>
@@ -260,6 +264,9 @@ export function RoiTab({
   // ── Scenario rates ────────────────────────────────────────────────────────
   const [scenarioRates, setScenarioRates] = useState<[number, number, number]>([1, 2, 4]);
 
+  // ── Loan Funding Rate ─────────────────────────────────────────────────────
+  const [loanFundingRatePct, setLoanFundingRatePct] = useState<number>(60);
+
   // ── Costs ─────────────────────────────────────────────────────────────────
   const [costs, setCosts] = useState<RoiCosts>({
     bureauCostPerCampaign: 30_000,
@@ -370,10 +377,11 @@ export function RoiTab({
       loanProducts: loanRows.filter((r) => r.enabled),
       depositProducts: depositRows.filter((r) => r.enabled),
       niiProducts: niiRows,
+      loanFundingRatePct,
       costs,
       scenarioRates,
     }),
-    [loanRows, depositRows, niiRows, costs, scenarioRates]
+    [loanRows, depositRows, niiRows, loanFundingRatePct, costs, scenarioRates]
   );
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -500,6 +508,32 @@ export function RoiTab({
 
         {showLoanInputs && (
           <div className="px-5 pb-5 space-y-6 border-t border-slate-100">
+            {/* Global Loan Funding Rate Slider */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-5 mb-2 shadow-inner">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                    Global Loan Funding Rate: <span className="font-mono text-emerald-600 text-sm font-extrabold">{loanFundingRatePct}%</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    The percentage of platform redemptions (started loan applications) that successfully close and fund.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 min-w-[200px] sm:min-w-[250px]">
+                  <span className="text-xs text-slate-400 font-mono">0%</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={loanFundingRatePct}
+                    onChange={(e) => setLoanFundingRatePct(Number(e.target.value))}
+                    className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                  <span className="text-xs text-slate-400 font-mono">100%</span>
+                </div>
+              </div>
+            </div>
+
             {loanRows.map((row, idx) => (
               <div key={row.label}>
                 <div className="flex items-center gap-3 mt-5 mb-3">
@@ -722,6 +756,7 @@ export function RoiTab({
                 <tr className="bg-slate-50 text-slate-500 uppercase tracking-wider">
                   <th className="px-4 py-3 text-left font-semibold">Product</th>
                   <th className="px-4 py-3 text-right font-semibold">Offers Sent</th>
+                  <th className="px-4 py-3 text-right font-semibold">Redemptions (Apps)</th>
                   <th className="px-4 py-3 text-right font-semibold">Loans Funded</th>
                   <th className="px-4 py-3 text-right font-semibold">Movemint Volume</th>
                   <th className="px-4 py-3 text-right font-semibold">Organic Baseline</th>
@@ -733,6 +768,7 @@ export function RoiTab({
                   <tr key={row.label} className="hover:bg-slate-50">
                     <td className="px-4 py-3 font-medium text-slate-700">{row.label}</td>
                     <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(row.offersGenerated)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(row.redemptions)}</td>
                     <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(row.incrementalFunded)}</td>
                     <td className="px-4 py-3 text-right font-mono text-emerald-700 font-semibold">{fmtUSD(row.incrementalVolume)}</td>
                     <td className="px-4 py-3 text-right font-mono text-slate-400">{fmtUSD(row.organicVolume)}</td>
@@ -742,6 +778,7 @@ export function RoiTab({
                 <tr className="bg-slate-50 font-semibold">
                   <td className="px-4 py-3 text-slate-700">Total</td>
                   <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(result.base.loanOffersGenerated)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(result.base.loanRedemptions)}</td>
                   <td className="px-4 py-3 text-right font-mono text-slate-600">{fmtCount(result.base.loanIncrementalFunded)}</td>
                   <td className="px-4 py-3 text-right font-mono text-emerald-700">{fmtUSD(result.base.loanIncrementalVolume)}</td>
                   <td className="px-4 py-3 text-right font-mono text-slate-400">—</td>
