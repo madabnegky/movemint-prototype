@@ -81,7 +81,7 @@ export function useStorefront(): StorefrontData {
         } else {
             // Demo mode with profile: use first live campaign (legacy behavior)
             const liveCampaigns = campaigns.filter(c => c.status === "live");
-            const activeCampaign = liveCampaigns.find(c => c.type === "perpetual") || liveCampaigns[0];
+            const activeCampaign = liveCampaigns.find(c => c.type === "perpetual") || liveCampaigns.find(c => c.type === "targeted") || liveCampaigns[0];
 
             if (!activeCampaign) return [];
 

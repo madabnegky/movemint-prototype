@@ -14,7 +14,7 @@ import {
     Users,
     Rocket,
     AlertCircle,
-    Infinity,
+    Zap,
 } from "lucide-react";
 
 // Import tab components
@@ -24,7 +24,7 @@ import ProductsTab from "@/components/admin/campaigns/ProductsTab";
 import AcceptanceRulesTab from "@/components/admin/campaigns/AcceptanceRulesTab";
 import ReconciliationRulesTab from "@/components/admin/campaigns/ReconciliationRulesTab";
 
-type TabId = "settings" | "file-processing" | "products" | "offer-lifecycle" | "acceptance-rules" | "reconciliation-rules" | "data-export";
+type TabId = "settings" | "file-processing" | "products" | "member-file-upload" | "acceptance-rules" | "reconciliation-rules" | "data-export";
 
 interface Tab {
     id: TabId;
@@ -38,7 +38,7 @@ const TABS: Tab[] = [
     { id: "settings", label: "Campaign Settings" },
     { id: "file-processing", label: "File Processing", targetedOnly: true },
     { id: "products", label: "Products" },
-    { id: "offer-lifecycle", label: "Offer Lifecycle", perpetualOnly: true },
+    { id: "member-file-upload", label: "Member File Upload", perpetualOnly: true },
     { id: "acceptance-rules", label: "Acceptance Rules", excludePerpetual: true },
     { id: "reconciliation-rules", label: "Reconciliation Rules", excludePerpetual: true },
     { id: "data-export", label: "Data Export" },
@@ -67,7 +67,7 @@ function TypeBadge({ type }: { type: Campaign["type"] }) {
     const config = {
         targeted: { label: "Targeted", icon: Target, className: "bg-purple-50 text-purple-700 border-purple-200" },
         untargeted: { label: "Untargeted", icon: Users, className: "bg-slate-50 text-slate-700 border-slate-200" },
-        perpetual: { label: "Perpetual", icon: Infinity, className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+        perpetual: { label: "Real-Time / Always-On", icon: Zap, className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
     };
     const { label, icon: Icon, className } = config[type];
 
@@ -134,233 +134,133 @@ function PendingStatusIndicator({ campaign }: { campaign: Campaign }) {
     );
 }
 
-// Offer Lifecycle Tab for perpetual campaigns
-function OfferLifecycleTab({ campaign, onUpdate }: { campaign: Campaign; onUpdate: (updates: Partial<Campaign>) => void }) {
-    // Get all products from all sections
-    const allProducts = [
-        ...campaign.featuredOffersSection.products,
-        ...campaign.sections.flatMap((s) => s.products),
-    ];
+// Member File Upload Tab for real-time / always-on campaigns
+function MemberFileUploadTab() {
+    const [uploadState, setUploadState] = useState<"idle" | "processing" | "success">("idle");
+    const [dragOver, setDragOver] = useState(false);
 
-    const getStatusBadge = (status?: string) => {
-        const configs: Record<string, { label: string; className: string }> = {
-            active: { label: "Active", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-            expiring_soon: { label: "Expiring Soon", className: "bg-amber-50 text-amber-700 border-amber-200" },
-            expired: { label: "Expired", className: "bg-slate-100 text-slate-500 border-slate-200" },
-            queued: { label: "Queued", className: "bg-blue-50 text-blue-700 border-blue-200" },
-        };
-        const config = configs[status || "active"];
-        return (
-            <span className={cn("inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full border", config.className)}>
-                {config.label}
-            </span>
-        );
+    const handleFile = () => {
+        setUploadState("processing");
+        setTimeout(() => setUploadState("success"), 1800);
     };
 
-    const getExpirationLabel = (product: typeof allProducts[0]) => {
-        if (!product.perpetualSettings) return "No lifecycle configured";
-
-        switch (product.perpetualSettings.expirationTrigger) {
-            case "manual":
-                return "Until manually removed";
-            case "days":
-                return `${product.perpetualSettings.expirationDays} days`;
-            case "redemptions":
-                return `${product.redemptionCount || 0} / ${product.perpetualSettings.expirationRedemptions} redemptions`;
-            case "date":
-                return `Until ${new Date(product.perpetualSettings.expirationDate || "").toLocaleDateString()}`;
-            default:
-                return "—";
-        }
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setDragOver(false);
+        handleFile();
     };
 
-    const getExpirationProgress = (product: typeof allProducts[0]) => {
-        if (!product.perpetualSettings) return null;
-
-        if (product.perpetualSettings.expirationTrigger === "redemptions" && product.perpetualSettings.expirationRedemptions) {
-            const progress = ((product.redemptionCount || 0) / product.perpetualSettings.expirationRedemptions) * 100;
-            return Math.min(progress, 100);
-        }
-
-        if (product.perpetualSettings.expirationTrigger === "days" && product.addedAt && product.perpetualSettings.expirationDays) {
-            const addedDate = new Date(product.addedAt);
-            const expiresDate = new Date(addedDate);
-            expiresDate.setDate(expiresDate.getDate() + product.perpetualSettings.expirationDays);
-            const totalDays = product.perpetualSettings.expirationDays;
-            const daysElapsed = Math.floor((Date.now() - addedDate.getTime()) / (1000 * 60 * 60 * 24));
-            const progress = (daysElapsed / totalDays) * 100;
-            return Math.min(progress, 100);
-        }
-
-        return null;
-    };
-
-    const handleRemoveOffer = (productId: string) => {
-        // Remove from featured section
-        const updatedFeatured = {
-            ...campaign.featuredOffersSection,
-            products: campaign.featuredOffersSection.products.filter((p) => p.id !== productId),
-        };
-
-        // Remove from other sections
-        const updatedSections = campaign.sections.map((section) => ({
-            ...section,
-            products: section.products.filter((p) => p.id !== productId),
-        }));
-
-        onUpdate({
-            featuredOffersSection: updatedFeatured,
-            sections: updatedSections,
-        });
-    };
+    const handleReset = () => setUploadState("idle");
 
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-2xl font-semibold text-slate-900">Offer Lifecycle</h2>
+                <h2 className="text-2xl font-semibold text-slate-900">Member File Upload</h2>
                 <p className="text-sm text-slate-500 mt-1">
-                    Manage how offers rotate, expire, and get replaced in this perpetual campaign.
+                    Upload a new or updated member file at any time. The platform will process the file and generate or refresh offers for affected members — independent of campaign start and end dates.
                 </p>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-4 gap-4">
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
-                    <p className="text-sm text-slate-500">Active Offers</p>
-                    <p className="text-2xl font-semibold text-slate-900 mt-1">
-                        {allProducts.filter((p) => p.status === "active" || !p.status).length}
-                    </p>
-                </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
-                    <p className="text-sm text-slate-500">Expiring Soon</p>
-                    <p className="text-2xl font-semibold text-amber-600 mt-1">
-                        {allProducts.filter((p) => p.status === "expiring_soon").length}
-                    </p>
-                </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
-                    <p className="text-sm text-slate-500">Total Redemptions</p>
-                    <p className="text-2xl font-semibold text-slate-900 mt-1">
-                        {allProducts.reduce((sum, p) => sum + (p.redemptionCount || 0), 0).toLocaleString()}
-                    </p>
-                </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
-                    <p className="text-sm text-slate-500">Queued Offers</p>
-                    <p className="text-2xl font-semibold text-blue-600 mt-1">
-                        {allProducts.filter((p) => p.status === "queued").length}
-                    </p>
+            {/* Info banner */}
+            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                    <Zap className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
+                    <div>
+                        <h4 className="text-sm font-medium text-indigo-900">Real-Time Offer Triggering</h4>
+                        <p className="text-xs text-indigo-700 mt-1">
+                            Offers are generated using the eligibility rules and expiration settings configured on each product. One offer per product type per member. Conflict resolution is applied at generation time — the winning offer is delivered, losers are not stored.
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            {/* Active Offers Table */}
-            <div className="bg-white rounded-xl border border-slate-200">
-                <div className="px-4 py-3 border-b border-slate-200">
-                    <h3 className="font-semibold text-slate-900">Active Offers</h3>
-                </div>
-                {allProducts.length === 0 ? (
-                    <div className="p-8 text-center text-sm text-slate-500">
-                        No offers configured. Add products to this campaign to get started.
+            {/* Upload area */}
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <h3 className="font-semibold text-slate-900 mb-4">Upload Member File</h3>
+
+                {uploadState === "idle" && (
+                    <div
+                        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                        onDragLeave={() => setDragOver(false)}
+                        onDrop={handleDrop}
+                        className={cn(
+                            "border-2 border-dashed rounded-xl p-10 text-center transition-colors",
+                            dragOver
+                                ? "border-indigo-400 bg-indigo-50"
+                                : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                        )}
+                    >
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+                                <Zap className="w-6 h-6 text-slate-400" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-slate-700">Drop your member file here</p>
+                                <p className="text-xs text-slate-500 mt-1">CSV, TXT, or fixed-width — any upload triggers offer generation</p>
+                            </div>
+                            <label className="cursor-pointer">
+                                <input
+                                    type="file"
+                                    className="sr-only"
+                                    onChange={handleFile}
+                                    accept=".csv,.txt,.tsv"
+                                />
+                                <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                                    Browse files
+                                </span>
+                            </label>
+                        </div>
                     </div>
-                ) : (
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-slate-200 bg-slate-50">
-                                <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                    Offer
-                                </th>
-                                <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                    Lifecycle
-                                </th>
-                                <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                    Progress
-                                </th>
-                                <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                    Redemptions
-                                </th>
-                                <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                    On Expiration
-                                </th>
-                                <th className="w-24 px-4 py-3">
-                                    <span className="sr-only">Actions</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {allProducts.map((product) => {
-                                const progress = getExpirationProgress(product);
-                                return (
-                                    <tr key={product.id} className="border-b border-slate-100 last:border-b-0">
-                                        <td className="px-4 py-3">
-                                            <div>
-                                                <p className="text-sm font-medium text-slate-900">{product.productName}</p>
-                                                <p className="text-xs text-slate-500">
-                                                    Added {product.addedAt ? new Date(product.addedAt).toLocaleDateString() : "—"}
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {getStatusBadge(product.status)}
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">
-                                            {getExpirationLabel(product)}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {progress !== null ? (
-                                                <div className="w-24">
-                                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                                        <div
-                                                            className={cn(
-                                                                "h-full rounded-full transition-all",
-                                                                progress >= 80 ? "bg-amber-500" : "bg-emerald-500"
-                                                            )}
-                                                            style={{ width: `${progress}%` }}
-                                                        />
-                                                    </div>
-                                                    <p className="text-xs text-slate-500 mt-1">{Math.round(progress)}%</p>
-                                                </div>
-                                            ) : (
-                                                <span className="text-sm text-slate-400">—</span>
-                                            )}
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">
-                                            {(product.redemptionCount || 0).toLocaleString()}
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">
-                                            {product.perpetualSettings?.expirationAction === "remove" && "Remove"}
-                                            {product.perpetualSettings?.expirationAction === "replace" && "Replace with next"}
-                                            {product.perpetualSettings?.expirationAction === "notify" && "Notify admin"}
-                                            {!product.perpetualSettings?.expirationAction && "—"}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <button
-                                                onClick={() => handleRemoveOffer(product.id)}
-                                                className="text-sm text-rose-600 hover:text-rose-700 font-medium"
-                                            >
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                )}
+
+                {uploadState === "processing" && (
+                    <div className="border-2 border-dashed border-indigo-300 rounded-xl p-10 text-center bg-indigo-50">
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                                <Zap className="w-6 h-6 text-indigo-500 animate-pulse" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-indigo-800">Processing member file...</p>
+                                <p className="text-xs text-indigo-600 mt-1">Evaluating eligibility rules and generating offers</p>
+                            </div>
+                            <div className="w-48 h-1.5 bg-indigo-200 rounded-full overflow-hidden mt-1">
+                                <div className="h-full bg-indigo-500 rounded-full animate-pulse w-2/3" />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {uploadState === "success" && (
+                    <div className="border-2 border-dashed border-emerald-300 rounded-xl p-10 text-center bg-emerald-50">
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-emerald-800">Offers updated successfully</p>
+                                <p className="text-xs text-emerald-600 mt-1">3 generated · 1 updated · 0 removed</p>
+                            </div>
+                            <button
+                                onClick={handleReset}
+                                className="mt-1 text-xs text-emerald-700 underline hover:text-emerald-800"
+                            >
+                                Upload another file
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
 
-            {/* Info Box */}
-            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                    <Infinity className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
-                    <div>
-                        <h4 className="text-sm font-medium text-indigo-900">About Perpetual Campaigns</h4>
-                        <p className="text-xs text-indigo-700 mt-1">
-                            Offers in perpetual campaigns rotate automatically based on their lifecycle settings.
-                            When an offer expires, the configured action (remove, replace, or notify) will be executed.
-                            You can configure these settings when adding new products to the campaign.
-                        </p>
-                    </div>
+            {/* Product expiration reference */}
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <h3 className="font-semibold text-slate-900 mb-1">Offer Expiration</h3>
+                <p className="text-sm text-slate-500 mb-4">
+                    Expiration is configured per product and is independent of campaign dates. Offers generated from bureau-enhanced files must carry an expiration — the default is 60 days, aligning with pre-qualification data freshness guidance.
+                </p>
+                <div className="flex items-center gap-3 text-sm text-slate-600">
+                    <span className="px-2.5 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700">Default: 60 days</span>
+                    <span className="text-slate-400">·</span>
+                    <span>Configurable per product in the Products tab</span>
                 </div>
             </div>
         </div>
@@ -505,7 +405,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                         )}
                         {campaign.type === "perpetual" && (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 border border-indigo-200 rounded-lg">
-                                <Infinity className="w-4 h-4 text-indigo-600" />
+                                <Zap className="w-4 h-4 text-indigo-600" />
                                 <span className="text-sm font-medium text-indigo-700">Always Live</span>
                             </div>
                         )}
@@ -563,11 +463,8 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                             onUpdate={handleUpdateCampaign}
                         />
                     )}
-                    {activeTab === "offer-lifecycle" && campaign.type === "perpetual" && (
-                        <OfferLifecycleTab
-                            campaign={campaign}
-                            onUpdate={handleUpdateCampaign}
-                        />
+                    {activeTab === "member-file-upload" && campaign.type === "perpetual" && (
+                        <MemberFileUploadTab />
                     )}
                     {activeTab === "acceptance-rules" && (
                         <AcceptanceRulesTab campaign={campaign} onUpdate={handleUpdateCampaign} />

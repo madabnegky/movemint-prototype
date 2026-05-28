@@ -152,27 +152,6 @@ export type CampaignStatus = 'draft' | 'pending' | 'live' | 'completed';
 // Preview mode for consumer-facing views
 export type PreviewMode = 'demo' | 'live';
 
-// Perpetual campaign offer lifecycle settings
-export type OfferExpirationTrigger = 'manual' | 'days' | 'redemptions' | 'date';
-export type OfferReplacementBehavior = 'add' | 'replace_specific' | 'clear_all';
-export type OfferExpirationAction = 'remove' | 'replace' | 'notify';
-
-export interface PerpetualOfferSettings {
-    // How long should this offer run?
-    expirationTrigger: OfferExpirationTrigger;
-    expirationDays?: number;              // If trigger is 'days'
-    expirationRedemptions?: number;       // If trigger is 'redemptions'
-    expirationDate?: string;              // If trigger is 'date' (ISO date)
-
-    // What happens to existing offers when this is added?
-    replacementBehavior: OfferReplacementBehavior;
-    replaceOfferId?: string;              // If behavior is 'replace_specific'
-
-    // When this offer expires, what happens?
-    expirationAction: OfferExpirationAction;
-    replacementOfferId?: string;          // If action is 'replace'
-}
-
 export type RuleOperator =
     | 'equals'
     | 'not_equals'
@@ -228,13 +207,9 @@ export interface CampaignProduct {
     preapprovalRules: Rule[];   // ORed together - highest matching limit wins
     introRateRules: Rule[];     // For credit cards/PLOCs
     consumerPrequalRules: Rule[]; // Consumer-initiated prequalification rules
-    // Perpetual campaign settings (perpetual campaigns only)
-    perpetualSettings?: PerpetualOfferSettings;
-    // Lifecycle tracking for perpetual offers
-    addedAt?: string;           // ISO date when offer was added
-    expiresAt?: string;         // Calculated expiration date (if applicable)
-    redemptionCount?: number;   // Current redemption count (for redemption-based expiration)
-    status?: 'active' | 'expiring_soon' | 'expired' | 'queued';
+    // Perpetual campaign settings
+    expirationDays?: number;    // Offer expiration duration in days (default: 60)
+    expirationDate?: string;    // Fixed expiration date (ISO), overrides expirationDays if set
 }
 
 export interface CampaignSection {
@@ -358,7 +333,7 @@ export interface FeatureFlags {
     admin_optimizationVertice: boolean;        // Show Vertice AI propensity score optimization
 
     // Campaign features
-    campaigns_perpetualType: boolean;          // Enable perpetual (always-on) campaign type
+    realtime_offerTriggering: boolean;         // Enable Real-Time Offer Triggering (perpetual/always-on campaign type + file upload trigger)
     campaigns_reconciliationCustomRules: boolean; // Enable custom reconciliation rules by loan class
     campaigns_reconciliationProductRules: boolean; // Enable custom reconciliation rules by product
 }
@@ -671,18 +646,18 @@ const DEFAULT_CAMPAIGNS: Campaign[] = [
     },
     {
         id: "campaign-6",
-        name: "Always-On Member Offers",
+        name: "Real-Time Offer Triggering",
         type: "perpetual",
         status: "live",
-        startDate: "2025-01-01",
-        createdAt: "2024-12-20",
+        startDate: "2026-01-01",
+        createdAt: "2025-12-20",
         featuredOffersSection: {
             id: "featured-6",
             name: "Featured Offers",
             order: 0,
             products: [
                 {
-                    id: "cp-perp-1",
+                    id: "cp-rt-1",
                     productId: "product-1",
                     productName: "New Auto Loan",
                     productType: "auto-loan",
@@ -692,79 +667,70 @@ const DEFAULT_CAMPAIGNS: Campaign[] = [
                     featuredPreapprovalDescription: "Get behind the wheel of your dream car with our lowest rates.",
                     featuredApplicationHeadline: "Apply for a New Auto Loan",
                     featuredApplicationDescription: "Competitive rates for new vehicle purchases.",
-                    isDefaultCampaignProduct: true,
-                    productRules: [],
-                    preapprovalRules: [],
+                    isDefaultCampaignProduct: false,
+                    productRules: [
+                        {
+                            id: "rt-rule-1",
+                            clauses: [
+                                { id: "rt-clause-1", attribute: "Credit Score", operator: "greater_than_or_equal", value: "660" }
+                            ]
+                        }
+                    ],
+                    preapprovalRules: [
+                        {
+                            id: "rt-pa-1",
+                            clauses: [
+                                { id: "rt-pa-clause-1", attribute: "Credit Score", operator: "greater_than_or_equal", value: "700" }
+                            ],
+                            preapprovalLimit: 50000
+                        }
+                    ],
                     introRateRules: [],
                     consumerPrequalRules: [],
-                    perpetualSettings: {
-                        expirationTrigger: 'days',
-                        expirationDays: 90,
-                        replacementBehavior: 'add',
-                        expirationAction: 'notify'
-                    },
-                    addedAt: "2025-01-01",
-                    expiresAt: "2025-04-01",
-                    redemptionCount: 145,
-                    status: 'active'
+                    expirationDays: 60
                 }
             ]
         },
         sections: [
             {
-                id: "section-perp-1",
+                id: "section-rt-1",
                 name: "Credit Cards",
                 order: 1,
                 products: [
                     {
-                        id: "cp-perp-2",
+                        id: "cp-rt-2",
                         productId: "product-5",
                         productName: "Platinum Rewards Visa",
                         productType: "credit-card",
-                        sectionId: "section-perp-1",
+                        sectionId: "section-rt-1",
                         isFeaturedOffer: false,
-                        isDefaultCampaignProduct: true,
-                        productRules: [],
-                        preapprovalRules: [],
+                        isDefaultCampaignProduct: false,
+                        productRules: [
+                            {
+                                id: "rt-rule-2",
+                                clauses: [
+                                    { id: "rt-clause-2", attribute: "Credit Score", operator: "greater_than_or_equal", value: "680" }
+                                ]
+                            }
+                        ],
+                        preapprovalRules: [
+                            {
+                                id: "rt-pa-2",
+                                clauses: [
+                                    { id: "rt-pa-clause-2", attribute: "Credit Score", operator: "greater_than_or_equal", value: "720" }
+                                ],
+                                preapprovalLimit: 15000
+                            }
+                        ],
                         introRateRules: [],
                         consumerPrequalRules: [],
-                        perpetualSettings: {
-                            expirationTrigger: 'manual',
-                            replacementBehavior: 'add',
-                            expirationAction: 'remove'
-                        },
-                        addedAt: "2025-01-01",
-                        redemptionCount: 89,
-                        status: 'active'
-                    },
-                    {
-                        id: "cp-perp-3",
-                        productId: "product-3",
-                        productName: "Home Equity Line of Credit",
-                        productType: "heloc",
-                        sectionId: "section-perp-1",
-                        isFeaturedOffer: false,
-                        isDefaultCampaignProduct: true,
-                        productRules: [],
-                        preapprovalRules: [],
-                        introRateRules: [],
-                        consumerPrequalRules: [],
-                        perpetualSettings: {
-                            expirationTrigger: 'redemptions',
-                            expirationRedemptions: 500,
-                            replacementBehavior: 'add',
-                            expirationAction: 'replace',
-                            replacementOfferId: 'product-4'
-                        },
-                        addedAt: "2025-01-15",
-                        redemptionCount: 423,
-                        status: 'expiring_soon'
+                        expirationDays: 60
                     }
                 ]
             }
         ],
         acceptanceRules: []
-    }
+    },
 ];
 
 const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
@@ -796,7 +762,7 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
     admin_optimizationVertice: false,
 
     // Campaign features
-    campaigns_perpetualType: true,
+    realtime_offerTriggering: false,
     campaigns_reconciliationCustomRules: false,
     campaigns_reconciliationProductRules: false,
 };

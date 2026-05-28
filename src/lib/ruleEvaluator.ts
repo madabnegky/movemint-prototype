@@ -237,11 +237,10 @@ export function aggregateOffersFromAllCampaigns(
     profile: MemberProfile,
     products: Product[]
 ): GeneratedOffer[] {
-    // Get all live campaigns, sorted by priority
+    // Get all live campaigns, sorted by priority (perpetual/always-on first, then targeted, then untargeted)
     const liveCampaigns = campaigns
         .filter(c => c.status === "live")
         .sort((a, b) => {
-            // Priority: perpetual > targeted > untargeted
             const priority = { perpetual: 0, targeted: 1, untargeted: 2 };
             return priority[a.type] - priority[b.type];
         });

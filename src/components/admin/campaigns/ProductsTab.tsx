@@ -678,11 +678,6 @@ export default function ProductsTab({ campaign, onUpdate }: ProductsTabProps) {
 
     const isPerpetual = campaign.type === "perpetual";
 
-    // Build list of available products for replacement selection (perpetual campaigns)
-    const availableProductsForReplacement = products
-        .filter(p => p.isActive)
-        .map(p => ({ id: p.id, name: p.name }));
-
     // If editing a product, show the rules editor
     if (editingProduct) {
         return (
@@ -692,7 +687,6 @@ export default function ProductsTab({ campaign, onUpdate }: ProductsTabProps) {
                 isPerpetual={isPerpetual}
                 onSave={handleUpdateProduct}
                 onCancel={() => setEditingProduct(null)}
-                availableProducts={availableProductsForReplacement}
             />
         );
     }
@@ -720,11 +714,11 @@ export default function ProductsTab({ campaign, onUpdate }: ProductsTabProps) {
                     <div className="flex items-start gap-3">
                         <Info className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
                         <div className="text-sm text-indigo-800">
-                            <p className="font-medium">Perpetual Campaign</p>
+                            <p className="font-medium">Real-Time / Always-On Campaign</p>
                             <p className="mt-1 text-indigo-700">
                                 Products can have rules that determine which members see them and who gets preapproved.
-                                Offers also rotate automatically based on lifecycle settings.
-                                Edit a product to configure its rules, duration, expiration, and rotation behavior.
+                                Each product carries its own eligibility rules and an expiration duration (default 60 days).
+                                Edit a product to configure its rules and expiration.
                             </p>
                         </div>
                     </div>

@@ -14,6 +14,7 @@ import {
     ChevronDown,
     Rocket,
     Infinity,
+    Zap,
 } from "lucide-react";
 
 type SortField = "name" | "startDate" | "endDate" | "type";
@@ -101,8 +102,8 @@ function CampaignTypeBadge({ type }: { type: CampaignType }) {
             className: "bg-slate-50 text-slate-700 border-slate-200",
         },
         perpetual: {
-            label: "Perpetual",
-            icon: Infinity,
+            label: "Real-Time / Always-On",
+            icon: Zap,
             className: "bg-indigo-50 text-indigo-700 border-indigo-200",
         },
     };
@@ -283,11 +284,11 @@ function CampaignRowMenu({
 }
 
 // Create Campaign Modal
-function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
+function CreateCampaignModal({ isOpen, onClose, onCreate, realtimeTriggeringEnabled }: {
     isOpen: boolean;
     onClose: () => void;
     onCreate: (campaign: Omit<Campaign, "id" | "createdAt" | "featuredOffersSection" | "sections">) => void;
-    perpetualEnabled: boolean;
+    realtimeTriggeringEnabled: boolean;
 }) {
     const [name, setName] = useState("");
     const [type, setType] = useState<CampaignType>("targeted");
@@ -298,15 +299,13 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name) return;
-        // Perpetual campaigns don't need dates
-        if (type !== "perpetual" && !startDate) return;
+        if (!name || !startDate) return;
 
         onCreate({
             name,
             type,
-            status: type === "perpetual" ? "live" : "draft", // Perpetual campaigns are always live
-            startDate: type === "perpetual" ? new Date().toISOString().split("T")[0] : startDate,
+            status: type === "perpetual" ? "live" : "draft",
+            startDate,
             endDate: endDate || undefined,
             acceptanceRules: [],
             reconciliationRule: 'no_change',
@@ -314,7 +313,6 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
             productReconciliationRules: [],
         });
 
-        // Reset form
         setName("");
         setType("targeted");
         setStartDate("");
@@ -329,14 +327,12 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
             case "untargeted":
                 return "Untargeted campaigns show offers to all consumers without personalization.";
             case "perpetual":
-                return "Perpetual campaigns are always-on. Offers rotate automatically based on lifecycle rules you define.";
+                return "Real-Time / Always-On campaigns go live immediately and accept member file uploads at any time to generate or refresh offers outside the normal campaign cycle.";
         }
     };
 
     const isFormValid = () => {
-        if (!name) return false;
-        if (type === "perpetual") return true; // No date requirements
-        if (!startDate) return false;
+        if (!name || !startDate) return false;
         if (type === "targeted" && !endDate) return false;
         return true;
     };
@@ -364,7 +360,7 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
                             </label>
                             <div className={cn(
                                 "flex rounded-lg border border-slate-200 p-1 bg-slate-50",
-                                perpetualEnabled ? "grid grid-cols-3" : "grid grid-cols-2"
+                                realtimeTriggeringEnabled ? "grid grid-cols-3" : "grid grid-cols-2"
                             )}>
                                 <button
                                     type="button"
@@ -392,7 +388,7 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
                                     <Users className="w-4 h-4" />
                                     Untargeted
                                 </button>
-                                {perpetualEnabled && (
+                                {realtimeTriggeringEnabled && (
                                     <button
                                         type="button"
                                         onClick={() => setType("perpetual")}
@@ -403,8 +399,8 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
                                                 : "text-slate-600 hover:text-slate-900"
                                         )}
                                     >
-                                        <Infinity className="w-4 h-4" />
-                                        Perpetual
+                                        <Zap className="w-4 h-4" />
+                                        Real-Time
                                     </button>
                                 )}
                             </div>
@@ -414,17 +410,16 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
                             </p>
                         </div>
 
-                        {/* Perpetual Campaign Info Banner */}
+                        {/* Real-Time Campaign Info Banner */}
                         {type === "perpetual" && (
                             <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
                                 <div className="flex items-start gap-3">
-                                    <Infinity className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
+                                    <Zap className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
                                     <div>
-                                        <h4 className="text-sm font-medium text-indigo-900">Always-On Campaign</h4>
+                                        <h4 className="text-sm font-medium text-indigo-900">Always-On — Goes Live Immediately</h4>
                                         <p className="text-xs text-indigo-700 mt-1">
-                                            This campaign will go live immediately after creation.
-                                            You&apos;ll configure offer lifecycles (duration, expiration, rotation)
-                                            when adding products.
+                                            Upload a member file at any time to generate or refresh offers outside the normal campaign cycle.
+                                            Products are configured with eligibility rules and a 60-day expiration by default.
                                         </p>
                                     </div>
                                 </div>
@@ -441,28 +436,28 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
                                 id="name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder={type === "perpetual" ? "e.g., Always-On Member Offers" : "Enter campaign name"}
+                                placeholder={type === "perpetual" ? "e.g., Real-Time Offer Triggering" : "Enter campaign name"}
                                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-950 focus:border-transparent"
                                 required
                             />
                         </div>
 
-                        {/* Dates - Hidden for perpetual campaigns */}
-                        {type !== "perpetual" && (
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label htmlFor="startDate" className="block text-sm font-medium text-slate-700 mb-1">
-                                        Start Date <span className="text-rose-500">*</span>
-                                    </label>
-                                    <input
-                                        type="date"
-                                        id="startDate"
-                                        value={startDate}
-                                        onChange={(e) => setStartDate(e.target.value)}
-                                        className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-950 focus:border-transparent"
-                                        required
-                                    />
-                                </div>
+                        {/* Dates */}
+                        <div className={type === "perpetual" ? "" : "grid grid-cols-2 gap-4"}>
+                            <div>
+                                <label htmlFor="startDate" className="block text-sm font-medium text-slate-700 mb-1">
+                                    Start Date <span className="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-950 focus:border-transparent"
+                                    required
+                                />
+                            </div>
+                            {type !== "perpetual" && (
                                 <div>
                                     <label htmlFor="endDate" className="block text-sm font-medium text-slate-700 mb-1">
                                         End Date {type === "targeted" && <span className="text-rose-500">*</span>}
@@ -477,8 +472,8 @@ function CreateCampaignModal({ isOpen, onClose, onCreate, perpetualEnabled }: {
                                         required={type === "targeted"}
                                     />
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
 
                     <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50 rounded-b-xl">
@@ -1030,7 +1025,7 @@ export default function CampaignsPage() {
                 isOpen={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
                 onCreate={handleCreate}
-                perpetualEnabled={featureFlags.campaigns_perpetualType}
+                realtimeTriggeringEnabled={featureFlags.realtime_offerTriggering}
             />
         </div>
     );

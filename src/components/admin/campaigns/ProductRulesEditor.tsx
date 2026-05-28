@@ -7,10 +7,6 @@ import {
     RuleClause,
     RuleOperator,
     ProductType,
-    PerpetualOfferSettings,
-    OfferExpirationTrigger,
-    OfferReplacementBehavior,
-    OfferExpirationAction,
 } from "@/context/StoreContext";
 import { useStore } from "@/context/StoreContext";
 import { cn } from "@/lib/utils";
@@ -26,9 +22,7 @@ import {
     DollarSign,
     Percent,
     Clock,
-    Calendar,
-    RefreshCw,
-    Timer,
+    Zap,
 } from "lucide-react";
 
 interface ProductRulesEditorProps {
@@ -37,6 +31,7 @@ interface ProductRulesEditorProps {
     isPerpetual?: boolean;
     onSave: (product: CampaignProduct) => void;
     onCancel: () => void;
+    availableProducts?: { id: string; name: string }[];
 }
 
 // Operator labels for display
@@ -366,47 +361,17 @@ export default function ProductRulesEditor({
     const [featuredHeadline, setFeaturedHeadline] = useState(product.featuredHeadline || "");
     const [featuredDescription, setFeaturedDescription] = useState(product.featuredDescription || "");
 
-    // Perpetual campaign lifecycle settings
-    const [expirationTrigger, setExpirationTrigger] = useState<OfferExpirationTrigger>(
-        product.perpetualSettings?.expirationTrigger || "manual"
-    );
-    const [expirationDays, setExpirationDays] = useState<number | undefined>(
-        product.perpetualSettings?.expirationDays
-    );
-    const [expirationRedemptions, setExpirationRedemptions] = useState<number | undefined>(
-        product.perpetualSettings?.expirationRedemptions
+    // Perpetual campaign expiration settings
+    const [expirationDays, setExpirationDays] = useState<number>(
+        product.expirationDays ?? 60
     );
     const [expirationDate, setExpirationDate] = useState<string>(
-        product.perpetualSettings?.expirationDate || ""
-    );
-    const [replacementBehavior, setReplacementBehavior] = useState<OfferReplacementBehavior>(
-        product.perpetualSettings?.replacementBehavior || "add"
-    );
-    const [replaceOfferId, setReplaceOfferId] = useState<string | undefined>(
-        product.perpetualSettings?.replaceOfferId
-    );
-    const [expirationAction, setExpirationAction] = useState<OfferExpirationAction>(
-        product.perpetualSettings?.expirationAction || "remove"
-    );
-    const [replacementOfferId, setReplacementOfferId] = useState<string | undefined>(
-        product.perpetualSettings?.replacementOfferId
+        product.expirationDate ?? ''
     );
 
     const supportsIntroRates = INTRO_RATE_PRODUCTS.includes(product.productType);
 
     const handleSave = () => {
-        // Build perpetual settings if applicable
-        const perpetualSettings: PerpetualOfferSettings | undefined = isPerpetual ? {
-            expirationTrigger,
-            expirationDays: expirationTrigger === "days" ? expirationDays : undefined,
-            expirationRedemptions: expirationTrigger === "redemptions" ? expirationRedemptions : undefined,
-            expirationDate: expirationTrigger === "date" ? expirationDate : undefined,
-            replacementBehavior,
-            replaceOfferId: replacementBehavior === "replace_specific" ? replaceOfferId : undefined,
-            expirationAction,
-            replacementOfferId: expirationAction === "replace" ? replacementOfferId : undefined,
-        } : undefined;
-
         onSave({
             ...product,
             isDefaultCampaignProduct: isDefaultProduct,
@@ -418,7 +383,8 @@ export default function ProductRulesEditor({
             featuredPreapprovalDescription: featuredPreapprovalDescription || undefined,
             featuredHeadline: featuredHeadline || undefined,
             featuredDescription: featuredDescription || undefined,
-            perpetualSettings,
+            expirationDays: isPerpetual ? expirationDays : undefined,
+            expirationDate: isPerpetual && expirationDate ? expirationDate : undefined,
         });
     };
 
@@ -874,227 +840,63 @@ export default function ProductRulesEditor({
                 </div>
             )}
 
-            {/* Perpetual Campaign Lifecycle Settings */}
+            {/* Real-Time Campaign Expiration Setting */}
             {isPerpetual && (
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                     <div className="px-6 py-4 border-b border-slate-100 bg-indigo-50">
                         <div className="flex items-center gap-2">
-                            <Timer className="w-5 h-5 text-indigo-600" />
-                            <h3 className="font-semibold text-slate-900">Offer Lifecycle Settings</h3>
+                            <Zap className="w-5 h-5 text-indigo-600" />
+                            <h3 className="font-semibold text-slate-900">Offer Expiration</h3>
                         </div>
                         <p className="text-sm text-slate-500 mt-0.5">
-                            Configure how long this offer runs and what happens when it expires.
+                            Set how long offers generated from member file uploads remain active. Required for bureau-derived pre-approvals.
                         </p>
                     </div>
-                    <div className="p-6 space-y-6">
-                        {/* Expiration Trigger */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                <span className="flex items-center gap-1.5">
-                                    <Clock className="w-4 h-4" />
-                                    Offer Duration
-                                </span>
-                            </label>
-                            <div className="space-y-3">
-                                <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
-                                    <input
-                                        type="radio"
-                                        name="expirationTrigger"
-                                        value="manual"
-                                        checked={expirationTrigger === "manual"}
-                                        onChange={() => setExpirationTrigger("manual")}
-                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                    <div>
-                                        <p className="text-sm font-medium text-slate-900">No automatic expiration</p>
-                                        <p className="text-xs text-slate-500">Offer runs until manually removed</p>
-                                    </div>
-                                </label>
-
-                                <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
-                                    <input
-                                        type="radio"
-                                        name="expirationTrigger"
-                                        value="days"
-                                        checked={expirationTrigger === "days"}
-                                        onChange={() => setExpirationTrigger("days")}
-                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-slate-900">Expires after duration</p>
-                                        <p className="text-xs text-slate-500">Set number of days from when offer is shown to member</p>
-                                    </div>
-                                    {expirationTrigger === "days" && (
-                                        <div className="flex items-center gap-2">
-                                            <input
-                                                type="number"
-                                                value={expirationDays || ""}
-                                                onChange={(e) => setExpirationDays(e.target.value ? parseInt(e.target.value) : undefined)}
-                                                placeholder="30"
-                                                min="1"
-                                                className="w-20 px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            />
-                                            <span className="text-sm text-slate-500">days</span>
-                                        </div>
-                                    )}
-                                </label>
-
-                                <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
-                                    <input
-                                        type="radio"
-                                        name="expirationTrigger"
-                                        value="redemptions"
-                                        checked={expirationTrigger === "redemptions"}
-                                        onChange={() => setExpirationTrigger("redemptions")}
-                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-slate-900">Expires after redemptions</p>
-                                        <p className="text-xs text-slate-500">Limit total number of redemptions across all members</p>
-                                    </div>
-                                    {expirationTrigger === "redemptions" && (
-                                        <div className="flex items-center gap-2">
-                                            <input
-                                                type="number"
-                                                value={expirationRedemptions || ""}
-                                                onChange={(e) => setExpirationRedemptions(e.target.value ? parseInt(e.target.value) : undefined)}
-                                                placeholder="100"
-                                                min="1"
-                                                className="w-24 px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            />
-                                            <span className="text-sm text-slate-500">redemptions</span>
-                                        </div>
-                                    )}
-                                </label>
-
-                                <label className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
-                                    <input
-                                        type="radio"
-                                        name="expirationTrigger"
-                                        value="date"
-                                        checked={expirationTrigger === "date"}
-                                        onChange={() => setExpirationTrigger("date")}
-                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-slate-900">Expires on specific date</p>
-                                        <p className="text-xs text-slate-500">Set a fixed end date for this offer</p>
-                                    </div>
-                                    {expirationTrigger === "date" && (
-                                        <input
-                                            type="date"
-                                            value={expirationDate}
-                                            onChange={(e) => setExpirationDate(e.target.value)}
-                                            className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                        />
-                                    )}
-                                </label>
-                            </div>
-                        </div>
-
-                        {/* Replacement Behavior */}
-                        <div className="pt-4 border-t border-slate-200">
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                <span className="flex items-center gap-1.5">
-                                    <RefreshCw className="w-4 h-4" />
-                                    When Adding This Offer
-                                </span>
-                            </label>
-                            <select
-                                value={replacementBehavior}
-                                onChange={(e) => setReplacementBehavior(e.target.value as OfferReplacementBehavior)}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                            >
-                                <option value="add">Add alongside existing offers</option>
-                                <option value="replace_specific">Replace a specific existing offer</option>
-                                <option value="clear_all">Clear all existing offers first</option>
-                            </select>
-                            <p className="mt-1 text-xs text-slate-500">
-                                {replacementBehavior === "add" && "This offer will be added to the member's offer set without affecting other offers."}
-                                {replacementBehavior === "replace_specific" && "This offer will replace a specific existing offer in the member's storefront."}
-                                {replacementBehavior === "clear_all" && "All existing offers will be removed before this offer is added."}
-                            </p>
-
-                            {/* Select which offer to replace */}
-                            {replacementBehavior === "replace_specific" && availableProducts.length > 0 && (
-                                <div className="mt-3">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Select offer to replace
-                                    </label>
-                                    <select
-                                        value={replaceOfferId || ""}
-                                        onChange={(e) => setReplaceOfferId(e.target.value || undefined)}
-                                        className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                                    >
-                                        <option value="">Select an offer...</option>
-                                        {availableProducts
-                                            .filter(p => p.id !== product.productId)
-                                            .map(p => (
-                                                <option key={p.id} value={p.id}>{p.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Expiration Action */}
-                        {expirationTrigger !== "manual" && (
-                            <div className="pt-4 border-t border-slate-200">
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <div className="p-6 space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
                                     <span className="flex items-center gap-1.5">
-                                        <Calendar className="w-4 h-4" />
-                                        When This Offer Expires
+                                        <Clock className="w-4 h-4" />
+                                        Duration
                                     </span>
                                 </label>
-                                <select
-                                    value={expirationAction}
-                                    onChange={(e) => setExpirationAction(e.target.value as OfferExpirationAction)}
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                                >
-                                    <option value="remove">Remove the offer</option>
-                                    <option value="replace">Replace with another offer</option>
-                                    <option value="notify">Notify admin (keep offer visible)</option>
-                                </select>
-                                <p className="mt-1 text-xs text-slate-500">
-                                    {expirationAction === "remove" && "The offer will be automatically removed from member storefronts."}
-                                    {expirationAction === "replace" && "The offer will be replaced with a designated follow-up offer."}
-                                    {expirationAction === "notify" && "Admin will be notified but the offer remains visible until manually removed."}
-                                </p>
-
-                                {/* Select replacement offer on expiration */}
-                                {expirationAction === "replace" && availableProducts.length > 0 && (
-                                    <div className="mt-3">
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                                            Replace with
-                                        </label>
-                                        <select
-                                            value={replacementOfferId || ""}
-                                            onChange={(e) => setReplacementOfferId(e.target.value || undefined)}
-                                            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                                        >
-                                            <option value="">Select a replacement offer...</option>
-                                            {availableProducts
-                                                .filter(p => p.id !== product.productId)
-                                                .map(p => (
-                                                    <option key={p.id} value={p.id}>{p.name}</option>
-                                                ))
-                                            }
-                                        </select>
-                                    </div>
-                                )}
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        value={expirationDays}
+                                        onChange={(e) => setExpirationDays(Math.max(1, parseInt(e.target.value) || 60))}
+                                        min="1"
+                                        max="365"
+                                        className="w-24 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    />
+                                    <span className="text-sm text-slate-600">days</span>
+                                </div>
+                                <p className="mt-1 text-xs text-slate-500">After offer generation</p>
                             </div>
-                        )}
-
-                        {/* Info banner */}
-                        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
-                            <div className="flex items-start gap-2">
-                                <Info className="w-4 h-4 text-indigo-600 mt-0.5 shrink-0" />
-                                <p className="text-xs text-indigo-700">
-                                    Lifecycle settings control how offers rotate in your perpetual campaign.
-                                    Each member sees offers based on their profile and these timing rules.
-                                </p>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Hard cutoff date <span className="text-slate-400 font-normal">(optional)</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    value={expirationDate}
+                                    onChange={(e) => setExpirationDate(e.target.value)}
+                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                />
+                                <p className="mt-1 text-xs text-slate-500">All offers expire by this date</p>
                             </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg">
+                            <span className="text-xs text-slate-500">Offers expire at whichever comes first — the duration or the cutoff date.</span>
+                        </div>
+
+                        <div className="flex items-start gap-2 bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+                            <Info className="w-4 h-4 text-indigo-600 mt-0.5 shrink-0" />
+                            <p className="text-xs text-indigo-700">
+                                Default is 60 days, aligning with pre-qualification data freshness guidance. Firm offers of credit (pre-approvals from bureau-enhanced files) must carry an expiration and cannot be removed once delivered.
+                            </p>
                         </div>
                     </div>
                 </div>

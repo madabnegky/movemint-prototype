@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore, FeatureFlags } from "@/context/StoreContext";
-import { RotateCcw, Sparkles, LayoutGrid, MessageSquare, BarChart3, Layers, TrendingUp, CreditCard, Zap, Eye, Mountain, Gauge, SlidersHorizontal, Brain, UserCheck, Infinity, GitMerge } from "lucide-react";
+import { RotateCcw, Sparkles, LayoutGrid, MessageSquare, BarChart3, Layers, TrendingUp, CreditCard, Zap, Eye, Mountain, Gauge, SlidersHorizontal, Brain, UserCheck, GitMerge } from "lucide-react";
 
 interface FlagConfig {
     key: keyof FeatureFlags;
@@ -148,10 +148,10 @@ const FLAG_SECTIONS: FlagSection[] = [
         description: "Campaign management features",
         flags: [
             {
-                key: "campaigns_perpetualType",
-                label: "Perpetual Campaigns",
-                description: "Enable perpetual (always-on) campaign type with automatic offer lifecycle management",
-                icon: <Infinity className="w-5 h-5" />
+                key: "realtime_offerTriggering",
+                label: "Real-Time Offer Triggering",
+                description: "Enable Real-Time / Always-On campaign type. Accepts member file uploads at any time to generate or refresh offers outside the normal campaign cycle, decoupled from campaign start and end dates.",
+                icon: <Zap className="w-5 h-5" />
             },
             {
                 key: "campaigns_reconciliationCustomRules",
