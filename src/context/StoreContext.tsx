@@ -336,6 +336,7 @@ export interface FeatureFlags {
     realtime_offerTriggering: boolean;         // Enable Real-Time Offer Triggering (perpetual/always-on campaign type + file upload trigger)
     campaigns_reconciliationCustomRules: boolean; // Enable custom reconciliation rules by loan class
     campaigns_reconciliationProductRules: boolean; // Enable custom reconciliation rules by product
+    campaigns_aiOptimization: boolean;         // Show AI Optimization tab (predicted performance + Claude recommendations) on campaign config
 }
 
 interface StoreContextType {
@@ -765,6 +766,7 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
     realtime_offerTriggering: false,
     campaigns_reconciliationCustomRules: false,
     campaigns_reconciliationProductRules: false,
+    campaigns_aiOptimization: false,
 };
 
 const DEFAULT_PRODUCTS: Product[] = [

@@ -164,6 +164,12 @@ const FLAG_SECTIONS: FlagSection[] = [
                 label: "Custom Reconciliation Rules (Product)",
                 description: "Enable custom reconciliation rules configured by specific campaign products (requires manual reconciliation)",
                 icon: <GitMerge className="w-5 h-5" />
+            },
+            {
+                key: "campaigns_aiOptimization",
+                label: "AI Optimization (Beta)",
+                description: "Add an AI Optimization tab to the campaign configuration page: predicted performance (your history first, then cross-network) plus goal-driven, Claude-generated recommendations",
+                icon: <Sparkles className="w-5 h-5" />
             }
         ]
     }

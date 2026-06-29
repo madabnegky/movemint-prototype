@@ -2,7 +2,7 @@
 
 import { useState, use } from "react";
 import Link from "next/link";
-import { useStore, Campaign } from "@/context/StoreContext";
+import { useStore, Campaign, FeatureFlags } from "@/context/StoreContext";
 import { cn } from "@/lib/utils";
 import {
     ArrowLeft,
@@ -23,8 +23,9 @@ import FileProcessingTab from "@/components/admin/campaigns/FileProcessingTab";
 import ProductsTab from "@/components/admin/campaigns/ProductsTab";
 import AcceptanceRulesTab from "@/components/admin/campaigns/AcceptanceRulesTab";
 import ReconciliationRulesTab from "@/components/admin/campaigns/ReconciliationRulesTab";
+import AiOptimizationTab from "@/components/admin/campaigns/AiOptimizationTab";
 
-type TabId = "settings" | "file-processing" | "products" | "member-file-upload" | "acceptance-rules" | "reconciliation-rules" | "data-export";
+type TabId = "settings" | "file-processing" | "products" | "member-file-upload" | "acceptance-rules" | "reconciliation-rules" | "ai-optimization" | "data-export";
 
 interface Tab {
     id: TabId;
@@ -32,6 +33,7 @@ interface Tab {
     targetedOnly?: boolean;
     perpetualOnly?: boolean;
     excludePerpetual?: boolean;
+    requiresFlag?: keyof FeatureFlags;
 }
 
 const TABS: Tab[] = [
@@ -41,6 +43,7 @@ const TABS: Tab[] = [
     { id: "member-file-upload", label: "Member File Upload", perpetualOnly: true },
     { id: "acceptance-rules", label: "Acceptance Rules", excludePerpetual: true },
     { id: "reconciliation-rules", label: "Reconciliation Rules", excludePerpetual: true },
+    { id: "ai-optimization", label: "AI Optimization", requiresFlag: "campaigns_aiOptimization" },
     { id: "data-export", label: "Data Export" },
 ];
 
@@ -298,7 +301,7 @@ function DataExportTab({ campaign: _campaign }: { campaign: Campaign }) {
 
 export default function CampaignDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const { campaigns, updateCampaign } = useStore();
+    const { campaigns, updateCampaign, featureFlags } = useStore();
     const [activeTab, setActiveTab] = useState<TabId>("settings");
 
     const campaign = campaigns.find((c) => c.id === id);
@@ -341,8 +344,17 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
         if (tab.perpetualOnly && campaign.type !== "perpetual") return false;
         // Tabs excluded from perpetual campaigns
         if (tab.excludePerpetual && campaign.type === "perpetual") return false;
+        // Feature-flagged tabs
+        if (tab.requiresFlag && !featureFlags[tab.requiresFlag]) return false;
         return true;
     });
+
+    // If the active tab isn't available (e.g. its flag was turned off while
+    // viewing it), fall back to the first available tab — derived, not stateful,
+    // so we never read a hidden tab.
+    const effectiveTab: TabId = availableTabs.some((t) => t.id === activeTab)
+        ? activeTab
+        : availableTabs[0]?.id ?? "settings";
 
     // Check if campaign is ready to launch
     const canLaunch = campaign.status === "pending" || (
@@ -431,7 +443,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                                     onClick={() => setActiveTab(tab.id)}
                                     className={cn(
                                         "w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors",
-                                        activeTab === tab.id
+                                        effectiveTab === tab.id
                                             ? "bg-slate-100 text-slate-900"
                                             : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                                     )}
@@ -445,34 +457,37 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
 
                 {/* Tab Content */}
                 <div className="flex-1 min-w-0">
-                    {activeTab === "settings" && (
+                    {effectiveTab === "settings" && (
                         <CampaignSettingsTab
                             campaign={campaign}
                             onUpdate={handleUpdateCampaign}
                         />
                     )}
-                    {activeTab === "file-processing" && campaign.type === "targeted" && (
+                    {effectiveTab === "file-processing" && campaign.type === "targeted" && (
                         <FileProcessingTab
                             campaign={campaign}
                             onUpdate={handleUpdateCampaign}
                         />
                     )}
-                    {activeTab === "products" && (
+                    {effectiveTab === "products" && (
                         <ProductsTab
                             campaign={campaign}
                             onUpdate={handleUpdateCampaign}
                         />
                     )}
-                    {activeTab === "member-file-upload" && campaign.type === "perpetual" && (
+                    {effectiveTab === "member-file-upload" && campaign.type === "perpetual" && (
                         <MemberFileUploadTab />
                     )}
-                    {activeTab === "acceptance-rules" && (
+                    {effectiveTab === "acceptance-rules" && (
                         <AcceptanceRulesTab campaign={campaign} onUpdate={handleUpdateCampaign} />
                     )}
-                    {activeTab === "reconciliation-rules" && (
+                    {effectiveTab === "reconciliation-rules" && (
                         <ReconciliationRulesTab campaign={campaign} onUpdate={handleUpdateCampaign} />
                     )}
-                    {activeTab === "data-export" && (
+                    {effectiveTab === "ai-optimization" && featureFlags.campaigns_aiOptimization && (
+                        <AiOptimizationTab campaign={campaign} onUpdate={handleUpdateCampaign} />
+                    )}
+                    {effectiveTab === "data-export" && (
                         <DataExportTab campaign={campaign} />
                     )}
                 </div>
