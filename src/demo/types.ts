@@ -87,6 +87,30 @@ export function isHbProvider(v: string | null | undefined): v is HbProvider {
     return HB_PROVIDERS.some((p) => p.value === v);
 }
 
+/**
+ * Promo code prefilled into the landing gate, mimicking the code on a member's
+ * mailer. Generated once and persisted rather than derived per render — the code
+ * a prospect is looking at must not change underneath them.
+ */
+export function generatePromoCode(): string {
+    let code = "";
+    for (let i = 0; i < 16; i++) code += Math.floor(Math.random() * 10);
+    return code;
+}
+
+/** Formats a 16-digit code for display: 1234 5678 9012 3456. */
+export function formatPromoCode(code: string): string {
+    return code.replace(/\D/g, "").replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
+/**
+ * Fallback for configs saved before promoCode existed. A literal rather than a
+ * generated value: DEFAULT_DEMO_CONFIG is module-level, and generating there
+ * would produce a different code on the server than the client and trip
+ * hydration. The provider generates a real one on first load.
+ */
+export const DEFAULT_PROMO_CODE = "0000000000000000";
+
 export interface DemoConfig {
     /** Financial institution name shown in nav and chrome. */
     fiName: string;
@@ -98,6 +122,14 @@ export interface DemoConfig {
     footerDisclaimer: string;
     selection: DemoSelection;
     flags: DemoFlags;
+    /** Prefilled in the landing gate's promo field. */
+    promoCode: string;
+    /**
+     * Whether the landing gate has been passed. Persists so a demo isn't
+     * re-gated on every reload; Setup exposes a reset to re-arm it for the
+     * next pitch.
+     */
+    landingUnlocked: boolean;
 }
 
 export const DEFAULT_DEMO_CONFIG: DemoConfig = {
@@ -109,4 +141,6 @@ export const DEFAULT_DEMO_CONFIG: DemoConfig = {
         "*APR = Annual Percentage Rate. Rates shown are the lowest available and are subject to change. Your actual rate may vary based on creditworthiness, loan term, and other factors. All loans subject to approval.",
     selection: { mode: "scenario", scenarioId: "full-storefront" },
     flags: DEFAULT_DEMO_FLAGS,
+    promoCode: DEFAULT_PROMO_CODE,
+    landingUnlocked: false,
 };

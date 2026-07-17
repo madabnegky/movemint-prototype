@@ -86,15 +86,21 @@ export function buildDemoStorefrontData(
 
     const sectionMap = new Map<string, Offer[]>();
     for (const offer of offers) {
-        if (offer.isFeatured || offer.isRedeemed) continue;
+        // Featured offers still appear in their section as a normal card — the
+        // hero is additional placement, not a move. (The non-demo storefront
+        // hides them from sections; here a hero offer stays browsable below.)
+        if (offer.isRedeemed) continue;
         // These two render as their own dedicated sections below.
         if (offer.section === CREDIT_MOUNTAIN_SECTION) continue;
         if (offer.section === INSURANCE_SECTION) continue;
 
         const name = offer.section || "Other Offers";
+        // Drop isFeatured on the section copy so it renders as a standard card
+        // rather than inheriting hero treatment.
+        const card = offer.isFeatured ? { ...offer, isFeatured: false } : offer;
         const bucket = sectionMap.get(name);
-        if (bucket) bucket.push(offer);
-        else sectionMap.set(name, [offer]);
+        if (bucket) bucket.push(card);
+        else sectionMap.set(name, [card]);
     }
 
     const order = SECTION_ORDER as readonly string[];

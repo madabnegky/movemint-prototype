@@ -2,10 +2,20 @@
 
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { DEFAULT_DEMO_CONFIG } from "./types";
+import { DEFAULT_DEMO_CONFIG, DEFAULT_PROMO_CODE, generatePromoCode } from "./types";
 import type { DemoConfig, DemoFlags, DemoOfferRef, DemoSelection } from "./types";
 
 const STORAGE_KEY = "movemint_demo_v1";
+
+/**
+ * Drop keys whose value is undefined, so spreading a stored config over the
+ * defaults can only fill fields in, never blank them out.
+ */
+function defined<T extends object>(obj: T): Partial<T> {
+    return Object.fromEntries(
+        Object.entries(obj).filter(([, v]) => v !== undefined),
+    ) as Partial<T>;
+}
 
 interface DemoStoreContextValue {
     config: DemoConfig;
@@ -18,6 +28,8 @@ interface DemoStoreContextValue {
     /** Switch to hand-picked mode, restoring the last hand-picked list. */
     useHandpicked: () => void;
     setHandpickedOffers: (offers: DemoOfferRef[]) => void;
+    /** Mint a fresh 16-digit promo code for the landing gate. */
+    regeneratePromoCode: () => void;
     resetConfig: () => void;
 }
 
@@ -41,15 +53,25 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             if (saved) {
                 const parsed = JSON.parse(saved) as Partial<DemoConfig>;
                 // Spread over defaults so a config saved before a field existed
-                // still loads, rather than rendering with the field undefined.
-                setConfig({
+                // still loads. defined() matters: a plain spread lets an explicit
+                // `undefined` overwrite the default and hand the UI a hole.
+                const merged: DemoConfig = {
                     ...DEFAULT_DEMO_CONFIG,
-                    ...parsed,
-                    flags: { ...DEFAULT_DEMO_CONFIG.flags, ...parsed.flags },
-                });
+                    ...defined(parsed),
+                    flags: { ...DEFAULT_DEMO_CONFIG.flags, ...defined(parsed.flags ?? {}) },
+                };
+                // Configs predating promoCode land on the placeholder; mint a real one.
+                if (!parsed.promoCode || parsed.promoCode === DEFAULT_PROMO_CODE) {
+                    merged.promoCode = generatePromoCode();
+                }
+                setConfig(merged);
                 if (parsed.selection?.mode === "handpicked") {
                     lastHandpicked.current = parsed.selection.offers;
                 }
+            } else {
+                // First run. Generated here rather than in DEFAULT_DEMO_CONFIG so
+                // the value is client-only and can't cause a hydration mismatch.
+                setConfig({ ...DEFAULT_DEMO_CONFIG, promoCode: generatePromoCode() });
             }
         } catch {
             // Corrupt or unreadable config shouldn't wedge the demo — fall back
@@ -88,9 +110,10 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             selectScenario: (scenarioId) => setConfig((c) => ({ ...c, selection: { mode: "scenario", scenarioId } })),
             useHandpicked: () => setSelection({ mode: "handpicked", offers: lastHandpicked.current }),
             setHandpickedOffers: (offers) => setSelection({ mode: "handpicked", offers }),
+            regeneratePromoCode: () => setConfig((c) => ({ ...c, promoCode: generatePromoCode() })),
             resetConfig: () => {
                 lastHandpicked.current = [];
-                setConfig(DEFAULT_DEMO_CONFIG);
+                setConfig({ ...DEFAULT_DEMO_CONFIG, promoCode: generatePromoCode() });
             },
         };
     }, [config, storageError]);

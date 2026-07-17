@@ -17,9 +17,14 @@ import type { HbProvider } from "@/demo/types";
  * that preserve provider state — never a reload.
  */
 
+/**
+ * Landing and Storefront render the same page — they differ only in how the
+ * member arrives (standalone URL with an auth gate vs. SSO from home banking),
+ * so the labels name the entry path rather than the destination.
+ */
 const SURFACES = [
-    { href: "/demo/landing", label: "Landing Page" },
-    { href: "/demo/storefront", label: "Storefront" },
+    { href: "/demo/landing", label: "Landing Page (auth)" },
+    { href: "/demo/storefront", label: "Storefront (SSO)" },
     { href: "/demo/home-banking", label: "Home Banking" },
 ] as const;
 

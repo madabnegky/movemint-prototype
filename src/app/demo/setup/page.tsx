@@ -7,8 +7,10 @@ import {
     Car,
     CreditCard,
     Home,
+    Lock,
     Mountain,
     Play,
+    RefreshCw,
     RotateCcw,
     Shield,
     Store,
@@ -23,7 +25,7 @@ import { useDemoStore } from "@/demo/DemoStoreContext";
 import { SCENARIOS } from "@/demo/scenarios";
 import type { ScenarioIconKey } from "@/demo/scenarios";
 import { processLogoFile } from "@/demo/logo";
-import { SELECTABLE_VARIANTS } from "@/demo/types";
+import { SELECTABLE_VARIANTS, formatPromoCode } from "@/demo/types";
 import type { DemoOfferRef } from "@/demo/types";
 
 const ICON_MAP: Record<ScenarioIconKey, React.ElementType> = {
@@ -44,6 +46,7 @@ export default function DemoSetupPage() {
         selectScenario,
         useHandpicked,
         setHandpickedOffers,
+        regeneratePromoCode,
         resetConfig,
     } = useDemoStore();
 
@@ -355,6 +358,64 @@ export default function DemoSetupPage() {
                             </div>
                         </div>
                     </label>
+                </section>
+
+                {/* Landing page */}
+                <section className="rounded-2xl border border-gray-200 bg-white p-6">
+                    <h2 className="mb-1 text-[15px] font-semibold">Landing Page</h2>
+                    <p className="mb-5 text-[13px] text-gray-500">
+                        The standalone URL shows the same storefront, but the member
+                        authenticates first. Any last-four is accepted.
+                    </p>
+
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+                        <div className="flex-1">
+                            <label className="mb-1.5 block text-[12px] font-medium text-gray-600">
+                                Promo code (prefilled for the member)
+                            </label>
+                            <div className="flex gap-2">
+                                <input
+                                    value={formatPromoCode(config.promoCode ?? "")}
+                                    onChange={(e) =>
+                                        updateConfig({
+                                            promoCode: e.target.value.replace(/\D/g, "").slice(0, 16),
+                                        })
+                                    }
+                                    inputMode="numeric"
+                                    placeholder="1234 5678 9012 3456"
+                                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 font-mono text-[14px] tracking-wider outline-none focus:border-[#143C67]"
+                                />
+                                <button
+                                    onClick={regeneratePromoCode}
+                                    title="Generate a new code"
+                                    className="rounded-lg border border-gray-300 px-3 text-gray-500 transition-colors hover:border-gray-400 hover:text-gray-700"
+                                >
+                                    <RefreshCw className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <span
+                                className={cn(
+                                    "rounded-full px-2.5 py-1 text-[11px] font-medium",
+                                    config.landingUnlocked
+                                        ? "bg-amber-100 text-amber-800"
+                                        : "bg-gray-100 text-gray-500",
+                                )}
+                            >
+                                {config.landingUnlocked ? "Unlocked" : "Locked"}
+                            </span>
+                            <button
+                                onClick={() => updateConfig({ landingUnlocked: false })}
+                                disabled={!config.landingUnlocked}
+                                className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-2 text-[12px] font-medium text-gray-600 transition-colors hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                                <Lock className="h-3.5 w-3.5" />
+                                Re-lock gate
+                            </button>
+                        </div>
+                    </div>
                 </section>
 
                 <div className="flex justify-between pb-8">
