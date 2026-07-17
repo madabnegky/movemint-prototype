@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useStore, DEFAULT_OFFERS } from "@/context/StoreContext";
 import type { Offer, MemberProfile } from "@/context/StoreContext";
 import { evaluateCampaignProduct, generateOfferFromCampaignProduct, aggregateOffersFromAllCampaigns, GeneratedOffer } from "@/lib/ruleEvaluator";
+import { useInjectedStorefrontData } from "./useStorefrontData";
 
 export const CREDIT_MOUNTAIN_SECTION = "Credit Monitoring & Coaching";
 
@@ -33,8 +34,22 @@ export interface StorefrontData {
 /**
  * Centralized hook for storefront data.
  * All presentation components should consume this hook to ensure consistent offer display.
+ *
+ * Returns injected data when a StorefrontDataProvider is present (see /demo);
+ * otherwise derives it from StoreContext via useLegacyStorefront below.
  */
 export function useStorefront(): StorefrontData {
+    const injected = useInjectedStorefrontData();
+    // Must run unconditionally — hook order cannot depend on `injected`.
+    const legacy = useLegacyStorefront();
+    return injected ?? legacy;
+}
+
+/**
+ * Derives storefront data from StoreContext: previewMode + selected member profile
+ * drive rule evaluation. This is the behavior every non-/demo surface uses.
+ */
+function useLegacyStorefront(): StorefrontData {
     const {
         offers,
         sections: configuredSections,

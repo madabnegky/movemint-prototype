@@ -6,7 +6,17 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useStorefront } from "@/hooks/useStorefront";
 
-export function HeroCarousel() {
+interface HeroCarouselProps {
+    /** Route prefix for offer CTAs, so /demo keeps clicks inside its own namespace. */
+    offerHrefBase?: string;
+    /** Full override for the CTA target. Takes precedence over offerHrefBase. */
+    offerHref?: string;
+}
+
+export function HeroCarousel({
+    offerHrefBase = "/storefront/offer",
+    offerHref,
+}: HeroCarouselProps = {}) {
     const { featuredOffers, showFeaturedCarousel } = useStorefront();
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -76,7 +86,7 @@ export function HeroCarousel() {
                         {/* CTA Button */}
                         <div className="flex flex-col gap-3 items-center min-[804px]:items-stretch max-w-[280px]">
                             <Link
-                                href={currentOffer.ctaLink || `/storefront/offer/${currentOffer.id}`}
+                                href={offerHref ?? currentOffer.ctaLink ?? `${offerHrefBase}/${currentOffer.id}`}
                                 className="inline-flex items-center justify-center w-full px-8 py-3.5 bg-[#262C30] text-white text-[12px] font-bold tracking-wider uppercase rounded-full hover:bg-black transition-colors"
                             >
                                 REVIEW OFFER
