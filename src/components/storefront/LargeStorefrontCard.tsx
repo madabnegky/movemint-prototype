@@ -19,6 +19,8 @@ export interface LargeStorefrontCardProps {
     ctaLabel?: string;
     ctaHref?: string;
     className?: string;
+    /** Render without a link wrapper, for surfaces with no offer detail route yet. */
+    disableLink?: boolean;
 }
 
 const TAG_STYLES: Record<LargeCardTag, { bg: string; text: string; label: string }> = {
@@ -72,6 +74,7 @@ export function LargeStorefrontCard({
     ctaLabel = "Learn More",
     ctaHref = "#",
     className,
+    disableLink = false,
 }: LargeStorefrontCardProps) {
     const card = (
         <div
@@ -121,7 +124,7 @@ export function LargeStorefrontCard({
         </div>
     );
 
-    if (tag === "redeemed") return card;
+    if (tag === "redeemed" || disableLink) return card;
 
     return (
         <Link href={ctaHref} className="flex">

@@ -56,7 +56,9 @@ function OfferAsLargeCard({ offer }: { offer: Offer }) {
                 "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"
             }
             ctaLabel={offer.ctaText}
-            ctaHref={`/demo/offer/${offer.id}`}
+            // Offer detail lives at /demo/offer/[id], which doesn't exist yet.
+            // Unlinked beats a 404 in front of a prospect.
+            disableLink
         />
     );
 }
@@ -123,7 +125,9 @@ export function DemoStorefront() {
                     </section>
                 )}
 
-                <HeroCarousel offerHrefBase="/demo/offer" />
+                {/* Offer detail (/demo/offer/[id]) isn't built yet. Point the hero CTA
+                    at the offer sections below rather than a 404. */}
+                <HeroCarousel offerHref="#offers" />
 
                 {sections.length > 1 && (
                     <div className="mb-12 flex flex-col gap-2">
@@ -147,7 +151,7 @@ export function DemoStorefront() {
                     </div>
                 )}
 
-                <div className="flex flex-col gap-12">
+                <div id="offers" className="flex flex-col gap-12">
                     {visibleSections.map((section) => {
                         if (section.isCreditMountain) {
                             return (

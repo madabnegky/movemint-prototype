@@ -32,8 +32,8 @@ function HomeBankingSurface() {
         <div className="min-h-screen bg-slate-100 py-8 font-sans">
             <PartnerShell partner={provider} userName={config.memberName}>
                 {provider === "q2-totalaccess" && <Q2OfferWidget />}
-                {provider === "q2-composable" && <Q2ComposableWidget />}
-                {provider === "alkami" && <AlkamiOfferWidget />}
+                {provider === "q2-composable" && <Q2ComposableWidget storefrontHref="/demo/storefront" />}
+                {provider === "alkami" && <AlkamiOfferWidget storefrontHref="/demo/storefront" />}
             </PartnerShell>
         </div>
     );

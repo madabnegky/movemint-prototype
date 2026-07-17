@@ -45,7 +45,8 @@ interface CarouselPage {
     offers?: (Offer | GeneratedOffer)[];
 }
 
-export function AlkamiOfferWidget() {
+/** Storefront route for the "Go to Storefront" link, so /demo keeps clicks in its namespace. */
+export function AlkamiOfferWidget({ storefrontHref = "/storefront" }: { storefrontHref?: string } = {}) {
     const { updateOffer, featureFlags } = useStore();
     const {
         featuredOffers,
@@ -544,7 +545,7 @@ export function AlkamiOfferWidget() {
                         <div className="text-center">
                             <p className="text-xs text-gray-500 mb-2">Want to see more?</p>
                             <Link
-                                href="/storefront"
+                                href={storefrontHref}
                                 className="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors uppercase"
                             >
                                 Go to Storefront

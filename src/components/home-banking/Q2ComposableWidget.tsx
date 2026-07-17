@@ -45,7 +45,8 @@ interface CarouselPage {
     offers?: (Offer | GeneratedOffer)[];
 }
 
-export function Q2ComposableWidget() {
+/** Storefront route for the "Go to Storefront" link, so /demo keeps clicks in its namespace. */
+export function Q2ComposableWidget({ storefrontHref = "/storefront" }: { storefrontHref?: string } = {}) {
     const { updateOffer, featureFlags } = useStore();
     const {
         featuredOffers,
@@ -644,7 +645,7 @@ export function Q2ComposableWidget() {
 
                         {/* Go to Storefront */}
                         <Link
-                            href="/storefront"
+                            href={storefrontHref}
                             className="w-full flex items-center justify-center px-[32px] py-[8px] border border-[#677178] rounded-[100px] text-[14px] leading-[20px] tracking-[0.25px] text-[#262c30] hover:bg-[#f3f5f5] transition-colors"
                             style={{ fontFamily: "'GT America', sans-serif", fontWeight: 400, fontFeatureSettings: "'ss03' 1" }}>
                             GO TO STOREFRONT
