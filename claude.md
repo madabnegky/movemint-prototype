@@ -121,7 +121,12 @@ These live in `src/app/globals.css` inside `@theme`. Use Tailwind utilities that
 All "Extended Medium" numeric type uses OpenType `font-feature-settings: 'ss03'`.
 
 ### Fonts
-GT America is a licensed font and must be self-hosted under `public/fonts/` and registered via `next/font/local` in `src/app/layout.tsx`. Until the font files are added, the prototype will fall back to system sans — that's a known visual delta, not a bug in the layout.
+GT America is self-hosted under `public/fonts/` and registered via `next/font/local` in `src/app/layout.tsx`: **Standard** → `--font-gt-america` (body, `font-sans`), **Extended** → `--font-gt-america-extended` (titles, `font-extended`). Four `.woff2` files are needed — Standard/Extended × Regular/Medium. See `public/fonts/README.md` for the exact filenames.
+
+**⚠️ The font files are NOT in git and deploys are NOT fully automatic.** GT America is licensed (Grilli Type EULA) and this repo is public, so the `.woff2` files are gitignored and must never be committed. Consequences:
+- **A `git push` / auto-deploy renders system-sans fallback, not GT America.** The build succeeds (the font loader is guarded), but the licensed font is absent.
+- **To ship the real fonts you MUST deploy manually** from a machine that has the files in `public/fonts/`: `netlify deploy --prod`. This runs the build locally with the fonts present and uploads the result; the public repo never contains the binaries.
+- A fresh clone has no fonts. Copy them from the licensed purchase into `public/fonts/` before expecting pixel-accurate local rendering.
 
 ---
 
