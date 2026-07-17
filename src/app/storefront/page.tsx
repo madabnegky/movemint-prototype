@@ -51,7 +51,7 @@ function OfferAsLargeCard({ offer }: { offer: Offer }) {
             productName={offer.title}
             tag={variantToTag(offer.variant, offer.isRedeemed)}
             heroValues={offerToHeroValues(offer)}
-            imageUrl={offer.imageUrl ?? "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+            imageUrl={offer.imageUrl ?? "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
             ctaLabel={offer.ctaText}
             ctaHref={offer.ctaLink ?? `/storefront/offer/${offer.id}`}
         />
@@ -279,7 +279,7 @@ export default function StorefrontPage() {
                                 <div className="min-[804px]:w-[60%] order-1 min-[804px]:order-2 relative">
                                     <div className="w-full h-full min-h-[200px] min-[804px]:min-h-full">
                                         <img
-                                            src={currentPrequalOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                                            src={currentPrequalOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                                             alt={currentPrequalOffer.title}
                                             className="w-full h-full object-cover object-center"
                                         />

@@ -216,7 +216,7 @@ export function Q2OfferWidget() {
                                             >
                                                 <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0">
                                                     <img
-                                                        src={offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=200&q=80"}
+                                                        src={offer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=200&q=80"}
                                                         alt={offer.title}
                                                         className="w-full h-full object-cover"
                                                     />
@@ -306,7 +306,7 @@ export function Q2OfferWidget() {
                     {/* Hero Image */}
                     <div className="rounded-lg overflow-hidden mb-4">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             className="w-full h-40 object-cover"
                         />
@@ -426,7 +426,7 @@ export function Q2OfferWidget() {
                     {/* Hero Image */}
                     <div className="rounded-lg overflow-hidden mb-4">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             className="w-full h-36 object-cover"
                         />
@@ -705,7 +705,7 @@ export function Q2OfferWidget() {
                     {/* Hero Image */}
                     <div className="rounded-lg overflow-hidden mb-4">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             className="w-full h-32 object-cover"
                         />
@@ -792,7 +792,7 @@ export function Q2OfferWidget() {
                 <div className="p-8 text-center">
                     <div className="w-48 h-32 mx-auto mb-6 rounded-lg overflow-hidden">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=400&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=80"}
                             alt="Success"
                             className="w-full h-full object-cover"
                         />

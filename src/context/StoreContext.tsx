@@ -775,7 +775,7 @@ const DEFAULT_PRODUCTS: Product[] = [
         name: "New Auto Loan",
         type: "auto-loan",
         description: "Finance your new vehicle purchase with competitive rates",
-        imageUrl: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",
         attributes: [
             { label: "Up to", value: "$50,000" },
             { label: "As low as", value: "3.62%", subtext: "APR*†" }
@@ -789,7 +789,7 @@ const DEFAULT_PRODUCTS: Product[] = [
         name: "Used Auto Loan",
         type: "auto-loan",
         description: "Great rates on pre-owned vehicles",
-        imageUrl: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=800&q=80",
         attributes: [
             { label: "Up to", value: "$35,000" },
             { label: "As low as", value: "4.49%", subtext: "APR*†" }
@@ -816,7 +816,7 @@ const DEFAULT_PRODUCTS: Product[] = [
         name: "Auto Refinance",
         type: "auto-refi",
         description: "Lower your monthly payments by refinancing your auto loan",
-        imageUrl: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80",
         attributes: [
             { label: "Save up to", value: "$127", subtext: "/mo." },
             { label: "As low as", value: "4.99%", subtext: "APR*" }
@@ -1167,7 +1167,7 @@ export const DEFAULT_OFFERS: Offer[] = [
             { label: "Up to", value: "$40,000" },
             { label: "As low as", value: "3.62%", subtext: "APR*†" }
         ],
-        imageUrl: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",
         ctaText: "Learn More"
     },
     {
@@ -1181,7 +1181,7 @@ export const DEFAULT_OFFERS: Offer[] = [
             { label: "Up to", value: "$35,000" },
             { label: "As low as", value: "4.49%", subtext: "APR*†" }
         ],
-        imageUrl: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=800&q=80",
         ctaText: "Learn More"
     },
     {
@@ -1223,7 +1223,7 @@ export const DEFAULT_OFFERS: Offer[] = [
             { label: "Save up to", value: "$127", subtext: "/mo." },
             { label: "Or as low as", value: "4.99%", subtext: "APR*" }
         ],
-        imageUrl: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80",
         ctaText: "Learn More"
     },
     {

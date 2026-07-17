@@ -387,7 +387,7 @@ export function Q2ComposableWidget({ storefrontHref = "/storefront" }: { storefr
                                 {/* Hero Image — flush, no padding */}
                                 <div className="overflow-hidden">
                                     <img
-                                        src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                                        src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                                         alt={currentPage.offer.title}
                                         className="w-full h-[152px] object-cover"
                                     />
@@ -679,7 +679,7 @@ export function Q2ComposableWidget({ storefrontHref = "/storefront" }: { storefr
                     {/* Hero Image */}
                     <div className="rounded-lg overflow-hidden mb-4">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             className="w-full h-40 object-cover"
                         />
@@ -804,7 +804,7 @@ export function Q2ComposableWidget({ storefrontHref = "/storefront" }: { storefr
                     {/* Hero Image */}
                     <div className="rounded-lg overflow-hidden mb-4">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             className="w-full h-36 object-cover"
                         />
@@ -1100,7 +1100,7 @@ export function Q2ComposableWidget({ storefrontHref = "/storefront" }: { storefr
                     {/* Hero Image */}
                     <div className="rounded-lg overflow-hidden mb-4">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             className="w-full h-32 object-cover"
                         />
@@ -1187,7 +1187,7 @@ export function Q2ComposableWidget({ storefrontHref = "/storefront" }: { storefr
                 <div className="p-8 text-center">
                     <div className="w-48 h-32 mx-auto mb-6 rounded-lg overflow-hidden">
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=400&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=80"}
                             alt="Success"
                             className="w-full h-full object-cover"
                         />

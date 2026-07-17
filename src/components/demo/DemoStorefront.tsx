@@ -53,7 +53,7 @@ function OfferAsLargeCard({ offer }: { offer: Offer }) {
             heroValues={offerToHeroValues(offer)}
             imageUrl={
                 offer.imageUrl ??
-                "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"
+                "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"
             }
             ctaLabel={offer.ctaText}
             // Offer detail lives at /demo/offer/[id], which doesn't exist yet.

@@ -31,7 +31,7 @@ const PREQUAL_OFFERS: PrequalOffer[] = [
         minApr: 4.49,
         maxApr: 6.99,
         terms: [36, 48, 60, 72],
-        imageUrl: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",
         icon: Car,
         description: "Finance your new vehicle purchase with competitive rates."
     },

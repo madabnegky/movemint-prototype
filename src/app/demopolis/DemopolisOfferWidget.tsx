@@ -252,7 +252,7 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
                                 <div style={{ width: "100%", height: "152px", overflow: "hidden" }}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
-                                        src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                                        src={currentPage.offer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                                         alt={currentPage.offer.title}
                                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                     />
@@ -506,7 +506,7 @@ export function DemopolisOfferWidget({ onOfferAccepted }: DemopolisOfferWidgetPr
 
                     <div style={{ borderRadius: "var(--radius-md)", overflow: "hidden", marginBottom: "1rem" }}>
                         <img
-                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                            src={selectedOffer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                             alt={selectedOffer.title}
                             style={{ width: "100%", height: "160px", objectFit: "cover" }}
                         />

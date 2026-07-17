@@ -297,7 +297,7 @@ export default function StrangerApplyPage() {
                     <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
                         <div className="relative w-full aspect-[3/1]">
                             <img
-                                src={offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80"}
+                                src={offer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"}
                                 alt={offer.title}
                                 className="w-full h-full object-cover"
                             />
@@ -375,7 +375,7 @@ export default function StrangerApplyPage() {
                 {currentStep === 'review' && (
                     <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
                         <div className="relative w-full aspect-[4/1]">
-                            <img src={offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80"} alt={offer.title} className="w-full h-full object-cover" />
+                            <img src={offer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"} alt={offer.title} className="w-full h-full object-cover" />
                         </div>
 
                         <div className="p-6 lg:p-8">
@@ -558,7 +558,7 @@ export default function StrangerApplyPage() {
                 {currentStep === 'terms' && (
                     <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
                         <div className="relative w-full aspect-[4/1]">
-                            <img src={offer.imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80"} alt={offer.title} className="w-full h-full object-cover" />
+                            <img src={offer.imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"} alt={offer.title} className="w-full h-full object-cover" />
                         </div>
 
                         <div className="p-6 lg:p-8">

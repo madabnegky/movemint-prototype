@@ -30,7 +30,7 @@ const PREQUAL_OFFERS: Offer[] = [
             { label: "Up to", value: "$45,000" },
             { label: "As low as", value: "4.49%", subtext: "APR*" }
         ],
-        imageUrl: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",
         ctaText: "Review Offer",
         description: "Finance your new vehicle purchase with competitive rates.",
         featuredHeadline: "You\u2019re prequalified!",

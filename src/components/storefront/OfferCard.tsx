@@ -123,7 +123,7 @@ export function OfferCard({
             <div className="px-3 pb-1">
                 <div className="relative w-full aspect-[2/1] overflow-hidden rounded-lg">
                     <img
-                        src={imageUrl || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80"}
+                        src={imageUrl || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                         alt={title}
                         className={cn(
                             "absolute inset-0 w-full h-full object-cover object-center",
