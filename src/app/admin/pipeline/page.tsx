@@ -13,6 +13,7 @@ import {
 } from "./_lib/stages";
 import { computeMetrics, countMembers } from "./_lib/universe";
 import type { ListId, PipelineState } from "./_lib/types";
+import { GlobalSearch } from "./_components/GlobalSearch";
 
 const FUNNEL_ROWS: ListId[] = [
   "universe",
@@ -285,6 +286,8 @@ export default function PipelineDashboard() {
 
   return (
     <div className="space-y-6">
+      <GlobalSearch />
+
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         <Kpi
           label="Universe"
