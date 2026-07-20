@@ -142,54 +142,56 @@ function Funnel({ state }: { state: PipelineState }) {
             <Link
               key={id}
               href={`/admin/pipeline/stage/${id}`}
-              className="flex items-center gap-3 rounded-lg px-2 py-1 -mx-2 hover:bg-slate-50 transition-colors group"
+              className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3 rounded-lg px-2 py-1.5 sm:py-1 -mx-2 hover:bg-slate-50 transition-colors group"
             >
-              <div className="w-56 shrink-0 flex items-center gap-2 text-[13px] font-semibold text-slate-700">
+              <div className="w-full sm:w-56 shrink-0 flex items-center gap-2 text-[13px] font-semibold text-slate-700">
                 <span className="truncate group-hover:text-slate-900">{STAGE_LABELS[id]}</span>
                 <span className="ml-auto text-[10px] font-semibold text-slate-400 bg-slate-100 rounded px-1.5 py-0.5 tabular-nums">
                   {sizing ? "—" : `${Math.round((prob ?? 0) * 100)}%`}
                 </span>
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 w-full min-w-0">
+                <div className="flex-1 min-w-0">
+                  <div
+                    className="h-7 rounded-md overflow-hidden flex ring-1 ring-inset ring-slate-200 bg-slate-50"
+                    style={{ width: `${width}%`, minWidth: 24 }}
+                  >
+                    {total === 0 ? (
+                      <div className="w-full h-full flex items-center justify-center text-[11px] font-bold text-slate-400">
+                        0
+                      </div>
+                    ) : (
+                      <>
+                        {cu > 0 && (
+                          <div
+                            className="bg-emerald-500 h-full flex items-center justify-center text-[11px] font-bold text-white overflow-hidden"
+                            style={{ width: `${cuPct}%`, minWidth: cu > 0 ? 18 : 0 }}
+                          >
+                            {cu.toLocaleString()}
+                          </div>
+                        )}
+                        {bank > 0 && (
+                          <div
+                            className="bg-blue-500 h-full flex items-center justify-center text-[11px] font-bold text-white overflow-hidden"
+                            style={{ width: `${100 - cuPct}%`, minWidth: bank > 0 ? 18 : 0 }}
+                          >
+                            {bank.toLocaleString()}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
                 <div
-                  className="h-7 rounded-md overflow-hidden flex ring-1 ring-inset ring-slate-200 bg-slate-50"
-                  style={{ width: `${width}%`, minWidth: 24 }}
-                >
-                  {total === 0 ? (
-                    <div className="w-full h-full flex items-center justify-center text-[11px] font-bold text-slate-400">
-                      0
-                    </div>
-                  ) : (
-                    <>
-                      {cu > 0 && (
-                        <div
-                          className="bg-emerald-500 h-full flex items-center justify-center text-[11px] font-bold text-white overflow-hidden"
-                          style={{ width: `${cuPct}%`, minWidth: cu > 0 ? 18 : 0 }}
-                        >
-                          {cu.toLocaleString()}
-                        </div>
-                      )}
-                      {bank > 0 && (
-                        <div
-                          className="bg-blue-500 h-full flex items-center justify-center text-[11px] font-bold text-white overflow-hidden"
-                          style={{ width: `${100 - cuPct}%`, minWidth: bank > 0 ? 18 : 0 }}
-                        >
-                          {bank.toLocaleString()}
-                        </div>
-                      )}
-                    </>
+                  className={cn(
+                    "w-20 shrink-0 text-right text-[13px] font-bold tabular-nums",
+                    sizing ? "text-slate-400" : "text-emerald-600",
                   )}
+                >
+                  {dollars > 0 ? `${sizing ? "~" : ""}${fmtMoney(dollars)}` : "—"}
                 </div>
               </div>
-              <div
-                className={cn(
-                  "w-20 shrink-0 text-right text-[13px] font-bold tabular-nums",
-                  sizing ? "text-slate-400" : "text-emerald-600",
-                )}
-              >
-                {dollars > 0 ? `${sizing ? "~" : ""}${fmtMoney(dollars)}` : "—"}
-              </div>
-              <div className="w-36 shrink-0 text-xs text-slate-400 tabular-nums truncate">
+              <div className="hidden lg:block w-36 shrink-0 text-xs text-slate-400 tabular-nums truncate">
                 {cu.toLocaleString()} CU · {bank.toLocaleString()} bank
               </div>
             </Link>
