@@ -1,0 +1,598 @@
+# Workbook Import Report
+
+Generated: 2026-07-20T22:28:45.728Z
+Universe: 4257 banks + 4336 CUs
+
+## Per-sheet match results
+
+| Sheet | Rows | Matched | Skipped |
+|---|---|---|---|
+| Addressable Banks | 881 | 768 | 113 |
+| Addressable CUs | 880 | 817 | 63 |
+| MQL | 384 | 262 | 122 |
+| SQL | 7 | 6 | 1 |
+| sales stage | 178 | 145 | 33 |
+
+## Seeded pipeline state
+
+- Records with any data: 1450
+- Platform fit: 1320
+- mql: 171
+- short-term-nurture: 81
+- long-term-nurture: 8
+- bad-contact-info: 5
+- signed-with-competitor: 1
+- warm-lead: 24
+- qualified: 6
+- discovery-scheduled: 7
+- discovery-complete: 1
+- demo-completed: 1
+- proposal-sent: 4
+- verbal-commitment: 2
+- closed-lost: 2
+- closed-won: 3
+
+## Non-exact matches — spot-check these (150)
+
+Accepted via containment/fuzzy/disambiguation rather than an exact name match.
+
+- Queenstown Bank → **The Queenstown Bank of Maryland** (Queenstown, MD) via `contain+city` — _Addressable Banks_
+- Fidelity Bank → **Fidelity Bank & Trust** (Dubuque, IA) via `name+assets` — _Addressable Banks_
+- Think Bank → **Think Mutual Bank** (Rochester, MN) via `contain+city` — _Addressable Banks_
+- Community Bank, National Association → **Community Bank, National Association** (Canton, NY) via `name+assets` — _Addressable Banks_
+- Greenville Federal Bank → **Greenville Federal** (Greenville, OH) via `name+city+assets` — _Addressable Banks_
+- Windsor Federal Savings & Loan → **Windsor Federal Bank** (Windsor, CT) via `contain+city` — _Addressable Banks_
+- Peoples Bank → **Peoples Bank** (Bellingham, WA) via `name+assets` — _Addressable Banks_
+- Citizens National Bank → **Citizens National Bank** (Sevierville, TN) via `name+assets` — _Addressable Banks_
+- KEB Hana Bank USA, National Association → **Hana Bank USA, National Association** (Fort Lee, NJ) via `contain+city` — _Addressable Banks_
+- R Bank Texas → **R Bank** (Round Rock, TX) via `contain+city` — _Addressable Banks_
+- Washington State Bank → **Washington State Bank** (Washington, LA) via `name+city+assets` — _Addressable Banks_
+- Alliance Bank → **Alliance Bank** (Lake City, MN) via `name+assets` — _Addressable Banks_
+- Clinton National Bank → **The Clinton National Bank** (Clinton, IA) via `name+city+assets` — _Addressable Banks_
+- Clinton Savings Bank → **Clinton Savings Bank** (Clinton, MA) via `name+city+assets` — _Addressable Banks_
+- Commercial Bank → **Commercial Bank** (Ithaca, MI) via `name+assets` — _Addressable Banks_
+- The Malvern National Bank → **The Malvern National Bank** (Malvern, AR) via `name+city+assets` — _Addressable Banks_
+- Wauchula State Bank → **First National Bank of Wauchula** (Wauchula, FL) via `contain+city` — _Addressable Banks_
+- Lone Star National Bank → **Lone Star National Bank** (Pharr, TX) via `name+assets` — _Addressable Banks_
+- Citizens Community Bank → **Citizens Community Bank** (Mascoutah, IL) via `name+assets` — _Addressable Banks_
+- Enterprise Bank → **Enterprise Bank** (Allison Park, PA) via `name+assets` — _Addressable Banks_
+- First Oklahoma Bank → **First Oklahoma Bank** (Jenks, OK) via `name+assets` — _Addressable Banks_
+- Independent Bank Corporation → **Independent Bank** (Grand Rapids, MI) via `contain+city` — _Addressable Banks_
+- MORGANTOWN BANK & TRUST CO → **Morgantown Bank & Trust Company, Incorporated** (Morgantown, KY) via `containment+assets` — _Addressable Banks_
+- Transportation Alliance Bank Inc. → **Transportation Alliance Bank, Inc. d/b/a TAB Bank** (Ogden, UT) via `contain+city` — _Addressable Banks_
+- Sonora Bank → **The First National Bank of Sonora** (Sonora, TX) via `contain+city` — _Addressable Banks_
+- Community National Bank → **Community National Bank** (Derby, VT) via `name+assets` — _Addressable Banks_
+- Taylor Bank → **Calvin B. Taylor Banking Company of Berlin, Maryland** (Berlin, MD) via `contain+city` — _Addressable Banks_
+- Fieldpoint Private Trust LLC → **Fieldpoint Private Bank & Trust** (Greenwich, CT) via `contain+city` — _Addressable Banks_
+- Northeast Bank → **Northeast Bank** (Portland, ME) via `name+assets` — _Addressable Banks_
+- Institution for Savings → **Institution for Savings in Newburyport and Its Vicinity** (Newburyport, MA) via `contain+city` — _Addressable Banks_
+- The Peoples Bank → **The Peoples Bank Co.** (Coldwater, OH) via `name+assets` — _Addressable Banks_
+- First Western Bank → **First Western Bank** (Booneville, AR) via `name+assets` — _Addressable Banks_
+- LOGAN B&TC → **Logan Bank & Trust Company** (Logan, WV) via `name+city+assets` — _Addressable Banks_
+- PACIFIC COAST BKR BK → **Pacific Coast Bankers' Bank** (Walnut Creek, CA) via `fuzzy(0.50)` — _Addressable Banks_
+- AMERICAN CMNTY B&T → **American Community Bank & Trust** (Woodstock, IL) via `contain+city` — _Addressable Banks_
+- NORTHFIELD SVG BK → **Northfield Savings Bank** (Northfield, VT) via `contain+city` — _Addressable Banks_
+- EARLHAM SVG BK → **Earlham Savings Bank** (West Des Moines, IA) via `contain+city` — _Addressable Banks_
+- ANDOVER BK → **The Andover Bank** (Andover, OH) via `name+city+assets` — _Addressable Banks_
+- FIRST ST BK OF THE FL → **First State Bank** (Key West, FL) via `contain+city` — _Addressable Banks_
+- STURDY SVG BK → **Sturdy Savings Bank** (Stone Harbor, NJ) via `contain+city` — _Addressable Banks_
+- WILMINGTON SVG BK → **The Wilmington Savings Bank** (Wilmington, OH) via `containment+assets` — _Addressable Banks_
+- KAW VALLEY ST B&TC OF WAMEGO K → **Kaw Valley State Bank and Trust Company** (Wamego, KS) via `contain+city` — _Addressable Banks_
+- Cedar Rapids Bank and Trust Company → **Cedar Rapids Bank and Trust Company** (Cedar Rapids, IA) via `name+city+assets` — _Addressable Banks_
+- Fortis Private Bank → **Fortis Bank** (Denver, CO) via `contain+city` — _Addressable Banks_
+- Franklin Savings Bank → **Franklin Savings Bank** (Franklin, NH) via `name+city+assets` — _Addressable Banks_
+- Greenville Savings Bank → **Greenville Savings Bank** (Greenville, PA) via `name+city+assets` — _Addressable Banks_
+- North Shore Bank, F S B → **North Shore Bank** (Brookfield, WI) via `contain+city` — _Addressable Banks_
+- Orange County Trust Co → **Orange Bank & Trust Company** (Middletown, NY) via `contain+city` — _Addressable Banks_
+- The Pueblo Bank and Trust Company → **PUEBLO GOVERNMENT AGENCIES** (Pueblo, CO) via `contain+city` — _Addressable Banks_
+- Stockman Bank → **Stockman Bank of Montana** (Miles City, MT) via `contain+city` — _Addressable Banks_
+- Five Star Bank → **Five Star Bank** (Rochester, NY) via `name+assets` — _Addressable Banks_
+- Nicolet National Bank Deposit Platform → **Nicolet National Bank** (Green Bay, WI) via `contain+city` — _Addressable Banks_
+- Rockland Trust Company → **Rockland Trust Company** (Rockland, MA) via `name+city+assets` — _Addressable Banks_
+- UNITED ROOSEVELT SVG BK → **United Roosevelt Savings Bank** (Carteret, NJ) via `contain+city` — _Addressable Banks_
+- FARMERS B&TC → **Farmers State Bank** (Lagrange, IN) via `name+assets` — _Addressable Banks_
+- FIRST FED CMNTY BK NA → **First Federal Community Bank, National Association** (Dover, OH) via `contain+city` — _Addressable Banks_
+- PEOPLES B&T → **Peoples Bank & Trust** (Pana, IL) via `contain+city` — _Addressable Banks_
+- EMBASSY BK FOR THE LEHIGH VALL → **Embassy Bank for the Lehigh Valley** (Bethlehem, PA) via `fuzzy(0.60)` — _Addressable Banks_
+- MAIN ST BK CORP → **Main Street Bank Corp.** (Wooster, OH) via `contain+city` — _Addressable Banks_
+- FIRST HOPE BK A NAT BKG ASSN → **First Hope Bank, A National Banking Association** (Hope, NJ) via `containment+assets` — _Addressable Banks_
+- BANK OF HILLSBORO NA → **The Citizens National Bank of Hillsboro** (Hillsboro, TX) via `fuzzy(0.50)` — _Addressable Banks_
+- RONDOUT SVG BK → **Rondout Savings Bank** (Kingston, NY) via `contain+city` — _Addressable Banks_
+- ROLLING HILLS B&T → **Rolling Hills Bank & Trust** (Atlantic, IA) via `contain+city` — _Addressable Banks_
+- FIRST SVG BK → **First Savings Bank** (Beresford, SD) via `contain+city` — _Addressable Banks_
+- FARMERS BK FRANKFORT IN → **First National Bank in Frankfort** (Frankfort, KS) via `fuzzy(0.50)` — _Addressable Banks_
+- CITIZENS ST BK OF NEW CASTLE → **Citizens State Bank of New Castle, Indiana** (New Castle, IN) via `contain+city` — _Addressable Banks_
+- WELLS RIVER SVG BK → **Wells River Savings Bank** (Wells River, VT) via `contain+city` — _Addressable Banks_
+- ALDEN ST BK → **Alden State Bank** (Alden, NY) via `name+city+assets` — _Addressable Banks_
+- BLACKHAWK B&T → **Blackhawk Bank & Trust** (Milan, IL) via `contain+city` — _Addressable Banks_
+- GREENFIELD CO-OP BK → **Greenfield Banking Company** (Greenfield, IN) via `containment+assets` — _Addressable Banks_
+- AMERICAN FED BK → **American Federal Bank** (Fargo, ND) via `contain+city` — _Addressable Banks_
+- FARMERS ST BK → **Farmers State Bank** (Marion, IA) via `name+city+assets` — _Addressable Banks_
+- SOUTH OTTUMWA SVG BK → **South Ottumwa Savings Bank** (Ottumwa, IA) via `contain+city` — _Addressable Banks_
+- STERLING FSB → **Sterling State Bank** (Austin, MN) via `name+assets` — _Addressable Banks_
+- Credit Union 1 → **CREDIT UNION 1** (Anchorage, AK) via `name+assets` — _Addressable CUs_
+- BMI Federal Credit Union;Financial Partners Credit Union → **BMI** (Dublin, OH) via `contain+city` — _Addressable CUs_
+- Community First Credit Union of Florida → **FIRST FLORIDA** (Jacksonville, FL) via `contain+city` — _Addressable CUs_
+- Family Savings Credit Union → **FAMILY SAVINGS** (Rainbow City, AL) via `name+assets` — _Addressable CUs_
+- Advantage One Credit Union → **ADVANTAGE ONE** (Brownstown, MI) via `name+assets` — _Addressable CUs_
+- Envista Federal Credit Union;Envista Credit Union → **ENVISTA** (Topeka, KS) via `contain+city` — _Addressable CUs_
+- Atlanta Postal Credit Union → **CREDIT UNION OF ATLANTA** (Atlanta, GA) via `contain+city` — _Addressable CUs_
+- Self-Help Federal Credit Union (CA) → **SELF-HELP** (Durham, NC) via `name+assets` — _Addressable CUs_
+- Public Service Credit Union, Michigan → **PUBLIC SERVICE** (Romulus, MI) via `contain+city` — _Addressable CUs_
+- Landmark Credit Union → **LANDMARK** (Brookfield, WI) via `name+assets` — _Addressable CUs_
+- Mission Fed Credit Union → **MISSION** (San Diego, CA) via `contain+city` — _Addressable CUs_
+- Summit Credit Union → **THE SUMMIT** (ROCHESTER, NY) via `name+assets` — _Addressable CUs_
+- Consumers Credit Union → **CONSUMERS** (lake Forest, IL) via `name+assets` — _Addressable CUs_
+- Guardian Credit Union → **GUARDIAN** (Oak Creek, WI) via `name+assets` — _Addressable CUs_
+- Great Lakes Credit Union → **GREAT LAKES** (BANNOCKBURN, IL) via `name+assets` — _Addressable CUs_
+- The Tennessee Credit Union → **TENNESSEE EMPLOYEES** (Nashville, TN) via `fuzzy(0.50)` — _Addressable CUs_
+- Park Side Credit Union → **PARK SIDE FINANCIAL** (Whitefish, MT) via `contain+city` — _Addressable CUs_
+- Alliance Credit Union Texas → **ALLIANCE** (Lubbock, TX) via `contain+city` — _Addressable CUs_
+- Signal Federal Credit Union → **SIGNAL FINANCIAL** (Kensington, MD) via `contain+city` — _Addressable CUs_
+- State Employees Credit Union of New Mexico → **STATE EMPLOYEES** (Santa Fe, NM) via `contain+city` — _Addressable CUs_
+- Harvard University Employees Credit Union (HUECU) → **HARVARD** (Cambridge, MA) via `contain+city` — _Addressable CUs_
+- Public Service Credit Union → **PUBLIC SERVICE** (Romulus, MI) via `name+assets` — _Addressable CUs_
+- Garden Savings Federal Credit Union → **GARDEN SAVINGS** (PARSIPPANY, NJ) via `name+assets` — _Addressable CUs_
+- Evergreen Credit Union → **EVERGREEN** (Portland, ME) via `name+assets` — _Addressable CUs_
+- Great Lakes Credit Union → **GREAT LAKES** (BANNOCKBURN, IL) via `name+assets` — _Addressable CUs_
+- Patriot Federal Credit Union → **PATRIOT** (CHAMBERSBURG, PA) via `name+assets` — _Addressable CUs_
+- The County Federal Credit Union → **THE COUNTY** (Presque Isle, ME) via `name+assets` — _Addressable CUs_
+- Widget Federal Credit Union DBA Widget Financial → **WIDGET** (Erie, PA) via `containment+assets` — _Addressable CUs_
+- Metro CU Federal Credit Union → **METRO** (Chelsea, MA) via `name+assets` — _Addressable CUs_
+- Carolina Trust Federal Credit Union → **CAROLINA TRUST** (MYRTLE BEACH, SC) via `name+assets` — _Addressable CUs_
+- Mutual Federal Credit Union → **MUTUAL** (Vicksburg, MS) via `name+assets` — _Addressable CUs_
+- Century Federal Credit Union → **CENTURY** (Independence, OH) via `name+assets` — _Addressable CUs_
+- Sun Federal Credit Union → **SUN** (Maumee, OH) via `name+assets` — _Addressable CUs_
+- Campus Federal Credit Union → **CAMPUS** (Baton Rouge, LA) via `name+assets` — _Addressable CUs_
+- Credit Union 1 → **CREDIT UNION 1** (Lombard, IL) via `name+assets` — _Addressable CUs_
+- The Summit Federal Credit Union → **THE SUMMIT** (ROCHESTER, NY) via `name+assets` — _Addressable CUs_
+- Advantage Federal Credit Union → **ADVANTAGE** (Rochester, NY) via `name+assets` — _Addressable CUs_
+- Horizon Credit Union → **HORIZON** (Spokane Valley, WA) via `name+assets` — _Addressable CUs_
+- CU Hawaii Federal Credit Union → **CU HAWAII** (Hilo, HI) via `name+assets` — _Addressable CUs_
+- Metro Credit Union → **METRO** (Chelsea, MA) via `name+assets` — _Addressable CUs_
+- The People's Credit Union → **THE PEOPLES** (Middletown, RI) via `name+assets` — _Addressable CUs_
+- Summit Credit Union → **SUMMIT** (Madison, WI) via `name+assets` — _Addressable CUs_
+- Provident Credit Union → **PROVIDENT** (REDWOOD CITY, CA) via `name+assets` — _Addressable CUs_
+- Capital Credit Union → **CAPITAL** (Bismarck, ND) via `name+assets` — _Addressable CUs_
+- Alliance Credit Union → **ALLIANCE** (Lubbock, TX) via `name+assets` — _Addressable CUs_
+- Alliance Credit Union → **ALLIANCE** (Lubbock, TX) via `name+assets` — _Addressable CUs_
+- Members 1st Credit Union → **MEMBERS 1ST** (Enola, PA) via `name+assets` — _Addressable CUs_
+- Members 1st Federal Credit Union → **MEMBERS 1ST** (Enola, PA) via `name+assets` — _Addressable CUs_
+- Guardian Credit Union → **GUARDIAN** (Oak Creek, WI) via `name+assets` — _Addressable CUs_
+- Hope Federal Credit Union → **HOPE** (JACKSON, MS) via `name+assets` — _Addressable CUs_
+- Family Savings Credit Union → **FAMILY SAVINGS** (Rainbow City, AL) via `name+assets` — _Addressable CUs_
+- Colorado Credit Union → **COLORADO** (Littleton, CO) via `name+assets` — _Addressable CUs_
+- Members Choice Credit Union → **MEMBERS CHOICE** (Houston, TX) via `name+assets` — _Addressable CUs_
+- Champion Credit Union → **CHAMPION** (Canton, NC) via `name+assets` — _Addressable CUs_
+- The County Federal Credit Union → **THE COUNTY** (Presque Isle, ME) via `name+assets` — _Addressable CUs_
+- Innovations FCU → **INNOVATIONS FINANCIAL** (PANAMA CITY, FL) via `contain` — _Addressable CUs_
+- Mountain View Federal Credit Union → **MOUNTAIN** (Waynesville, NC) via `contain` — _MQL_
+- TopLine Federal Credit Union → **TOPLINE FINANCIAL** (Maple Grove, MN) via `contain` — _MQL_
+- Sullivan Financial Credit Union → **FINANCIAL TRUST** (Cheektowaga, NY) via `contain` — _MQL_
+- UNIFY Financial Credit Union → **FINANCIAL TRUST** (Cheektowaga, NY) via `contain` — _MQL_
+- Seattle Credit Union → **SEATTLE METROPOLITAN** (Seattle, WA) via `contain` — _MQL_
+- Linn Area Credit Union → **AREA** (ABERDEEN, SD) via `contain` — _MQL_
+- MWA Financial Federal Credit Union → **FINANCIAL TRUST** (Cheektowaga, NY) via `contain` — _MQL_
+- Cape Cod 5 Credit Union → **CAPE** (Clarksburg, WV) via `contain` — _MQL_
+- BR Telco Federal Credit Union → **TELCO** (TARBORO, NC) via `contain` — _MQL_
+- Advanced Technology Federal Credit Union → **TECHNOLOGY** (SAN JOSE, CA) via `contain` — _MQL_
+- Financial Advantage Federal Credit Union → **ADVANTAGE FINANCIAL** (WASHINGTON, DC) via `fuzzy(1.00)` — _MQL_
+- US Eagle Federal Credit Union → **EAGLE** (ATCHISON, KS) via `contain` — _MQL_
+- Barbados Public Workers Coop CU Ltd → **WORKERS** (Littleton, MA) via `contain` — _MQL_
+- HAPO → **HAPO COMMUNITY** (Richland, WA) via `contain` — _MQL_
+- Mayo Credit Union → **MAYO EMPLOYEES** (ROCHESTER, MN) via `contain` — _MQL_
+- Horizon Credit Union (WA) → **HORIZON** (Spokane Valley, WA) via `name+state` — _SQL_
+- Capital Credit Union (WI) - Digital Storefront → **CAPITAL** (Green Bay, WI) via `name+state` — _sales stage_
+- Heartland Credit Union (WI) - Digital Storefront → **HEARTLAND** (Madison, WI) via `name+state` — _sales stage_
+- MY CREDIT UNION (MN) - Digital Storefront → **MY** (BLOOMINGTON, MN) via `name+state` — _sales stage_
+- Horizon Credit Union (WA) → **HORIZON** (Spokane Valley, WA) via `name+state` — _sales stage_
+
+## Collapsed duplicates (69)
+
+- WESTCONSIN (cu-66742): had "mql", SQL sheet says "qualified" → kept "qualified"
+- TINKER (cu-24524): had "mql", SQL sheet says "qualified" → kept "qualified"
+- MONTEREY (cu-97071): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- CALIFORNIA COAST (cu-66584): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- MICHIGAN STATE UNIVERSITY (cu-23279): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- CREDIT UNION WEST (cu-68421): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- BAYER HERITAGE (cu-11836): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- LAUNCH CREDIT UNION (cu-68716): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- TUCSON (cu-2157): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- TRANSCEND (cu-68666): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- DENVER COMMUNITY CU D.B.A. ZING CU (cu-68616): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- CARTER (cu-9164): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- WEST COMMUNITY (cu-62801): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- EMBERS (cu-62038): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- TOPSIDE (cu-14754): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- ENBRIGHT (cu-68148): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- FIRST U.S. COMMUNITY (cu-68474): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- UNITED TELETECH FINANCIAL (cu-18195): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- HAWAIIUSA (cu-1815): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- GFA (cu-24279): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- HENRICO (cu-18175): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- EFCU FINANCIAL (cu-13): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- VIA CREDIT UNION (cu-68572): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- MID AMERICAN (cu-65378): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- LEVO (cu-60): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- PROFED (cu-17012): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- INOVA (cu-4968): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- PATHWAYS FINANCIAL (cu-66376): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- TRAX (cu-24703): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- PIMA (cu-7316): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- BMI (cu-1199): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- KOHLER (cu-66872): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- GREATER IOWA (cu-64203): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- UNIVERSITY OF KENTUCKY (cu-24165): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- WESTERRA (cu-65788): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- OKLAHOMA CENTRAL (cu-62322): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- CONNEXUS (cu-66538): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- TRAVIS (cu-68429): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- BLACK HILLS (cu-4365): had "mql", sales stage sheet says "short-term-nurture" → kept "short-term-nurture"
+- TRIUS (cu-17999): had "mql", sales stage sheet says "long-term-nurture" → kept "long-term-nurture"
+- SELFRELIANCE (cu-7346): had "mql", sales stage sheet says "long-term-nurture" → kept "long-term-nurture"
+- FARM CREDIT EMPLOYEES (cu-22132): had "mql", sales stage sheet says "long-term-nurture" → kept "long-term-nurture"
+- UNITED STATES SENATE (cu-624): had "mql", sales stage sheet says "long-term-nurture" → kept "long-term-nurture"
+- TRULIANT (cu-7840): had "mql", sales stage sheet says "long-term-nurture" → kept "long-term-nurture"
+- TRUITY (cu-3130): had "mql", sales stage sheet says "discovery-scheduled" → kept "discovery-scheduled"
+- FOX COMMUNITIES (cu-66731): had "mql", sales stage sheet says "discovery-scheduled" → kept "discovery-scheduled"
+- ARDENT (cu-22637): had "mql", sales stage sheet says "discovery-scheduled" → kept "discovery-scheduled"
+- FORTRESS (cu-7392): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- FIRST FINANCIAL OF MARYLAND (cu-8554): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- GERBER (cu-6832): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- UNIVERSITY OF TOLEDO (cu-16174): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- TELCO COMMUNITY CREDIT UNION (cu-63545): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- LAMPCO (cu-15248): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- RIZE (cu-7835): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- SIU (cu-60279): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- ALOHA PACIFIC (cu-1845): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- SIGNAL FINANCIAL (cu-5571): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- ZEAL (cu-62426): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- NUMERICA (cu-66841): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- HUGHES (cu-7531): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- PATELCO (cu-68579): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- IDAHO CENTRAL (cu-63194): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- DOW (cu-60137): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- ENDURANCE (cu-13898): had "mql", sales stage sheet says "warm-lead" → kept "warm-lead"
+- HUDSON RIVER COMMUNITY (cu-24987): had "mql", sales stage sheet says "bad-contact-info" → kept "bad-contact-info"
+- FRONTIER (cu-68376): had "mql", sales stage sheet says "bad-contact-info" → kept "bad-contact-info"
+- CREDIT UNION OF AMERICA (cu-60062): had "mql", sales stage sheet says "demo-completed" → kept "demo-completed"
+- FOOTHILL (cu-12425): had "mql", sales stage sheet says "proposal-sent" → kept "proposal-sent"
+- PIONEER (cu-9247): had "mql", sales stage sheet says "verbal-commitment" → kept "verbal-commitment"
+
+## Unmatched / needs human review (332)
+
+These rows were NOT imported. Resolve manually in the UI (find the FI and set
+its stage/owner/fit) or fix the workbook and re-run the import.
+
+- **City National Bank** (Charleston) — _Addressable Banks_: ambiguous name
+- **Mifflinburg Bank & Trust Co** (Mifflinburg) — _Addressable Banks_: no confident match (best 0.00)
+- **North Shore Bank** (Peabody) — _Addressable Banks_: ambiguous name
+- **Central Valley Community Bank** (Fresno) — _Addressable Banks_: no confident match (best 0.25 = Community West Bank, Fresno CA)
+- **Farmers National Bank** (Canfield) — _Addressable Banks_: ambiguous name
+- **City National Bank** (Lawton) — _Addressable Banks_: ambiguous name
+- **1st Security Bank** (Mountlake Terrace) — _Addressable Banks_: ambiguous name
+- **FNB Community Bank** (Fairfield) — _Addressable Banks_: ambiguous name
+- **Farmers State Bank** (Peyton) — _Addressable Banks_: ambiguous name
+- **State Bank of India (California)** (Los Angeles) — _Addressable Banks_: ambiguous name
+- **Two Rivers Bank & Trust** (Burlington) — _Addressable Banks_: no confident match (best 0.00)
+- **Bank of Southern California, N.A.** (San Diego) — _Addressable Banks_: no confident match (best 0.33 = California Bank of Commerce, National Association, San Diego CA)
+- **Citizens National Bank, N.A.** (Bossier City) — _Addressable Banks_: ambiguous name
+- **Community Bank & Trust** (Waco) — _Addressable Banks_: ambiguous name
+- **Farmers Exchange Bank** (Cherokee) — _Addressable Banks_: no confident match (best 0.00)
+- **Farmers State Bank** (Waupaca) — _Addressable Banks_: ambiguous name
+- **The Washington Trust Co** (Westerly) — _Addressable Banks_: ambiguous name
+- **FIRST NATIONAL BANK & TRUST CO. OF MC ALESTER** (McAlester) — _Addressable Banks_: no confident match (best 0.25 = First National Bank & Trust Company of McAlester, Mcalester OK)
+- **Union Bank** (Lake Odessa) — _Addressable Banks_: empty name after normalization
+- **First Liberty Bank** (The Village) — _Addressable Banks_: ambiguous name
+- **Peapack-Gladstone Bank** (Bedminster) — _Addressable Banks_: no confident match (best 0.33 = Peapack Private Bank & Trust, Bedminster NJ)
+- **Servis1st Bank** (Birmingham) — _Addressable Banks_: no confident match (best 0.00)
+- **Eagle Bancorp, Inc.** (Bethesda) — _Addressable Banks_: ambiguous name
+- **F&M Bank** (Timberville) — _Addressable Banks_: ambiguous name
+- **Field & Main Bank** (Henderson) — _Addressable Banks_: no confident match (best 0.00)
+- **First National Bank** (Howell) — _Addressable Banks_: ambiguous name
+- **First Bank Texas** (Willow Park) — _Addressable Banks_: ambiguous name
+- **City National Bank & Trust Company** (Lawton) — _Addressable Banks_: ambiguous name
+- **Community Bank** (Ontario) — _Addressable Banks_: ambiguous name
+- **FRONTIER BK OF TX** (Elgin) — _Addressable Banks_: no confident match (best 0.33 = Frontier Bank of Texas, Elgin TX)
+- **Union Savings Bank** (Danbury) — _Addressable Banks_: empty name after normalization
+- **TRADITION CAP BK** (Wayzata) — _Addressable Banks_: no confident match (best 0.33 = Tradition Capital Bank, Wayzata MN)
+- **VANTAGE BK TX** (San Antonio) — _Addressable Banks_: no confident match (best 0.33 = Vantage Bank Texas, San Antonio TX)
+- **BANK OF FRANKLIN CTY** (Washington) — _Addressable Banks_: no confident match (best 0.33 = Bank of Franklin County, Washington MO)
+- **STATE SVG BK** (West Des Moines) — _Addressable Banks_: no confident match (best 0.00)
+- **ENNIS ST BK** (Ennis) — _Addressable Banks_: no confident match (best 0.00)
+- **SOUTH LA BK** (Houma) — _Addressable Banks_: no confident match (best 0.33 = South Louisiana Bank, Houma LA)
+- **TEXAS SCTY BK** (Dallas) — _Addressable Banks_: no confident match (best 0.33 = Texas Capital Bank, Dallas TX)
+- **COMMUNITY PTNRS SVGS BK** (Salem) — _Addressable Banks_: no confident match (best 0.33 = Community Partners Savings Bank, Salem IL)
+- **FIRST SCTY B&TC** (Charles City) — _Addressable Banks_: no confident match (best 0.33 = First Security Bank and Trust Company, Charles City IA)
+- **FIRST GEN BK** (Rowland Heights) — _Addressable Banks_: no confident match (best 0.33 = First General Bank, Rowland Heights CA)
+- **ALBANY B&TC NA** (Chicago) — _Addressable Banks_: no confident match (best 0.00)
+- **UNION ST BK** (Everest) — _Addressable Banks_: empty name after normalization
+- **South Carolina Community Bank** (Columbia) — _Addressable Banks_: no confident match (best 0.00)
+- **Flagship Community Bank** (Oldsmar) — _Addressable Banks_: no confident match (best 0.00)
+- **First National Bank & Trust Company of Okmulgee** (Okmulgee) — _Addressable Banks_: no confident match (best 0.00)
+- **Bank Of The Ozarks** (Little Rock) — _Addressable Banks_: no confident match (best 0.00)
+- **BANK 34** (Las Cruces) — _Addressable Banks_: no confident match (best 0.00)
+- **Bank Of Putnam County** (Cookeville) — _Addressable Banks_: ambiguous name
+- **Central National Bank** (Enid) — _Addressable Banks_: ambiguous name
+- **Commercial Bank** (Saint Loius) — _Addressable Banks_: ambiguous name
+- **Dean Cooperative Bank** (Franklin) — _Addressable Banks_: no confident match (best 0.33 = Dean Co-operative Bank, Franklin MA)
+- **Farmers & Merchants National Bank** (Nashville) — _Addressable Banks_: ambiguous name
+- **First Bank** (Creve Coeur) — _Addressable Banks_: ambiguous name
+- **First Bank Financial Centre** (Oconomowoc) — _Addressable Banks_: no confident match (best 0.00)
+- **Home Bank** (Martinsville) — _Addressable Banks_: ambiguous name
+- **Link Bank** (Camp Hill) — _Addressable Banks_: no confident match (best 0.00)
+- **Premier Bank Rochester** (Rochester) — _Addressable Banks_: no confident match (best 0.00)
+- **Santa Cruz County Bank** (Santa Cruz) — _Addressable Banks_: no confident match (best 0.00)
+- **Peoples Trust** (Saint Albans City) — _Addressable Banks_: ambiguous name
+- **Security Bank of KC** (Kansas City) — _Addressable Banks_: no confident match (best 0.25 = Security Bank of Kansas City, Kansas City KS)
+- **The First Bank and Trust Company** (Abingdon) — _Addressable Banks_: ambiguous name
+- **North Shore Bank** (Duluth) — _Addressable Banks_: ambiguous name
+- **PARTNERS BK OF CA** (Mission Viejo) — _Addressable Banks_: no confident match (best 0.33 = Partners Bank of California, Mission Viejo CA)
+- **American Bank & Trust** (Wessington Springs) — _Addressable Banks_: ambiguous name
+- **The Federal Savings Bank** (Chicago) — _Addressable Banks_: empty name after normalization
+- **Bank of Charles Town** (Charles Town) — _Addressable Banks_: no confident match (best 0.00)
+- **FIRST FED BK OF KS CITY** (Lees Summit) — _Addressable Banks_: no confident match (best 0.40 = First Federal Bank of Kansas City, Lees Summit MO)
+- **CENTRAL BK IL** (Geneseo) — _Addressable Banks_: no confident match (best 0.33 = Central Bank Illinois, Geneseo IL)
+- **BANK OF GREENE CTY** (Catskill) — _Addressable Banks_: no confident match (best 0.33 = The Bank of Greene County, Catskill NY)
+- **UNION ST BK** (Arkansas City) — _Addressable Banks_: empty name after normalization
+- **HANOVER COMM BK** (Garden City Park) — _Addressable Banks_: no confident match (best 0.33 = Hanover Community Bank, Garden City Park NY)
+- **BANK OF SF** (San Francisco) — _Addressable Banks_: no confident match (best 0.00)
+- **CORNERSTONE CAP BK SSB** (Houston) — _Addressable Banks_: no confident match (best 0.33 = Cornerstone Capital Bank, SSB, Houston TX)
+- **PACIFIC ALLI BK** (San Gabriel) — _Addressable Banks_: no confident match (best 0.33 = Pacific Alliance Bank, San Gabriel CA)
+- **COMMUNITY NAT B&T TX** (Corsicana) — _Addressable Banks_: no confident match (best 0.25 = Community National Bank & Trust of Texas, Corsicana TX)
+- **BANCORP BK NA** (Sioux Falls) — _Addressable Banks_: empty name after normalization
+- **SAVINGS BK** (Wakefield) — _Addressable Banks_: empty name after normalization
+- **SAVINGS BK** (Circleville) — _Addressable Banks_: empty name after normalization
+- **STATE BK** (Brownsburg) — _Addressable Banks_: empty name after normalization
+- **BANK OF EDMONSON CTY** (Brownsville) — _Addressable Banks_: no confident match (best 0.33 = Bank of Edmonson County, Brownsville KY)
+- **CLACKAMAS CTY BK** (Sandy) — _Addressable Banks_: no confident match (best 0.33 = Clackamas County Bank, Sandy OR)
+- **FIRST NE BK** (Valley) — _Addressable Banks_: no confident match (best 0.33 = First Nebraska Bank, Valley NE)
+- **VALLEY BK OF NV** (North Las Vegas) — _Addressable Banks_: no confident match (best 0.33 = Valley Bank of Nevada, North Las Vegas NV)
+- **LIBERTY BK MN** (Saint Cloud) — _Addressable Banks_: no confident match (best 0.33 = Liberty Bank Minnesota, Saint Cloud MN)
+- **MIDWEST RGNL BK** (Clayton) — _Addressable Banks_: no confident match (best 0.33 = Midwest Regional Bank, Clayton MO)
+- **BANK OF CMRC** (Duncan) — _Addressable Banks_: no confident match (best 0.00)
+- **SHINHAN BK AMER** (New York) — _Addressable Banks_: no confident match (best 0.33 = Shinhan Bank America, New York NY)
+- **FIRST CENT ST BK** (De Witt) — _Addressable Banks_: no confident match (best 0.00)
+- **SUMITOMO MITSUI TR BK USA** (Hoboken) — _Addressable Banks_: no confident match (best 0.33 = Sumitomo Mitsui Trust Bank (U.S.A.) Limited, Hoboken NJ)
+- **MAGNOLIA BK** (Elizabethtown) — _Addressable Banks_: ambiguous name
+- **PEOPLES EXCH BK** (Winchester) — _Addressable Banks_: no confident match (best 0.33 = Peoples Exchange Bank, Winchester KY)
+- **FIRST NEIGH BK NA** (Toledo) — _Addressable Banks_: no confident match (best 0.33 = First Neighbor Bank, National Association, Toledo IL)
+- **AMERICAN BUS BK** (Los Angeles) — _Addressable Banks_: no confident match (best 0.33 = American Business Bank, Los Angeles CA)
+- **HOME BK OF CA** (San Diego) — _Addressable Banks_: no confident match (best 0.33 = Home Bank of California, San Diego CA)
+- **STATE BK OF TX** (Irving) — _Addressable Banks_: no confident match (best 0.00)
+- **FIRST FSB OF KY** (Frankfort) — _Addressable Banks_: no confident match (best 0.33 = First Federal Savings Bank of Kentucky, Frankfort KY)
+- **BANK & TC** (Litchfield) — _Addressable Banks_: empty name after normalization
+- **INDEPENDENCE BK OF KY** (Owensboro) — _Addressable Banks_: no confident match (best 0.33 = Independence Bank of Kentucky, Owensboro KY)
+- **HOME FED BK OF TN** (Knoxville) — _Addressable Banks_: no confident match (best 0.25 = Home Federal Bank of Tennessee, Knoxville TN)
+- **CATTARAUGUS CTY BK** (Little Valley) — _Addressable Banks_: no confident match (best 0.33 = Cattaraugus County Bank, Little Valley NY)
+- **COMMONWEALTH BUS BK** (Los Angeles) — _Addressable Banks_: no confident match (best 0.33 = Commonwealth Business Bank, Los Angeles CA)
+- **SOUTHWEST CAP BK** (Albuquerque) — _Addressable Banks_: no confident match (best 0.33 = Southwest Capital Bank, Albuquerque NM)
+- **PEOPLES BK OF CMRC** (Medford) — _Addressable Banks_: no confident match (best 0.33 = People's Bank of Commerce, Medford OR)
+- **BANK OF CENT FL** (Lakeland) — _Addressable Banks_: no confident match (best 0.00)
+- **AUSTIN BK TX NA** (Jacksonville) — _Addressable Banks_: no confident match (best 0.33 = Austin Bank, Texas National Association, Jacksonville TX)
+- **CITIZENS BUS BK** (Ontario) — _Addressable Banks_: no confident match (best 0.33 = Citizens Business Bank, National Association, Ontario CA)
+- **CITIZENS BK OF KY** (Paintsville) — _Addressable Banks_: no confident match (best 0.33 = Citizens Bank of Kentucky, Inc., Paintsville KY)
+- **DECATUR CTY BK** (Decaturville) — _Addressable Banks_: no confident match (best 0.33 = Decatur County Bank, Decaturville TN)
+- **FIRST BK OF OH** (Tiffin) — _Addressable Banks_: no confident match (best 0.33 = First Bank of Ohio, Tiffin OH)
+- **FIRST AMER B&TC** (Vacherie) — _Addressable Banks_: no confident match (best 0.33 = First American Bank and Trust, Vacherie LA)
+- **OPPORTUNITY BK OF MT** (Helena) — _Addressable Banks_: no confident match (best 0.33 = Opportunity Bank of Montana, Helena MT)
+- **The Kearny County Bank** (Lakin) — _Addressable Banks_: no confident match (best 0.00)
+- **Santa Clara County Federal Credit Union** (San Jose) — _Addressable CUs_: no confident match (best 0.00)
+- **San Mateo Credit Union** (Redwood City) — _Addressable CUs_: no confident match (best 0.00)
+- **CCCU** (Portland) — _Addressable CUs_: no confident match (best 0.00)
+- **C A H P Credit Union** (Corinth) — _Addressable CUs_: no confident match (best 0.00)
+- **A+Federal Credit Union** (Austin) — _Addressable CUs_: empty name after normalization
+- **State Employees' Credit Union** (Yorktown) — _Addressable CUs_: ambiguous name
+- **Community First Credit Union** (Jacksonville) — _Addressable CUs_: ambiguous name
+- **OBee Credit Union** (Lacey) — _Addressable CUs_: no confident match (best 0.00)
+- **Atomic Employees Credit Union** (Beaver) — _Addressable CUs_: no confident match (best 0.00)
+- **UK Federal Credit Union** (Lexington) — _Addressable CUs_: no confident match (best 0.00)
+- **Hickam Federal Credit Union** (Pearl City) — _Addressable CUs_: no confident match (best 0.00)
+- **Xceed Financial Credit Union** (El Segundo) — _Addressable CUs_: no confident match (best 0.00)
+- **UT Federal Credit Union** (Knoxville) — _Addressable CUs_: no confident match (best 0.00)
+- **Westerly CommunityCU** (Westerly) — _Addressable CUs_: no confident match (best 0.00)
+- **Cornerstone CFCU** (Lockport) — _Addressable CUs_: no confident match (best 0.33 = CORNERSTONE COMMUNITY, LOCKPORT NY)
+- **UVA Community Credit Union** (Charlottesville) — _Addressable CUs_: no confident match (best 0.25 = UNIVERSITY OF VA COMMUNITY CU, Charlottesville VA)
+- **Heartland Credit Union** (Medford) — _Addressable CUs_: ambiguous name
+- **WECU®** (Bellingham) — _Addressable CUs_: no confident match (best 0.00)
+- **WSECU** (Olympia) — _Addressable CUs_: no confident match (best 0.00)
+- **NIH Federal Credit Union** (Rockville) — _Addressable CUs_: no confident match (best 0.00)
+- **Credit Union of Southern** (Brea) — _Addressable CUs_: ambiguous name
+- **Merrimack Valley Credit Union** — _Addressable CUs_: no confident match (best 0.50 = VALLEY, Brownsville TX)
+- **Missouri Credit Union** (Capitola) — _Addressable CUs_: no confident match (best 0.00)
+- **SeaComm Federal Credit Union** (Massena) — _Addressable CUs_: no confident match (best 0.00)
+- **Seattle Credit Union** (Washington) — _Addressable CUs_: no confident match (best 0.00)
+- **P1FCU** (Lewiston) — _Addressable CUs_: no confident match (best 0.00)
+- **CBC Federal Credit Union** (Oxnard) — _Addressable CUs_: no confident match (best 0.00)
+- **CapEd Credit Union** (Meridian) — _Addressable CUs_: no confident match (best 0.00)
+- **Pacific NW Federal Credit Union** (Portland) — _Addressable CUs_: no confident match (best 0.33 = PACIFIC N W, PORTLAND OR)
+- **1st Community Federal Credit Union** (Groton) — _Addressable CUs_: ambiguous name
+- **CAP COM Federal Credit Union** (Albany) — _Addressable CUs_: no confident match (best 0.00)
+- **Benchmark Federal Credit Union** (West Chester) — _Addressable CUs_: no confident match (best 0.00)
+- **FSU Credit Union** (Tallahassee) — _Addressable CUs_: no confident match (best 0.00)
+- **FAST Credit Union** (Hanford) — _Addressable CUs_: no confident match (best 0.00)
+- **HRCU** (Rochester) — _Addressable CUs_: no confident match (best 0.00)
+- **NFCU** (Madawaska) — _Addressable CUs_: no confident match (best 0.00)
+- **Ascu** (Sierra Vista) — _Addressable CUs_: no confident match (best 0.00)
+- **Ukrainian Selfreliance Federal Credit Union** (Austin) — _Addressable CUs_: no confident match (best 0.00)
+- **Wings Financial Credit Union** (Biloxi) — _Addressable CUs_: no confident match (best 0.00)
+- **Hawaii State Federal Credit Union** (Honolulu) — _Addressable CUs_: ambiguous name+city
+- **SCE Credit Union** (Irwindale) — _Addressable CUs_: no confident match (best 0.00)
+- **SF Fire Credit Union** (San Francisco) — _Addressable CUs_: no confident match (best 0.25 = SAN FRANCISCO FIRE, San Francisco CA)
+- **Fire First Credit Union** (Pasadena) — _Addressable CUs_: no confident match (best 0.33 = FIRST CITY, Pasadena CA)
+- **U of I Community Credit Union** (Champaign) — _Addressable CUs_: no confident match (best 0.20 = UNIVERSITY OF ILLINOIS COMMUNITY, Champaign IL)
+- **IC Credit Union** (Fitchburg) — _Addressable CUs_: no confident match (best 0.00)
+- **sfcu - Sidney Federal Credit Union** (New York) — _Addressable CUs_: no confident match (best 0.00)
+- **Ukrainian Federal Credit Union** (Warren) — _Addressable CUs_: ambiguous name
+- **IU Credit Union** (Bloomington) — _Addressable CUs_: no confident match (best 0.00)
+- **Members First Credit Union** (Eau Claire) — _Addressable CUs_: ambiguous name
+- **WCCU Credit Union** (Westby) — _Addressable CUs_: no confident match (best 0.00)
+- **Maps Credit Union** (Salem) — _Addressable CUs_: no confident match (best 0.00)
+- **OCCU** — _Addressable CUs_: no confident match (best 0.00)
+- **Firefly Credit Union** (Burnsville) — _Addressable CUs_: no confident match (best 0.00)
+- **SCU Credit Union** (Brockton) — _Addressable CUs_: no confident match (best 0.00)
+- **University of Virginia Community CU** — _Addressable CUs_: no confident match (best 0.67 = VIRGINIA STATE UNIVERSITY, South Chesterfi VA)
+- **Credit Union of Southern California** — _Addressable CUs_: no confident match (best 0.50 = CALIFORNIA, GLENDALE CA)
+- **Maine Savings Federal Credit Union** — _Addressable CUs_: ambiguous name
+- **Marine Federal Credit Union** — _Addressable CUs_: ambiguous name
+- **Marine Credit Union** — _Addressable CUs_: ambiguous name
+- **Digital Federal Credit Union** — _Addressable CUs_: no confident match (best 0.00)
+- **orsa credit union** (Plymouth) — _Addressable CUs_: no confident match (best 0.00)
+- **7 17 Credit Union** — _Addressable CUs_: no confident match (best 0.25 = THD DISTRICT 17, Bryan TX)
+- **Rrcu** (Texarkana) — _Addressable CUs_: no confident match (best 0.00)
+- **Fire First Federal Credit Union** — _MQL_: no confident match (best 0.50 = FIRST, Chandler AZ)
+- **First Community Credit Union** — _MQL_: ambiguous name
+- **Schools Financial Credit Union** — _MQL_: no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)
+- **AAA Credit Union** — _MQL_: no confident match (best 0.00)
+- **Merrimack Valley Credit Union** — _MQL_: no confident match (best 0.50 = VALLEY, Brownsville TX)
+- **San Francisco Firefighters Credit Union** — _MQL_: no confident match (best 0.67 = SAN FRANCISCO, San Francisco CA)
+- **UW Credit Union** — _MQL_: no confident match (best 0.00)
+- **Sun West Federal Credit Union** — _MQL_: no confident match (best 0.50 = CREDIT UNION WEST, Glendale AZ)
+- **State Employees Credit Union of New Mexico** — _MQL_: no confident match (best 0.40 = NEW YORK TIMES EMPLOYEES, NEW YORK NY)
+- **Sandia Laboratory Federal Credit Union** — _MQL_: no confident match (best 0.33 = SANDIA AREA, Albuquerque NM)
+- **BFS Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **ComChoice Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Community First Credit Union** — _MQL_: ambiguous name
+- **Heartland Credit Union** — _MQL_: ambiguous name
+- **A+ Federal Credit Union** — _MQL_: empty name after normalization
+- **SunWest Federal Credit Union** — _MQL_: ambiguous name
+- **AA Credit Union** — _MQL_: no confident match (best 0.00)
+- **Landmark Credit Union** — _MQL_: ambiguous name
+- **Firefighters Credit Union** — _MQL_: ambiguous name
+- **Illinois University Credit Union** — _MQL_: no confident match (best 0.67 = UNIVERSITY OF ILLINOIS COMMUNITY, Champaign IL)
+- **Family Savings Credit Union** — _MQL_: ambiguous name
+- **Kaiser Permanente Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Linnarea Credit Union** — _MQL_: no confident match (best 0.00)
+- **Credit Union of Southern California** — _MQL_: no confident match (best 0.50 = CALIFORNIA, GLENDALE CA)
+- **Financial Partners Credit Union** — _MQL_: ambiguous name
+- **Contego International** — _MQL_: no confident match (best 0.33 = International Bank of Commerce, Laredo TX)
+- **Metro Federal Credit Union** — _MQL_: ambiguous name
+- **Ohio Health Credit Union** — _MQL_: no confident match (best 0.50 = CREDIT UNION OF OHIO, Hilliard OH)
+- **Superior Credit Union** — _MQL_: ambiguous name
+- **Guardian Credit Union** — _MQL_: ambiguous name
+- **TrueSky Credit Union** — _MQL_: no confident match (best 0.00)
+- **Clackamas Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Community Wide Federal Credit Union** — _MQL_: no confident match (best 0.50 = COMMUNITY TRUST, Gurnee IL)
+- **CU SoCal** — _MQL_: no confident match (best 0.00)
+- **GE Credit Union** — _MQL_: no confident match (best 0.00)
+- **Members Own Federal Credit Union** — _MQL_: no confident match (best 0.50 = MEMBERS, WINSTON SALEM NC)
+- **MidAmerican Credit Union** — _MQL_: no confident match (best 0.00)
+- **Ohio University Credit Union** — _MQL_: no confident match (best 0.50 = UNIVERSITY, AUSTIN TX)
+- **Pacific Marine Credit Union** — _MQL_: no confident match (best 0.50 = MARINE, La Crosse WI)
+- **Public Service Credit Union** — _MQL_: ambiguous name
+- **Community Choice Credit Union** — _MQL_: ambiguous name
+- **CPD Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Summit Federal Credit Union** — _MQL_: ambiguous name
+- **BH Credit Union** — _MQL_: no confident match (best 0.00)
+- **C1st Credit Union** — _MQL_: no confident match (best 0.00)
+- **Capital Credit Union** — _MQL_: ambiguous name
+- **Great Lakes Credit Union** — _MQL_: ambiguous name
+- **IHMVCU** — _MQL_: no confident match (best 0.00)
+- **Members Choice Credit Union** — _MQL_: ambiguous name
+- **Missoula Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Missouri Credit Union** — _MQL_: no confident match (best 0.50 = MISSOURI CENTRAL, Lees Summit MO)
+- **Southern California Edison Federal Credit Union** — _MQL_: no confident match (best 0.33 = CALIFORNIA, GLENDALE CA)
+- **Sun Federal Credit Union** — _MQL_: ambiguous name
+- **Wise Public Credit Union** — _MQL_: no confident match (best 0.33 = PUBLIC SERVICE, Romulus MI)
+- **WPCCU** — _MQL_: no confident match (best 0.00)
+- **Credit Union of Colorado** — _MQL_: ambiguous name
+- **Firefighters & Safety Employees Credit Union** — _MQL_: no confident match (best 0.33 = STATE EMPLOYEES', RALEIGH NC)
+- **USS Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **5Point Credit Union** — _MQL_: no confident match (best 0.00)
+- **AFCU (America First Credit Union)** — _MQL_: no confident match (best 0.00)
+- **AmeriFirst Credit Union** — _MQL_: no confident match (best 0.00)
+- **BECU** — _MQL_: no confident match (best 0.00)
+- **BRT Employees Federal Credit Union** — _MQL_: no confident match (best 0.50 = STATE EMPLOYEES', RALEIGH NC)
+- **Consumers Credit Union** — _MQL_: ambiguous name
+- **DCCU (DuPont Community Credit Union)** — _MQL_: no confident match (best 0.00)
+- **FAFCU Credit Union** — _MQL_: no confident match (best 0.00)
+- **Hawaii USA Federal Credit Union** — _MQL_: no confident match (best 0.50 = HAWAII STATE, Honolulu HI)
+- **Houston Area Community Credit Union** — _MQL_: no confident match (best 0.67 = AREA COMMUNITY, GRAND FORKS ND)
+- **IHMVCU (IH Mississippi Valley Credit Union)** — _MQL_: no confident match (best 0.00)
+- **Members 1st Federal Credit Union** — _MQL_: ambiguous name
+- **Metro Credit Union** — _MQL_: ambiguous name
+- **Metro West Alliance Federal Credit Union** — _MQL_: no confident match (best 0.50 = WEST METRO SCHOOLS, Hopkins MN)
+- **Michigan Medicine Federal Credit Union** — _MQL_: no confident match (best 0.33 = LAKE MICHIGAN, Grand Rapids MI)
+- **Professional Federal Credit Union** — _MQL_: no confident match (best 0.50 = CONSUMERS PROFESSIONAL, LANSING MI)
+- **RIA Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **SunWest Credit Union** — _MQL_: ambiguous name
+- **uCredit** — _MQL_: no confident match (best 0.00)
+- **University Credit Union** — _MQL_: ambiguous name
+- **useaglefcu.org** — _MQL_: no confident match (best 0.00)
+- **ValleyStrong Credit Union** — _MQL_: no confident match (best 0.00)
+- **Community 1st Credit Union** — _MQL_: ambiguous name
+- **717 Credit Union** — _MQL_: no confident match (best 0.00)
+- **P1FCU** — _MQL_: no confident match (best 0.00)
+- **Credit Union of Texas** — _MQL_: ambiguous name
+- **Credit Union One** — _MQL_: ambiguous name
+- **Gen Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Horizon Zero Credit Union** — _MQL_: no confident match (best 0.50 = HORIZON, Spokane Valley WA)
+- **MAPS Credit Union** — _MQL_: no confident match (best 0.00)
+- **NIH Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **OBEE Credit Union** — _MQL_: no confident match (best 0.00)
+- **PremierOne Credit Union** — _MQL_: no confident match (best 0.00)
+- **SCU Credit Union** — _MQL_: no confident match (best 0.00)
+- **Self Reliance New York Federal Credit Union** — _MQL_: no confident match (best 0.40 = SELF RELIANCE FINANCIAL, New York NY)
+- **University Federal Credit Union** — _MQL_: ambiguous name
+- **Commonwealth CU** — _MQL_: ambiguous name
+- **Indiana State University FCU** — _MQL_: ambiguous name
+- **Plus CU** — _MQL_: ambiguous name
+- **Rising Above Enterprises** — _MQL_: no confident match (best 0.25 = AFGM ENTERPRISES, Cheektowaga NY)
+- **AACUC - GAC 2026 Referral Opportunity** — _MQL_: no confident match (best 0.00)
+- **AFCU** — _MQL_: no confident match (best 0.00)
+- **Cal Coast** — _MQL_: no confident match (best 0.33 = Third Coast Bank, Humble TX)
+- **DOCFCU** — _MQL_: no confident match (best 0.00)
+- **Education First Credit Union** — _MQL_: ambiguous name
+- **FECCA Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **First Financial Federal Credit Union** — _MQL_: ambiguous name
+- **Foothills Credit Union** — _MQL_: ambiguous name
+- **HRCU** — _MQL_: no confident match (best 0.00)
+- **Intelliplan Financial** — _MQL_: no confident match (best 0.50 = Financial Federal Bank, Memphis TN)
+- **IU Credit Union** — _MQL_: no confident match (best 0.00)
+- **IUCU** — _MQL_: no confident match (best 0.00)
+- **MDDC - GAC 2026** — _MQL_: no confident match (best 0.00)
+- **ORNLFCU** — _MQL_: no confident match (best 0.00)
+- **ORSA Credit Union** — _MQL_: no confident match (best 0.00)
+- **Pediment - GAC 2026 Potential Referral Partner** — _MQL_: no confident match (best 0.00)
+- **Prismm - GAC 2026 Referral Opportunity** — _MQL_: no confident match (best 0.00)
+- **Tarrant County Credit Union  - GAC 2026** — _MQL_: no confident match (best 0.50 = THE COUNTY, Presque Isle ME)
+- **The League of Credit Unions & Affiliates - GAC 2026 Referral Partner** — _MQL_: no confident match (best 0.25 = ST. COLMAN & AFFILIATES, Cleveland OH)
+- **The Summit Federal Credit Union - GAC 2026** — _MQL_: ambiguous name
+- **UK Credit Union** — _MQL_: no confident match (best 0.00)
+- **UK Federal Credit Union** — _MQL_: no confident match (best 0.00)
+- **Vault - GAC 2026 Referall Opp** — _MQL_: no confident match (best 0.00)
+- **WCCU Credit Union** — _MQL_: no confident match (best 0.00)
+- **Community Credit Union of Lynn - New Deal** — _SQL_: no confident match (best 0.50 = COMMUNITY TRUST, Gurnee IL)
+- **Advantage One Credit Union - New Deal** — _sales stage_: ambiguous name
+- **A+ Federal Credit Union - Digital Storefront** — _sales stage_: empty name after normalization
+- **Credit Union 1 Alaska** — _sales stage_: no confident match (best 0.50 = CREDIT UNION 1, Lombard IL)
+- **Sun Federal Credit Union - Digital Storefront** — _sales stage_: ambiguous name
+- **Family Savings Credit Union - Digital Storefront** — _sales stage_: ambiguous name
+- **SCU CU** — _sales stage_: no confident match (best 0.00)
+- **H E B FEDERAL CREDIT UNION** — _sales stage_: ambiguous name
+- **North Coast Credit Union - Digital Storefront** — _sales stage_: ambiguous name
+- **OBee Credit Union** — _sales stage_: no confident match (best 0.00)
+- **Heartland Credit Union - Kansas - Digital Storefront** — _sales stage_: ambiguous name
+- **Meridian Trust Federal Credit Union - Digital Storefront** — _sales stage_: ambiguous name
+- **U Of I Community Credit Union - Digital Storefront** — _sales stage_: no confident match (best 0.50 = U. S. I., Deer Park TX)
+- **Garden Savings Federal Credit Union** — _sales stage_: ambiguous name
+- **Service 1st Federal Credit Union - Digital Storefront** — _sales stage_: ambiguous name
+- **Great Lakes Credit Union - Digital Storefront** — _sales stage_: ambiguous name
+- **Pediment - GAC 2026 Potential Referral Partner** — _sales stage_: no confident match (best 0.00)
+- **The League of Credit Unions & Affiliates - GAC 2026 Referral Partner** — _sales stage_: no confident match (best 0.25 = ST. COLMAN & AFFILIATES, Cleveland OH)
+- **Louisiana Federal Credit Union - Digital Storefront** — _sales stage_: no confident match (best 0.50 = SOUTHWEST LOUISIANA, Lake Charles LA)
+- **Members Choice Credit Union (Houston, TX)** — _sales stage_: ambiguous name
+- **BECU - Digital Storefront** — _sales stage_: no confident match (best 0.00)
+- **Tarrant County Credit Union  - GAC 2026** — _sales stage_: no confident match (best 0.50 = THE COUNTY, Presque Isle ME)
+- **Prismm - GAC 2026 Referral Opportunity** — _sales stage_: no confident match (best 0.00)
+- **MDDC - GAC 2026** — _sales stage_: no confident match (best 0.00)
+- **AACUC - GAC 2026 Referral Opportunity** — _sales stage_: no confident match (best 0.00)
+- **Community 1st Credit Union** — _sales stage_: ambiguous name
+- **The Summit Federal Credit Union - GAC 2026** — _sales stage_: ambiguous name
+- **PSECU - Digital Storefront** — _sales stage_: no confident match (best 0.00)
+- **Vault - GAC 2026 Referall Opp** — _sales stage_: no confident match (best 0.00)
+- **Education First FCU - Digital Storefront** — _sales stage_: ambiguous name
+- **America's Credit Union** — _sales stage_: ambiguous name
+- **Airforce Federal Credit Union** — _sales stage_: no confident match (best 0.00)
+- **Community Credit Union of Lynn - New Deal** — _sales stage_: no confident match (best 0.50 = COMMUNITY TRUST, Gurnee IL)
+- **Granite Credit Union - GAC 2026** — _sales stage_: ambiguous name

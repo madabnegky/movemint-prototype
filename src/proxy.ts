@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// HTTP Basic Auth gate for /admin/pricing-model.
+// HTTP Basic Auth gate for /admin/pricing-model and the sales pipeline
+// (/admin/pipeline + its API), which hold real prospect data.
 //
 // Why this approach: it's the simplest server-side password gate that hides
 // the password from the JS bundle. The browser handles the credential prompt
@@ -12,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 // File is named proxy.ts — the Next.js 16+ rename of middleware.ts. Same
 // behavior, runs at the edge.
 
-const REALM = "Movemint Pricing Model";
+const REALM = "Movemint Internal";
 const USERNAME = "movemint";
 
 export function proxy(req: NextRequest) {
@@ -22,7 +23,7 @@ export function proxy(req: NextRequest) {
   const expected = process.env.ADMIN_PASSWORD;
   // Fail closed: if no password is configured in production, deny access.
   if (!expected) {
-    return new NextResponse("Pricing model is not configured. Set ADMIN_PASSWORD env var.", {
+    return new NextResponse("This area is not configured. Set ADMIN_PASSWORD env var.", {
       status: 503,
     });
   }
@@ -44,5 +45,9 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/pricing-model/:path*"],
+  matcher: [
+    "/admin/pricing-model/:path*",
+    "/admin/pipeline/:path*",
+    "/api/pipeline/:path*",
+  ],
 };

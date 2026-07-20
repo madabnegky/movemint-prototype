@@ -48,3 +48,7 @@ next-env.d.ts
 # Local Claude Code / MCP settings — personal to each dev's machine.
 .claude/
 .mcp.json
+
+# sales pipeline local dev persistence
+.pipeline-dev-store.json
+scripts/ncua-tmp/

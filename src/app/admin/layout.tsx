@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe, Bell, Calendar, Calculator, PanelLeft, PanelLeftClose, X } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, LogOut, Palette, Play, ToggleLeft, Megaphone, Package, Eye, Home, ChevronDown, ChevronRight, Layers, Globe, Bell, Calendar, Calculator, PanelLeft, PanelLeftClose, X, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
@@ -15,6 +15,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Sales Pipeline", href: "/admin/pipeline", icon: TrendingUp },
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Campaigns", href: "/admin/campaigns", icon: Megaphone },
     { name: "Notifications", href: "/admin/notifications", icon: Bell },
