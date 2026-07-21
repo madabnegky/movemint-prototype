@@ -30,7 +30,21 @@ const OUT_UNMATCHED = join(REPO_ROOT, "src/data/pipeline-unmatched.json");
 // ---------- Universe ----------
 const banks = JSON.parse(readFileSync(join(REPO_ROOT, "src/data/universe-banks.json"))).institutions;
 const cus = JSON.parse(readFileSync(join(REPO_ROOT, "src/data/universe-cus.json"))).institutions;
+
+// Optional: validated MQL name->CU map (from validate-mql-matches.mjs). When
+// present, an MQL row whose name appears here is linked to that CU directly,
+// bypassing fuzzy matching. Keyed by workbook name for lookup.
+let MQL_VALIDATED = new Map();
+try {
+  const v = JSON.parse(readFileSync(join(REPO_ROOT, "scripts/data/mql-validated.json")));
+  for (const m of Object.values(v.matches)) {
+    MQL_VALIDATED.set(m.workbookName, m.fiId);
+  }
+} catch {
+  /* no validated map — pure fuzzy matching */
+}
 const universe = [...banks, ...cus];
+const FI_BY_ID = new Map(universe.map((fi) => [fi.id, fi]));
 
 // ---------- Name normalization ----------
 // NCUA directory names omit "Credit Union"/"FCU" suffixes entirely, so those
@@ -412,8 +426,13 @@ for (const [sheet, type] of [
   const rows = sheetRows("MQL", "Financial Institution");
   let matched = 0;
   for (const row of rows) {
-    const res = matchFI(row["Financial Institution"]);
     const src = String(row["Lead Source"] ?? "").trim();
+    // Prefer a validated match when available (name-verified charter or unique
+    // name), otherwise fall back to fuzzy matching.
+    const validatedId = MQL_VALIDATED.get(String(row["Financial Institution"]).trim());
+    const res = validatedId
+      ? { fi: FI_BY_ID.get(validatedId), method: "validated" }
+      : matchFI(row["Financial Institution"]);
     if (!res.fi) {
       report.unmatched.push({
         sheet: "MQL",

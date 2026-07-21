@@ -1,0 +1,1581 @@
+{
+  "stats": {
+    "charterOk": 209,
+    "charterRejected": 118,
+    "bankRejected": 52,
+    "fallback": 47,
+    "unmatched": 128
+  },
+  "matches": {
+    "cu-68583": {
+      "fiId": "cu-68583",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Avadian Credit Union"
+    },
+    "cu-7397": {
+      "fiId": "cu-7397",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Ascend Federal Credit Union"
+    },
+    "cu-61623": {
+      "fiId": "cu-61623",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "KEMBA Financial Credit Union"
+    },
+    "cu-62509": {
+      "fiId": "cu-62509",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Firstmark Credit Union"
+    },
+    "cu-68576": {
+      "fiId": "cu-68576",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Kitsap Credit Union"
+    },
+    "cu-68671": {
+      "fiId": "cu-68671",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Ent Credit Union"
+    },
+    "cu-61810": {
+      "fiId": "cu-61810",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "KEMBA Credit Union"
+    },
+    "cu-24877": {
+      "fiId": "cu-24877",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Firefighters First Federal Credit Union (NM)"
+    },
+    "cu-24979": {
+      "fiId": "cu-24979",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "BayPort Credit Union"
+    },
+    "cu-18708": {
+      "fiId": "cu-18708",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Partners Federal Credit Union"
+    },
+    "cu-1792": {
+      "fiId": "cu-1792",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Evolve Federal Credit Union"
+    },
+    "cu-68061": {
+      "fiId": "cu-68061",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Solarity Credit Union"
+    },
+    "cu-63057": {
+      "fiId": "cu-63057",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Listerhill Credit Union"
+    },
+    "cu-60438": {
+      "fiId": "cu-60438",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "IQ Credit Union"
+    },
+    "cu-10465": {
+      "fiId": "cu-10465",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "University of Hawaii Federal Credit Union"
+    },
+    "cu-66158": {
+      "fiId": "cu-66158",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "TruMark Financial Credit Union"
+    },
+    "cu-24969": {
+      "fiId": "cu-24969",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Altura Credit Union"
+    },
+    "cu-68731": {
+      "fiId": "cu-68731",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "TopLine Financial Credit Union"
+    },
+    "cu-61552": {
+      "fiId": "cu-61552",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "University of Michigan Credit Union"
+    },
+    "cu-11065": {
+      "fiId": "cu-11065",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Security Service Federal Credit Union"
+    },
+    "cu-24165": {
+      "fiId": "cu-24165",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "University of Kentucky Federal Credit Union"
+    },
+    "cu-61093": {
+      "fiId": "cu-61093",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Vibrant Credit Union"
+    },
+    "cu-24688": {
+      "fiId": "cu-24688",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Cyprus Credit Union"
+    },
+    "cu-68660": {
+      "fiId": "cu-68660",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Rogue Credit Union - GAC 2026"
+    },
+    "cu-5612": {
+      "fiId": "cu-5612",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "AltaOne Federal Credit Union"
+    },
+    "cu-24957": {
+      "fiId": "cu-24957",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "CoastHills Credit Union"
+    },
+    "cu-68694": {
+      "fiId": "cu-68694",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Gulf Winds Credit Union"
+    },
+    "cu-66538": {
+      "fiId": "cu-66538",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Connexus Credit Union"
+    },
+    "cu-151": {
+      "fiId": "cu-151",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Justice FCU"
+    },
+    "cu-63194": {
+      "fiId": "cu-63194",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Idaho Central Credit Union"
+    },
+    "cu-66731": {
+      "fiId": "cu-66731",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Fox Communities Credit Union"
+    },
+    "cu-97069": {
+      "fiId": "cu-97069",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "San Francisco Fire Credit Union"
+    },
+    "cu-5571": {
+      "fiId": "cu-5571",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Signal Financial Federal Credit Union - GAC 2026"
+    },
+    "cu-66492": {
+      "fiId": "cu-66492",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "University of Wisconsin Credit Union"
+    },
+    "cu-64471": {
+      "fiId": "cu-64471",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "DuTrac Community Credit Union"
+    },
+    "cu-66328": {
+      "fiId": "cu-66328",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Wright-Patt Credit Union"
+    },
+    "cu-24560": {
+      "fiId": "cu-24560",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Greylock Federal Credit Union"
+    },
+    "cu-24564": {
+      "fiId": "cu-24564",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Healthcare Systems Federal Credit Union"
+    },
+    "cu-68703": {
+      "fiId": "cu-68703",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Jolt Credit Union"
+    },
+    "cu-63832": {
+      "fiId": "cu-63832",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "TruWest Credit Union"
+    },
+    "cu-2285": {
+      "fiId": "cu-2285",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Advancial Federal Credit Union"
+    },
+    "cu-61844": {
+      "fiId": "cu-61844",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "DFCU Financial"
+    },
+    "cu-68278": {
+      "fiId": "cu-68278",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Gesa Credit Union"
+    },
+    "cu-7531": {
+      "fiId": "cu-7531",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Hughes Federal Credit Union"
+    },
+    "cu-60532": {
+      "fiId": "cu-60532",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Landmark Credit Union"
+    },
+    "cu-67079": {
+      "fiId": "cu-67079",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Firefighters Credit Union"
+    },
+    "cu-24748": {
+      "fiId": "cu-24748",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Mayo Credit Union"
+    },
+    "cu-63639": {
+      "fiId": "cu-63639",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Minnco Credit Union"
+    },
+    "cu-62322": {
+      "fiId": "cu-62322",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Oklahoma Central Credit Union"
+    },
+    "cu-5547": {
+      "fiId": "cu-5547",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Security First Credit Union"
+    },
+    "cu-62903": {
+      "fiId": "cu-62903",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Partner Colorado Credit Union"
+    },
+    "cu-60978": {
+      "fiId": "cu-60978",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Directions Credit Union"
+    },
+    "cu-68628": {
+      "fiId": "cu-68628",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Family Savings Credit Union"
+    },
+    "cu-7590": {
+      "fiId": "cu-7590",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Greater Texas Credit Union"
+    },
+    "cu-68476": {
+      "fiId": "cu-68476",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Tropical Financial Credit Union"
+    },
+    "cu-68666": {
+      "fiId": "cu-68666",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Transcend Credit Union"
+    },
+    "cu-1845": {
+      "fiId": "cu-1845",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Aloha Pacific Federal Credit Union"
+    },
+    "cu-68433": {
+      "fiId": "cu-68433",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "AmeriCU Credit Union"
+    },
+    "cu-67535": {
+      "fiId": "cu-67535",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "DATCU Credit Union"
+    },
+    "cu-16619": {
+      "fiId": "cu-16619",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Financial Partners Credit Union"
+    },
+    "cu-68239": {
+      "fiId": "cu-68239",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "HAPO Community Credit Union"
+    },
+    "cu-12199": {
+      "fiId": "cu-12199",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Kirtland Federal Credit Union"
+    },
+    "cu-60062": {
+      "fiId": "cu-60062",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Credit Union of America"
+    },
+    "cu-20042": {
+      "fiId": "cu-20042",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Franklin Mint Federal Credit Union"
+    },
+    "cu-17012": {
+      "fiId": "cu-17012",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "ProFed Federal Credit Union"
+    },
+    "cu-28": {
+      "fiId": "cu-28",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Centris Federal Credit Union"
+    },
+    "cu-12425": {
+      "fiId": "cu-12425",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Foothill Federal Credit Union"
+    },
+    "cu-23371": {
+      "fiId": "cu-23371",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Healthcare Plus Credit Union"
+    },
+    "cu-62978": {
+      "fiId": "cu-62978",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Ideal Credit Union"
+    },
+    "cu-65856": {
+      "fiId": "cu-65856",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Oregon Community Credit Union"
+    },
+    "cu-11316": {
+      "fiId": "cu-11316",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Sandia Area Federal Credit Union"
+    },
+    "cu-6248": {
+      "fiId": "cu-6248",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "SkyOne Federal Credit Union"
+    },
+    "cu-68710": {
+      "fiId": "cu-68710",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Sunmark Federal Credit Union"
+    },
+    "cu-65788": {
+      "fiId": "cu-65788",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Westerra Credit Union"
+    },
+    "cu-60215": {
+      "fiId": "cu-60215",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Superior Credit Union"
+    },
+    "cu-7448": {
+      "fiId": "cu-7448",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "1st Advantage Federal Credit Union"
+    },
+    "cu-10920": {
+      "fiId": "cu-10920",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Arkansas Federal Credit Union"
+    },
+    "cu-24963": {
+      "fiId": "cu-24963",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "First South Financial Credit Union"
+    },
+    "cu-60400": {
+      "fiId": "cu-60400",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "St. Louis Community Credit Union"
+    },
+    "cu-5851": {
+      "fiId": "cu-5851",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Sunward Credit Union"
+    },
+    "cu-60583": {
+      "fiId": "cu-60583",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "University of Illinois Community Credit Union"
+    },
+    "cu-10709": {
+      "fiId": "cu-10709",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Utah Community Credit Union"
+    },
+    "cu-13605": {
+      "fiId": "cu-13605",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "ABNB Federal Credit Union"
+    },
+    "cu-18297": {
+      "fiId": "cu-18297",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Coastal Federal Credit Union"
+    },
+    "cu-13919": {
+      "fiId": "cu-13919",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Del-One Federal Credit Union"
+    },
+    "cu-68301": {
+      "fiId": "cu-68301",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "First Commerce Credit Union"
+    },
+    "cu-10023": {
+      "fiId": "cu-10023",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Island Federal Credit Union"
+    },
+    "cu-65299": {
+      "fiId": "cu-65299",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Keypoint Credit Union"
+    },
+    "cu-60931": {
+      "fiId": "cu-60931",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Michigan Educational Credit Union"
+    },
+    "cu-65378": {
+      "fiId": "cu-65378",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Mid American Credit Union"
+    },
+    "cu-24692": {
+      "fiId": "cu-24692",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Mountain America Credit Union"
+    },
+    "cu-60683": {
+      "fiId": "cu-60683",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Public Service Credit Union"
+    },
+    "cu-24524": {
+      "fiId": "cu-24524",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Tinker Federal Credit Union"
+    },
+    "cu-14754": {
+      "fiId": "cu-14754",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Topside Federal Credit Union"
+    },
+    "cu-68429": {
+      "fiId": "cu-68429",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Travis Credit Union - GAC 2026"
+    },
+    "cu-24774": {
+      "fiId": "cu-24774",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Alltru Credit Union"
+    },
+    "cu-16626": {
+      "fiId": "cu-16626",
+      "leadSource": "AiVantage; Events",
+      "via": "name-unique",
+      "workbookName": "Heritage Federal Credit Union"
+    },
+    "cu-63932": {
+      "fiId": "cu-63932",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "1st MidAmerica Credit Union"
+    },
+    "cu-66376": {
+      "fiId": "cu-66376",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Pathways Financial Credit Union"
+    },
+    "cu-2551": {
+      "fiId": "cu-2551",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Police and Fire Federal Credit Union"
+    },
+    "cu-64029": {
+      "fiId": "cu-64029",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Santa Cruz Community Federal Credit Union"
+    },
+    "cu-68437": {
+      "fiId": "cu-68437",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Bellco Credit Union"
+    },
+    "cu-4365": {
+      "fiId": "cu-4365",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Black Hills Federal Credit Union"
+    },
+    "cu-1199": {
+      "fiId": "cu-1199",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "BMI Federal Credit Union"
+    },
+    "cu-9164": {
+      "fiId": "cu-9164",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Carter Federal Credit Union"
+    },
+    "cu-97068": {
+      "fiId": "cu-97068",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Christian Community Credit Union"
+    },
+    "cu-2508": {
+      "fiId": "cu-2508",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Crossroads Community Credit Union"
+    },
+    "cu-12765": {
+      "fiId": "cu-12765",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "First Commonwealth Federal Credit Union"
+    },
+    "cu-11111": {
+      "fiId": "cu-11111",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Freedom First Credit Union"
+    },
+    "cu-24874": {
+      "fiId": "cu-24874",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Great Lakes Credit Union"
+    },
+    "cu-14091": {
+      "fiId": "cu-14091",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Houston Federal Credit Union"
+    },
+    "cu-5561": {
+      "fiId": "cu-5561",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Keesler Federal Credit Union"
+    },
+    "cu-62026": {
+      "fiId": "cu-62026",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Members Choice Credit Union"
+    },
+    "cu-97071": {
+      "fiId": "cu-97071",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Monterey Credit Union"
+    },
+    "cu-68413": {
+      "fiId": "cu-68413",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Pacific Service Credit Union"
+    },
+    "cu-97085": {
+      "fiId": "cu-97085",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Silver State Schools Credit Union"
+    },
+    "cu-1022": {
+      "fiId": "cu-1022",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "South Carolina Federal Credit Union"
+    },
+    "cu-22157": {
+      "fiId": "cu-22157",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Southwest Airlines Federal Credit Union"
+    },
+    "cu-12858": {
+      "fiId": "cu-12858",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Texas Tech Federal Credit Union"
+    },
+    "cu-24703": {
+      "fiId": "cu-24703",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Trax Credit Union - GAC 2026"
+    },
+    "cu-528": {
+      "fiId": "cu-528",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Utah First Federal Credit Union"
+    },
+    "cu-16411": {
+      "fiId": "cu-16411",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "DC Credit Union"
+    },
+    "cu-13": {
+      "fiId": "cu-13",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "EFCU Financial"
+    },
+    "cu-68248": {
+      "fiId": "cu-68248",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Forum Credit Union"
+    },
+    "cu-66742": {
+      "fiId": "cu-66742",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "WestConsin Credit Union"
+    },
+    "cu-24694": {
+      "fiId": "cu-24694",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "America First Credit Union"
+    },
+    "cu-68681": {
+      "fiId": "cu-68681",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Amplify Credit Union"
+    },
+    "cu-63268": {
+      "fiId": "cu-63268",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Ascentra Credit Union"
+    },
+    "cu-62604": {
+      "fiId": "cu-62604",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Boeing Employees Credit Union (BECU)"
+    },
+    "cu-16951": {
+      "fiId": "cu-16951",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Consumers Credit Union"
+    },
+    "cu-16416": {
+      "fiId": "cu-16416",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Financial Advantage Federal Credit Union"
+    },
+    "cu-62452": {
+      "fiId": "cu-62452",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Financial Security Credit Union"
+    },
+    "cu-1815": {
+      "fiId": "cu-1815",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "HawaiiUSA Federal Credit Union"
+    },
+    "cu-68505": {
+      "fiId": "cu-68505",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "InTouch Credit Union"
+    },
+    "cu-68716": {
+      "fiId": "cu-68716",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Launch Federal Credit Union"
+    },
+    "cu-67770": {
+      "fiId": "cu-67770",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Members 1st Federal Credit Union"
+    },
+    "cu-24954": {
+      "fiId": "cu-24954",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Navigator Credit Union"
+    },
+    "cu-17117": {
+      "fiId": "cu-17117",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "R.I.A. Federal Credit Union"
+    },
+    "cu-8111": {
+      "fiId": "cu-8111",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Randolph-Brooks Federal Credit Union"
+    },
+    "cu-68712": {
+      "fiId": "cu-68712",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Valley Strong Credit Union"
+    },
+    "cu-68517": {
+      "fiId": "cu-68517",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Verity Credit Union"
+    },
+    "cu-67012": {
+      "fiId": "cu-67012",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Community 1st Credit Union"
+    },
+    "cu-68668": {
+      "fiId": "cu-68668",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "1st Northern California Credit Union"
+    },
+    "cu-64342": {
+      "fiId": "cu-64342",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Credit Union of Denver"
+    },
+    "cu-67928": {
+      "fiId": "cu-67928",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "EECU Credit Union"
+    },
+    "cu-67532": {
+      "fiId": "cu-67532",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Fort Worth City Credit Union"
+    },
+    "cu-18175": {
+      "fiId": "cu-18175",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Henrico Federal Credit Union"
+    },
+    "cu-62710": {
+      "fiId": "cu-62710",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Pelican State Credit Union"
+    },
+    "cu-24542": {
+      "fiId": "cu-24542",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "San Francisco Federal Credit Union"
+    },
+    "cu-9296": {
+      "fiId": "cu-9296",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Sun Community Federal Credit Union"
+    },
+    "cu-60509": {
+      "fiId": "cu-60509",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "TLC Community Credit Union"
+    },
+    "cu-2157": {
+      "fiId": "cu-2157",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Tucson Federal Credit Union"
+    },
+    "cu-24986": {
+      "fiId": "cu-24986",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Valley First Credit Union"
+    },
+    "cu-60042": {
+      "fiId": "cu-60042",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Washington State Employees Credit Union"
+    },
+    "cu-24899": {
+      "fiId": "cu-24899",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "WEOKIE Federal Credit Union"
+    },
+    "cu-62426": {
+      "fiId": "cu-62426",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Zeal Credit Union"
+    },
+    "cu-60137": {
+      "fiId": "cu-60137",
+      "leadSource": "AiVantage; Events",
+      "via": "charter-validated",
+      "workbookName": "Dow Credit Union"
+    },
+    "cu-2441": {
+      "fiId": "cu-2441",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Amoco Federal Credit Union"
+    },
+    "cu-477": {
+      "fiId": "cu-477",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Atlantic Federal Credit Union"
+    },
+    "cu-12067": {
+      "fiId": "cu-12067",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Bay Federal Credit Union"
+    },
+    "cu-11836": {
+      "fiId": "cu-11836",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Bayer Heritage Federal Credit Union"
+    },
+    "cu-11300": {
+      "fiId": "cu-11300",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Clearwater Credit Union"
+    },
+    "cu-67278": {
+      "fiId": "cu-67278",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Coastal1 Credit Union"
+    },
+    "cu-66848": {
+      "fiId": "cu-66848",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "CoVantage Credit Union"
+    },
+    "cu-62038": {
+      "fiId": "cu-62038",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Embers Credit Union"
+    },
+    "cu-61170": {
+      "fiId": "cu-61170",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "First Florida Credit Union"
+    },
+    "cu-68376": {
+      "fiId": "cu-68376",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Frontier Credit Union"
+    },
+    "cu-68494": {
+      "fiId": "cu-68494",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Frontwave Credit Union"
+    },
+    "cu-24987": {
+      "fiId": "cu-24987",
+      "leadSource": "AiVantage",
+      "via": "name-unique",
+      "workbookName": "Hudson River Community Credit Union"
+    },
+    "cu-4968": {
+      "fiId": "cu-4968",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Inova Federal Credit Union"
+    },
+    "cu-1261": {
+      "fiId": "cu-1261",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Langley Federal Credit Union"
+    },
+    "cu-60": {
+      "fiId": "cu-60",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Levo Credit Union"
+    },
+    "cu-68604": {
+      "fiId": "cu-68604",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Magnifi Financial"
+    },
+    "cu-23279": {
+      "fiId": "cu-23279",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Michigan State University Federal Credit Union"
+    },
+    "cu-66841": {
+      "fiId": "cu-66841",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Numerica Credit Union - GAC 2026"
+    },
+    "cu-7316": {
+      "fiId": "cu-7316",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Pima Federal CU"
+    },
+    "cu-67173": {
+      "fiId": "cu-67173",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Superior Choice Credit Union"
+    },
+    "cu-62848": {
+      "fiId": "cu-62848",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Telhio Credit Union"
+    },
+    "cu-24567": {
+      "fiId": "cu-24567",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Texar Federal Credit Union"
+    },
+    "cu-7840": {
+      "fiId": "cu-7840",
+      "leadSource": "AiVantage",
+      "via": "charter-validated",
+      "workbookName": "Truliant Federal Credit Union"
+    },
+    "cu-68373": {
+      "fiId": "cu-68373",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "First Entertainment CU"
+    },
+    "cu-62406": {
+      "fiId": "cu-62406",
+      "leadSource": "Event List",
+      "via": "name-unique",
+      "workbookName": "Bridge Credit Union Inc"
+    },
+    "cu-97095": {
+      "fiId": "cu-97095",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Commonwealth CU"
+    },
+    "cu-67974": {
+      "fiId": "cu-67974",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Community Service CU"
+    },
+    "cu-68354": {
+      "fiId": "cu-68354",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Eaton Family Credit Union"
+    },
+    "cu-1969": {
+      "fiId": "cu-1969",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Education Personnel FCU"
+    },
+    "cu-10223": {
+      "fiId": "cu-10223",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Everence FCU"
+    },
+    "cu-13167": {
+      "fiId": "cu-13167",
+      "leadSource": "Event List",
+      "via": "name-unique",
+      "workbookName": "Florence FCU"
+    },
+    "cu-7392": {
+      "fiId": "cu-7392",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Fortress Federal Credit Union"
+    },
+    "cu-12": {
+      "fiId": "cu-12",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Franklin Trust FCU"
+    },
+    "cu-1785": {
+      "fiId": "cu-1785",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Hawaii Schools FCU"
+    },
+    "cu-13616": {
+      "fiId": "cu-13616",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Indiana State University FCU"
+    },
+    "cu-62733": {
+      "fiId": "cu-62733",
+      "leadSource": "Event List",
+      "via": "name-unique",
+      "workbookName": "NSP Credit Union"
+    },
+    "cu-95107": {
+      "fiId": "cu-95107",
+      "leadSource": "Event List",
+      "via": "name-unique",
+      "workbookName": "Ohio Educational CU Inc"
+    },
+    "cu-86756": {
+      "fiId": "cu-86756",
+      "leadSource": "Event List",
+      "via": "name-unique",
+      "workbookName": "Plus CU"
+    },
+    "cu-12890": {
+      "fiId": "cu-12890",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Riverways FCU"
+    },
+    "cu-24545": {
+      "fiId": "cu-24545",
+      "leadSource": "Event List",
+      "via": "name-unique",
+      "workbookName": "Theory FCU"
+    },
+    "cu-62245": {
+      "fiId": "cu-62245",
+      "leadSource": "Event List",
+      "via": "charter-validated",
+      "workbookName": "Total Community CU"
+    },
+    "cu-21073": {
+      "fiId": "cu-21073",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "1st Mississippi Federal Credit Union"
+    },
+    "cu-23957": {
+      "fiId": "cu-23957",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "American Airlines Federal Credit Union"
+    },
+    "cu-61823": {
+      "fiId": "cu-61823",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Azura Credit Union"
+    },
+    "cu-24304": {
+      "fiId": "cu-24304",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Border Federal Credit Union - GAC 2026"
+    },
+    "cu-4616": {
+      "fiId": "cu-4616",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Bronco FCU"
+    },
+    "cu-66584": {
+      "fiId": "cu-66584",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "California Coast Credit Union"
+    },
+    "cu-13495": {
+      "fiId": "cu-13495",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "County Schools FCU"
+    },
+    "cu-24470": {
+      "fiId": "cu-24470",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Education First Credit Union"
+    },
+    "cu-68148": {
+      "fiId": "cu-68148",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Enbright Credit Union - GAC 2026"
+    },
+    "cu-13898": {
+      "fiId": "cu-13898",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Endurance Federal Credit Union"
+    },
+    "cu-8554": {
+      "fiId": "cu-8554",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "First Financial Federal Credit Union of Maryland - New Deal"
+    },
+    "cu-9604": {
+      "fiId": "cu-9604",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "First Heritage Federal Credit Union"
+    },
+    "cu-2440": {
+      "fiId": "cu-2440",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "First New York Federal Credit Union"
+    },
+    "cu-68474": {
+      "fiId": "cu-68474",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "First U.S. Community CU"
+    },
+    "cu-15015": {
+      "fiId": "cu-15015",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Foothills Credit Union"
+    },
+    "cu-6832": {
+      "fiId": "cu-6832",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Gerber Federal Credit Union"
+    },
+    "cu-24279": {
+      "fiId": "cu-24279",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "GFA Federal Credit Union - GAC 2026"
+    },
+    "cu-64203": {
+      "fiId": "cu-64203",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Greater Iowa Credit Union"
+    },
+    "cu-66399": {
+      "fiId": "cu-66399",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Harborstone Credit Union"
+    },
+    "cu-24742": {
+      "fiId": "cu-24742",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Heritage Family Federal Credit Union - GAC 2026"
+    },
+    "cu-24984": {
+      "fiId": "cu-24984",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Hudson Valley Credit Union - GAC 2026"
+    },
+    "cu-82794": {
+      "fiId": "cu-82794",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Interra Credit Union - GAC 2026"
+    },
+    "cu-66872": {
+      "fiId": "cu-66872",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Kohler Credit Union - GAC 2026"
+    },
+    "cu-15248": {
+      "fiId": "cu-15248",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Lampco FCU - GAC 2026"
+    },
+    "cu-5536": {
+      "fiId": "cu-5536",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Navy Federal Credit Union - GAC 2026"
+    },
+    "cu-24286": {
+      "fiId": "cu-24286",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Nebraska Energy Federal Credit Union"
+    },
+    "cu-68579": {
+      "fiId": "cu-68579",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Patelco Credit Union - Digital Storefront"
+    },
+    "cu-68690": {
+      "fiId": "cu-68690",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "PFCU"
+    },
+    "cu-9247": {
+      "fiId": "cu-9247",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Pioneer Federal Credit Union"
+    },
+    "cu-7835": {
+      "fiId": "cu-7835",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Rize Federal Credit Union"
+    },
+    "cu-7346": {
+      "fiId": "cu-7346",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Selfreliance Federal Credit Union - GAC 2026"
+    },
+    "cu-66678": {
+      "fiId": "cu-66678",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Simplicity Credit Union - GAC 2026"
+    },
+    "cu-60279": {
+      "fiId": "cu-60279",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "SIU Credit Union - GAC 2026"
+    },
+    "cu-63545": {
+      "fiId": "cu-63545",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Telco Community Credit Union - GAC 2026"
+    },
+    "cu-17999": {
+      "fiId": "cu-17999",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "Trius Federal Credit Union - GAC 2026"
+    },
+    "cu-3130": {
+      "fiId": "cu-3130",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Truity Credit Union"
+    },
+    "cu-624": {
+      "fiId": "cu-624",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "United States Senate Federal Credit Union - GAC 2026"
+    },
+    "cu-18195": {
+      "fiId": "cu-18195",
+      "leadSource": "Events",
+      "via": "name-unique",
+      "workbookName": "United Teletech Financial - GAC 2026"
+    },
+    "cu-16174": {
+      "fiId": "cu-16174",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "University of Toledo Credit Union"
+    },
+    "cu-68572": {
+      "fiId": "cu-68572",
+      "leadSource": "Events",
+      "via": "charter-validated",
+      "workbookName": "Via Credit Union"
+    },
+    "cu-22637": {
+      "fiId": "cu-22637",
+      "leadSource": "Incentivized Lead",
+      "via": "name-unique",
+      "workbookName": "Ardent Credit Union - Digital Storefront"
+    },
+    "cu-68371": {
+      "fiId": "cu-68371",
+      "leadSource": "WEBINAR",
+      "via": "charter-validated",
+      "workbookName": "AMERICAN LAKE CREDIT UNION"
+    }
+  },
+  "unmatched": [
+    "Fire First Federal Credit Union",
+    "Mountain View Federal Credit Union",
+    "First Community Credit Union",
+    "TopLine Federal Credit Union",
+    "Schools Financial Credit Union",
+    "AAA Credit Union",
+    "Merrimack Valley Credit Union",
+    "Denver Community Credit Union",
+    "San Francisco Firefighters Credit Union",
+    "Sullivan Financial Credit Union",
+    "UW Credit Union",
+    "Sun West Federal Credit Union",
+    "Chicago Firefighters Credit Union",
+    "UNIFY Financial Credit Union",
+    "State Employees Credit Union of New Mexico",
+    "Sandia Laboratory Federal Credit Union",
+    "Seattle Credit Union",
+    "BFS Federal Credit Union",
+    "ComChoice Federal Credit Union",
+    "Community First Credit Union",
+    "Heartland Credit Union",
+    "A+ Federal Credit Union",
+    "SunWest Federal Credit Union",
+    "AA Credit Union",
+    "Illinois University Credit Union",
+    "Cape Ann Savings Bank",
+    "Kaiser Permanente Federal Credit Union",
+    "Linnarea Credit Union",
+    "Credit Union of Southern California",
+    "Linn Area Credit Union",
+    "Contego International",
+    "CO-OP Credit Union (Contego International)",
+    "Metro Federal Credit Union",
+    "MWA Financial Federal Credit Union",
+    "Ohio Health Credit Union",
+    "Guardian Credit Union",
+    "TrueSky Credit Union",
+    "Clackamas Federal Credit Union",
+    "Community Wide Federal Credit Union",
+    "CU SoCal",
+    "GE Credit Union",
+    "Members Own Federal Credit Union",
+    "MidAmerican Credit Union",
+    "Ohio University Credit Union",
+    "Pacific Marine Credit Union",
+    "Community Choice Credit Union",
+    "CPD Federal Credit Union",
+    "Summit Federal Credit Union",
+    "BH Credit Union",
+    "C1st Credit Union",
+    "Cape Cod 5 Credit Union",
+    "Capital Credit Union",
+    "Credit Union West",
+    "IHMVCU",
+    "Missoula Federal Credit Union",
+    "Missouri Credit Union",
+    "Southern California Edison Federal Credit Union",
+    "Sun Federal Credit Union",
+    "Wise Public Credit Union",
+    "WPCCU",
+    "BR Telco Federal Credit Union",
+    "Credit Union of Colorado",
+    "Firefighters & Safety Employees Credit Union",
+    "USS Federal Credit Union",
+    "5Point Credit Union",
+    "Advanced Technology Federal Credit Union",
+    "AFCU (America First Credit Union)",
+    "AmeriFirst Credit Union",
+    "BECU",
+    "BRT Employees Federal Credit Union",
+    "DCCU (DuPont Community Credit Union)",
+    "FAFCU Credit Union",
+    "Hawaii USA Federal Credit Union",
+    "Houston Area Community Credit Union",
+    "IHMVCU (IH Mississippi Valley Credit Union)",
+    "Metro Credit Union",
+    "Metro West Alliance Federal Credit Union",
+    "Michigan Medicine Federal Credit Union",
+    "Professional Federal Credit Union",
+    "RIA Federal Credit Union",
+    "SunWest Credit Union",
+    "uCredit",
+    "University Credit Union",
+    "US Eagle Federal Credit Union",
+    "useaglefcu.org",
+    "ValleyStrong Credit Union",
+    "Monterey Credit Union GAC 2026",
+    "717 Credit Union",
+    "P1FCU",
+    "West Community Credit Union",
+    "Credit Union of Texas",
+    "Credit Union One",
+    "Gen Federal Credit Union",
+    "Horizon Zero Credit Union",
+    "MAPS Credit Union",
+    "NIH Federal Credit Union",
+    "OBEE Credit Union",
+    "PremierOne Credit Union",
+    "SCU Credit Union",
+    "Self Reliance New York Federal Credit Union",
+    "University Federal Credit Union",
+    "Barbados Public Workers Coop CU Ltd",
+    "Rising Above Enterprises",
+    "AACUC - GAC 2026 Referral Opportunity",
+    "AFCU",
+    "Cal Coast",
+    "DOCFCU",
+    "Farm Credit Employees FCU - GAC 2026",
+    "FECCA Federal Credit Union",
+    "First Financial Federal Credit Union",
+    "HAPO",
+    "HRCU",
+    "Intelliplan Financial",
+    "IU Credit Union",
+    "IUCU",
+    "MDDC - GAC 2026",
+    "ORNLFCU",
+    "ORSA Credit Union",
+    "Pediment - GAC 2026 Potential Referral Partner",
+    "Prismm - GAC 2026 Referral Opportunity",
+    "Tarrant County Credit Union  - GAC 2026",
+    "The League of Credit Unions & Affiliates - GAC 2026 Referral Partner",
+    "The Summit Federal Credit Union - GAC 2026",
+    "UK Credit Union",
+    "UK Federal Credit Union",
+    "Vault - GAC 2026 Referall Opp",
+    "WCCU Credit Union",
+    "Wright Patt Credit Union"
+  ]
+}

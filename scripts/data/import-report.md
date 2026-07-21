@@ -1,6 +1,6 @@
 # Workbook Import Report
 
-Generated: 2026-07-20T23:37:47.713Z
+Generated: 2026-07-21T01:03:50.179Z
 Universe: 4257 banks + 4336 CUs
 
 ## Per-sheet match results
@@ -9,15 +9,15 @@ Universe: 4257 banks + 4336 CUs
 |---|---|---|---|
 | Addressable Banks | 881 | 768 | 113 |
 | Addressable CUs | 880 | 815 | 65 |
-| MQL | 384 | 249 | 135 |
+| MQL | 384 | 266 | 118 |
 | SQL | 7 | 6 | 1 |
 | sales stage | 178 | 145 | 33 |
 
 ## Seeded pipeline state
 
-- Records with any data: 1441
+- Records with any data: 1454
 - Platform fit: 1319
-- mql: 162
+- mql: 178
 - short-term-nurture: 81
 - long-term-nurture: 8
 - bad-contact-info: 5
@@ -32,7 +32,7 @@ Universe: 4257 banks + 4336 CUs
 - closed-lost: 2
 - closed-won: 3
 
-## Non-exact matches — spot-check these (135)
+## Non-exact matches — spot-check these (374)
 
 Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 
@@ -164,8 +164,247 @@ Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 - Members Choice Credit Union → **MEMBERS CHOICE** (Houston, TX) via `name+assets` — _Addressable CUs_
 - Champion Credit Union → **CHAMPION** (Canton, NC) via `name+assets` — _Addressable CUs_
 - The County Federal Credit Union → **THE COUNTY** (Presque Isle, ME) via `name+assets` — _Addressable CUs_
+- Avadian Credit Union → **AVADIAN** (Birmingham, AL) via `validated` — _MQL_
+- Ascend Federal Credit Union → **ASCEND** (TULLAHOMA, TN) via `validated` — _MQL_
+- KEMBA Financial Credit Union → **KEMBA FINANCIAL** (Gahanna, OH) via `validated` — _MQL_
+- Firstmark Credit Union → **FIRSTMARK** (San Antonio, TX) via `validated` — _MQL_
+- Kitsap Credit Union → **KITSAP** (BREMERTON, WA) via `validated` — _MQL_
+- Ent Credit Union → **ENT** (Colorado Spring, CO) via `validated` — _MQL_
+- KEMBA Credit Union → **KEMBA** (West Chester, OH) via `validated` — _MQL_
+- BayPort Credit Union → **BAYPORT** (NEWPORT NEWS, VA) via `validated` — _MQL_
+- Partners Federal Credit Union → **PARTNERS** (Burbank, CA) via `validated` — _MQL_
+- Evolve Federal Credit Union → **EVOLVE** (El Paso, TX) via `validated` — _MQL_
+- Solarity Credit Union → **SOLARITY** (Yakima, WA) via `validated` — _MQL_
+- Listerhill Credit Union → **LISTERHILL** (Sheffield, AL) via `validated` — _MQL_
+- IQ Credit Union → **IQ** (Vancouver, WA) via `validated` — _MQL_
+- University of Hawaii Federal Credit Union → **UNIVERSITY OF HAWAII** (Honolulu, HI) via `validated` — _MQL_
+- TruMark Financial Credit Union → **TRUMARK FINANCIAL** (Fort Washington, PA) via `validated` — _MQL_
+- Altura Credit Union → **ALTURA** (Riverside, CA) via `validated` — _MQL_
+- TopLine Financial Credit Union → **TOPLINE FINANCIAL** (Maple Grove, MN) via `validated` — _MQL_
+- University of Michigan Credit Union → **UNIVERSITY OF MICHIGAN** (Ann Arbor, MI) via `validated` — _MQL_
+- Security Service Federal Credit Union → **SECURITY SERVICE** (San Antonio, TX) via `validated` — _MQL_
+- University of Kentucky Federal Credit Union → **UNIVERSITY OF KENTUCKY** (Lexington, KY) via `validated` — _MQL_
+- Vibrant Credit Union → **VIBRANT** (Moline, IL) via `validated` — _MQL_
+- Cyprus Credit Union → **CYPRUS** (West Jordan, UT) via `validated` — _MQL_
+- AltaOne Federal Credit Union → **ALTAONE** (Ridgecrest, CA) via `validated` — _MQL_
+- CoastHills Credit Union → **COASTHILLS** (Santa Maria, CA) via `validated` — _MQL_
+- Gulf Winds Credit Union → **GULF WINDS** (PENSACOLA, FL) via `validated` — _MQL_
+- Connexus Credit Union → **CONNEXUS** (Wausau, WI) via `validated` — _MQL_
+- Idaho Central Credit Union → **IDAHO CENTRAL** (Chubbuck, ID) via `validated` — _MQL_
+- Fox Communities Credit Union → **FOX COMMUNITIES** (Appleton, WI) via `validated` — _MQL_
+- San Francisco Fire Credit Union → **SAN FRANCISCO FIRE** (San Francisco, CA) via `validated` — _MQL_
+- University of Wisconsin Credit Union → **UNIVERSITY OF WISCONSIN** (Madison, WI) via `validated` — _MQL_
+- DuTrac Community Credit Union → **DUTRAC COMMUNITY** (DUBUQUE, IA) via `validated` — _MQL_
+- Wright-Patt Credit Union → **WRIGHT-PATT CREDIT UNION, INC.** (Beavercreek, OH) via `validated` — _MQL_
+- Greylock Federal Credit Union → **GREYLOCK** (Pittsfield, MA) via `validated` — _MQL_
+- Healthcare Systems Federal Credit Union → **HEALTHCARE SYSTEMS** (Falls Church, VA) via `validated` — _MQL_
+- Jolt Credit Union → **JOLT** (SAGINAW, MI) via `validated` — _MQL_
+- TruWest Credit Union → **TRUWEST** (Scottsdale, AZ) via `validated` — _MQL_
+- Advancial Federal Credit Union → **ADVANCIAL** (Dallas, TX) via `validated` — _MQL_
+- DFCU Financial → **DFCU FINANCIAL** (Dearborn, MI) via `validated` — _MQL_
+- Gesa Credit Union → **GESA** (RICHLAND, WA) via `validated` — _MQL_
+- Hughes Federal Credit Union → **HUGHES** (Tucson, AZ) via `validated` — _MQL_
+- Landmark Credit Union → **LANDMARK** (Danville, IL) via `validated` — _MQL_
+- Firefighters Credit Union → **FIREFIGHTERS** (Draper, UT) via `validated` — _MQL_
 - Illinois University Credit Union → **UNIVERSITY OF ILLINOIS COMMUNITY** (Champaign, IL) via `contain` — _MQL_
-- Financial Advantage Federal Credit Union → **ADVANTAGE FINANCIAL** (WASHINGTON, DC) via `contain` — _MQL_
+- Minnco Credit Union → **MINNCO** (Cambridge, MN) via `validated` — _MQL_
+- Oklahoma Central Credit Union → **OKLAHOMA CENTRAL** (Tulsa, OK) via `validated` — _MQL_
+- Security First Credit Union → **SECURITY FIRST** (MCALLEN, TX) via `validated` — _MQL_
+- Partner Colorado Credit Union → **PARTNER COLORADO** (Arvada, CO) via `validated` — _MQL_
+- Directions Credit Union → **DIRECTIONS** (Toledo, OH) via `validated` — _MQL_
+- Family Savings Credit Union → **FAMILY SAVINGS** (Rainbow City, AL) via `validated` — _MQL_
+- Tropical Financial Credit Union → **TROPICAL FINANCIAL** (MIRAMAR, FL) via `validated` — _MQL_
+- Transcend Credit Union → **TRANSCEND** (Louisville, KY) via `validated` — _MQL_
+- Aloha Pacific Federal Credit Union → **ALOHA PACIFIC** (Honolulu, HI) via `validated` — _MQL_
+- AmeriCU Credit Union → **AMERICU** (Rome, NY) via `validated` — _MQL_
+- DATCU Credit Union → **DATCU** (DENTON, TX) via `validated` — _MQL_
+- Financial Partners Credit Union → **FINANCIAL PARTNERS** (Woodburn, IN) via `validated` — _MQL_
+- Greater Texas Credit Union → **GREATER TEXAS** (AUSTIN, TX) via `validated` — _MQL_
+- HAPO Community Credit Union → **HAPO COMMUNITY** (Richland, WA) via `validated` — _MQL_
+- Kirtland Federal Credit Union → **KIRTLAND** (ALBUQUERQUE, NM) via `validated` — _MQL_
+- Credit Union of America → **CREDIT UNION OF AMERICA** (Wichita, KS) via `validated` — _MQL_
+- Franklin Mint Federal Credit Union → **FRANKLIN MINT** (CHADDS FORD, PA) via `validated` — _MQL_
+- ProFed Federal Credit Union → **PROFED** (Fort Wayne, IN) via `validated` — _MQL_
+- Centris Federal Credit Union → **CENTRIS** (Omaha, NE) via `validated` — _MQL_
+- Foothill Federal Credit Union → **FOOTHILL** (Arcadia, CA) via `validated` — _MQL_
+- Healthcare Plus Credit Union → **HEALTHCARE PLUS** (Aberdeen, SD) via `validated` — _MQL_
+- Ideal Credit Union → **IDEAL** (WOODBURY, MN) via `validated` — _MQL_
+- Oregon Community Credit Union → **OREGON COMMUNITY** (Eugene, OR) via `validated` — _MQL_
+- Sandia Area Federal Credit Union → **SANDIA AREA** (Albuquerque, NM) via `validated` — _MQL_
+- SkyOne Federal Credit Union → **SKYONE** (Hawthorne, CA) via `validated` — _MQL_
+- Westerra Credit Union → **WESTERRA** (Denver, CO) via `validated` — _MQL_
+- Superior Credit Union → **SUPERIOR CREDIT UNION** (Collegeville, PA) via `validated` — _MQL_
+- 1st Advantage Federal Credit Union → **1ST ADVANTAGE** (Newport News, VA) via `validated` — _MQL_
+- Arkansas Federal Credit Union → **ARKANSAS** (Little Rock, AR) via `validated` — _MQL_
+- First South Financial Credit Union → **FIRST SOUTH FINANCIAL** (Bartlett, TN) via `validated` — _MQL_
+- St. Louis Community Credit Union → **ST. LOUIS COMMUNITY** (Saint Louis, MO) via `validated` — _MQL_
+- University of Illinois Community Credit Union → **UNIVERSITY OF ILLINOIS COMMUNITY** (Champaign, IL) via `validated` — _MQL_
+- Utah Community Credit Union → **UTAH COMMUNITY** (Provo, UT) via `validated` — _MQL_
+- ABNB Federal Credit Union → **ABNB** (Chesapeake, VA) via `validated` — _MQL_
+- Coastal Federal Credit Union → **COASTAL** (Raleigh, NC) via `validated` — _MQL_
+- Del-One Federal Credit Union → **DEL-ONE** (Dover, DE) via `validated` — _MQL_
+- First Commerce Credit Union → **FIRST COMMERCE** (Tallahassee, FL) via `validated` — _MQL_
+- Island Federal Credit Union → **ISLAND** (Hauppauge, NY) via `validated` — _MQL_
+- Keypoint Credit Union → **KEYPOINT** (San Jose, CA) via `validated` — _MQL_
+- Michigan Educational Credit Union → **MICHIGAN EDUCATIONAL** (Plymouth, MI) via `validated` — _MQL_
+- Mid American Credit Union → **MID AMERICAN** (Wichita, KS) via `validated` — _MQL_
+- Mountain America Credit Union → **MOUNTAIN AMERICA** (SANDY, UT) via `validated` — _MQL_
+- Public Service Credit Union → **PUBLIC SERVICE** (Romulus, MI) via `validated` — _MQL_
+- Sunward Credit Union → **SUNWARD** (Albuquerque, NM) via `validated` — _MQL_
+- Tinker Federal Credit Union → **TINKER** (Oklahoma City, OK) via `validated` — _MQL_
+- Topside Federal Credit Union → **TOPSIDE** (DAHLGREN, VA) via `validated` — _MQL_
+- Alltru Credit Union → **ALLTRU** (WENTZVILLE, MO) via `validated` — _MQL_
+- Heritage Federal Credit Union → **HERITAGE** (Newburgh, IN) via `validated` — _MQL_
+- 1st MidAmerica Credit Union → **1ST MIDAMERICA** (Bethalto, IL) via `validated` — _MQL_
+- Pathways Financial Credit Union → **PATHWAYS FINANCIAL** (Columbus, OH) via `validated` — _MQL_
+- Police and Fire Federal Credit Union → **POLICE & FIRE** (Philadelphia, PA) via `validated` — _MQL_
+- Santa Cruz Community Federal Credit Union → **SANTA CRUZ COMMUNITY** (Santa Cruz, CA) via `validated` — _MQL_
+- Sunmark Federal Credit Union → **SUNMARK** (Albany, NY) via `validated` — _MQL_
+- Bellco Credit Union → **BELLCO** (GREENWOOD VILLA, CO) via `validated` — _MQL_
+- Black Hills Federal Credit Union → **BLACK HILLS** (Rapid City, SD) via `validated` — _MQL_
+- BMI Federal Credit Union → **BMI** (Dublin, OH) via `validated` — _MQL_
+- Carter Federal Credit Union → **CARTER** (SPRINGHILL, LA) via `validated` — _MQL_
+- Christian Community Credit Union → **CHRISTIAN COMMUNITY** (San Dimas, CA) via `validated` — _MQL_
+- Crossroads Community Credit Union → **CROSSROADS COMMUNITY** (CHEEKTOWAGA, NY) via `validated` — _MQL_
+- First Commonwealth Federal Credit Union → **FIRST COMMONWEALTH** (Lehigh Valley, PA) via `validated` — _MQL_
+- Freedom First Credit Union → **FREEDOM FIRST** (Roanoke, VA) via `validated` — _MQL_
+- Great Lakes Credit Union → **GREAT LAKES** (Bay City, MI) via `validated` — _MQL_
+- Houston Federal Credit Union → **HOUSTON** (Sugar Land, TX) via `validated` — _MQL_
+- Keesler Federal Credit Union → **KEESLER** (BILOXI, MS) via `validated` — _MQL_
+- Members Choice Credit Union → **MEMBERS CHOICE** (ASHLAND, KY) via `validated` — _MQL_
+- Monterey Credit Union → **MONTEREY** (MONTEREY, CA) via `validated` — _MQL_
+- Pacific Service Credit Union → **PACIFIC SERVICE** (Concord, CA) via `validated` — _MQL_
+- Silver State Schools Credit Union → **SILVER STATE SCHOOLS** (Las Vegas, NV) via `validated` — _MQL_
+- South Carolina Federal Credit Union → **SOUTH CAROLINA** (NORTH CHARLESTO, SC) via `validated` — _MQL_
+- Southwest Airlines Federal Credit Union → **SOUTHWEST AIRLINES** (Dallas, TX) via `validated` — _MQL_
+- Texas Tech Federal Credit Union → **TEXAS TECH** (Lubbock, TX) via `validated` — _MQL_
+- Utah First Federal Credit Union → **UTAH FIRST** (Salt Lake City, UT) via `validated` — _MQL_
+- DC Credit Union → **DC** (Washington, DC) via `validated` — _MQL_
+- EFCU Financial → **EFCU FINANCIAL** (Baton Rouge, LA) via `validated` — _MQL_
+- Forum Credit Union → **FORUM** (INDIANAPOLIS, IN) via `validated` — _MQL_
+- WestConsin Credit Union → **WESTCONSIN** (Menomonie, WI) via `validated` — _MQL_
+- America First Credit Union → **AMERICA FIRST** (RIVERDALE, UT) via `validated` — _MQL_
+- Amplify Credit Union → **AMPLIFY** (Austin, TX) via `validated` — _MQL_
+- Ascentra Credit Union → **ASCENTRA** (Bettendorf, IA) via `validated` — _MQL_
+- Boeing Employees Credit Union (BECU) → **BOEING EMPLOYEES** (TUKWILA, WA) via `validated` — _MQL_
+- Consumers Credit Union → **CONSUMERS** (Brooklyn, NY) via `validated` — _MQL_
+- Financial Advantage Federal Credit Union → **ADVANTAGE FINANCIAL** (WASHINGTON, DC) via `validated` — _MQL_
+- Financial Security Credit Union → **FINANCIAL SECURITY** (CARLSBAD, NM) via `validated` — _MQL_
+- HawaiiUSA Federal Credit Union → **HAWAIIUSA** (Honolulu, HI) via `validated` — _MQL_
+- InTouch Credit Union → **INTOUCH** (PLANO, TX) via `validated` — _MQL_
+- Launch Federal Credit Union → **LAUNCH CREDIT UNION** (MERRITT ISLAND, FL) via `validated` — _MQL_
+- Members 1st Federal Credit Union → **MEMBERS 1ST** (Saint Louis, MO) via `validated` — _MQL_
+- Navigator Credit Union → **NAVIGATOR** (Pascagoula, MS) via `validated` — _MQL_
+- R.I.A. Federal Credit Union → **R.I.A.** (Rock Island, IL) via `validated` — _MQL_
+- Randolph-Brooks Federal Credit Union → **RANDOLPH-BROOKS** (UNIVERSAL CITY, TX) via `validated` — _MQL_
+- Valley Strong Credit Union → **VALLEY STRONG** (BAKERSFIELD, CA) via `validated` — _MQL_
+- Verity Credit Union → **VERITY** (Seattle, WA) via `validated` — _MQL_
+- Community 1st Credit Union → **1ST COMMUNITY** (Sparta, WI) via `validated` — _MQL_
+- Travis Credit Union - GAC 2026 → **TRAVIS** (VACAVILLE, CA) via `validated` — _MQL_
+- 1st Northern California Credit Union → **1ST NORTHERN CALIFORNIA** (Martinez, CA) via `validated` — _MQL_
+- Credit Union of Denver → **CREDIT UNION OF DENVER** (LAKEWOOD, CO) via `validated` — _MQL_
+- EECU Credit Union → **EECU** (Fort Worth, TX) via `validated` — _MQL_
+- Fort Worth City Credit Union → **FORT WORTH CITY** (Fort Worth, TX) via `validated` — _MQL_
+- Henrico Federal Credit Union → **HENRICO** (Henrico, VA) via `validated` — _MQL_
+- Pelican State Credit Union → **PELICAN** (Baton Rouge, LA) via `validated` — _MQL_
+- San Francisco Federal Credit Union → **SAN FRANCISCO** (San Francisco, CA) via `validated` — _MQL_
+- Sun Community Federal Credit Union → **SUN COMMUNITY** (El Centro, CA) via `validated` — _MQL_
+- TLC Community Credit Union → **TLC COMMUNITY** (Adrian, MI) via `validated` — _MQL_
+- Tucson Federal Credit Union → **TUCSON** (TUCSON, AZ) via `validated` — _MQL_
+- Valley First Credit Union → **VALLEY FIRST** (Modesto, CA) via `validated` — _MQL_
+- Washington State Employees Credit Union → **WASHINGTON STATE EMPLOYEES** (OLYMPIA, WA) via `validated` — _MQL_
+- WEOKIE Federal Credit Union → **WEOKIE** (Oklahoma City, OK) via `validated` — _MQL_
+- Zeal Credit Union → **ZEAL** (Livonia, MI) via `validated` — _MQL_
+- Dow Credit Union → **DOW** (Midland, MI) via `validated` — _MQL_
+- Amoco Federal Credit Union → **AMOCO** (Texas City, TX) via `validated` — _MQL_
+- Atlantic Federal Credit Union → **THE ATLANTIC** (Kenilworth, NJ) via `validated` — _MQL_
+- Bay Federal Credit Union → **BAY** (Capitola, CA) via `validated` — _MQL_
+- Bayer Heritage Federal Credit Union → **BAYER HERITAGE** (New Martinsvill, WV) via `validated` — _MQL_
+- Clearwater Credit Union → **CLEARWATER** (Missoula, MT) via `validated` — _MQL_
+- Coastal1 Credit Union → **COASTAL1** (Pawtucket, RI) via `validated` — _MQL_
+- CoVantage Credit Union → **COVANTAGE** (Antigo, WI) via `validated` — _MQL_
+- Embers Credit Union → **EMBERS** (Marquette, MI) via `validated` — _MQL_
+- Firefighters First Federal Credit Union (NM) → **FIREFIGHTERS FIRST** (Los Angeles, CA) via `validated` — _MQL_
+- First Florida Credit Union → **FIRST FLORIDA** (Jacksonville, FL) via `validated` — _MQL_
+- Frontier Credit Union → **FRONTIER** (Idaho Falls, ID) via `validated` — _MQL_
+- Frontwave Credit Union → **FRONTWAVE** (Oceanside, CA) via `validated` — _MQL_
+- Hudson River Community Credit Union → **HUDSON RIVER COMMUNITY** (Corinth, NY) via `validated` — _MQL_
+- Inova Federal Credit Union → **INOVA** (Elkhart, IN) via `validated` — _MQL_
+- Langley Federal Credit Union → **LANGLEY** (Newport News, VA) via `validated` — _MQL_
+- Levo Credit Union → **LEVO** (Sioux Falls, SD) via `validated` — _MQL_
+- Magnifi Financial → **MAGNIFI FINANCIAL** (MELROSE, MN) via `validated` — _MQL_
+- Michigan State University Federal Credit Union → **MICHIGAN STATE UNIVERSITY** (East Lansing, MI) via `validated` — _MQL_
+- Superior Choice Credit Union → **SUPERIOR CHOICE** (Superior, WI) via `validated` — _MQL_
+- Telhio Credit Union → **TELHIO** (Columbus, OH) via `validated` — _MQL_
+- Texar Federal Credit Union → **TEXAR** (TEXARKANA, TX) via `validated` — _MQL_
+- Truliant Federal Credit Union → **TRULIANT** (Winston Salem, NC) via `validated` — _MQL_
+- Bridge Credit Union Inc → **BRIDGE** (Powell, OH) via `validated` — _MQL_
+- Commonwealth CU → **COMMONWEALTH** (Bourbonnais, IL) via `validated` — _MQL_
+- Community Service CU → **COMMUNITY SERVICE** (Huntsville, TX) via `validated` — _MQL_
+- Eaton Family Credit Union → **EATON FAMILY** (Euclid, OH) via `validated` — _MQL_
+- Education Personnel FCU → **EDUCATION PERSONNEL** (Danville, IL) via `validated` — _MQL_
+- Everence FCU → **EVERENCE** (Lancaster, PA) via `validated` — _MQL_
+- Florence FCU → **FLORENCE** (Florence, AL) via `validated` — _MQL_
+- Franklin Trust FCU → **FRANKLIN TRUST** (Hartford, CT) via `validated` — _MQL_
+- Hawaii Schools FCU → **HAWAII SCHOOLS** (Honolulu, HI) via `validated` — _MQL_
+- Indiana State University FCU → **INDIANA STATE UNIVERSITY** (Terre Haute, IN) via `validated` — _MQL_
+- NSP Credit Union → **NSP** (Maplewood, MN) via `validated` — _MQL_
+- Ohio Educational CU Inc → **OHIO EDUCATIONAL** (Cleveland, OH) via `validated` — _MQL_
+- Plus CU → **PLUS** (Las Vegas, NV) via `validated` — _MQL_
+- Riverways FCU → **RIVERWAYS** (Rolla, MO) via `validated` — _MQL_
+- Theory FCU → **THEORY** (PAINESVILLE, OH) via `validated` — _MQL_
+- Total Community CU → **TOTAL COMMUNITY** (TAYLOR, MI) via `validated` — _MQL_
+- 1st Mississippi Federal Credit Union → **1ST MISSISSIPPI** (Meridian, MS) via `validated` — _MQL_
+- American Airlines Federal Credit Union → **AMERICAN AIRLINES** (Fort Worth, TX) via `validated` — _MQL_
+- Azura Credit Union → **AZURA** (Topeka, KS) via `validated` — _MQL_
+- Border Federal Credit Union - GAC 2026 → **BORDER** (Del Rio, TX) via `validated` — _MQL_
+- Bronco FCU → **BRONCO** (FRANKLIN, VA) via `validated` — _MQL_
+- California Coast Credit Union → **CALIFORNIA COAST** (San Diego, CA) via `validated` — _MQL_
+- County Schools FCU → **COUNTY SCHOOLS** (Ventura, CA) via `validated` — _MQL_
+- Education First Credit Union → **EDUCATION FIRST** (Beaumont, TX) via `validated` — _MQL_
+- Enbright Credit Union - GAC 2026 → **ENBRIGHT** (Nashville, TN) via `validated` — _MQL_
+- Endurance Federal Credit Union → **ENDURANCE** (Duncan, OK) via `validated` — _MQL_
+- First Entertainment CU → **FIRST ENTERTAINMENT** (Hollywood, CA) via `validated` — _MQL_
+- First Financial Federal Credit Union of Maryland - New Deal → **FIRST FINANCIAL OF MARYLAND** (Sparks, MD) via `validated` — _MQL_
+- First Heritage Federal Credit Union → **FIRST HERITAGE** (Corning, NY) via `validated` — _MQL_
+- First New York Federal Credit Union → **FIRST NEW YORK** (Albany, NY) via `validated` — _MQL_
+- First U.S. Community CU → **FIRST U.S. COMMUNITY** (Sacramento, CA) via `validated` — _MQL_
+- Foothills Credit Union → **FOOTHILLS** (LOUDON, TN) via `validated` — _MQL_
+- Fortress Federal Credit Union → **FORTRESS** (Marion, IN) via `validated` — _MQL_
+- Gerber Federal Credit Union → **GERBER** (Fremont, MI) via `validated` — _MQL_
+- GFA Federal Credit Union - GAC 2026 → **GFA** (Gardner, MA) via `validated` — _MQL_
+- Greater Iowa Credit Union → **GREATER IOWA** (Ames, IA) via `validated` — _MQL_
+- Harborstone Credit Union → **HARBORSTONE** (TACOMA, WA) via `validated` — _MQL_
+- Heritage Family Federal Credit Union - GAC 2026 → **HERITAGE FAMILY** (Rutland, VT) via `validated` — _MQL_
+- Hudson Valley Credit Union - GAC 2026 → **HUDSON VALLEY** (Poughkeepsie, NY) via `validated` — _MQL_
+- Interra Credit Union - GAC 2026 → **INTERRA** (Goshen, IN) via `validated` — _MQL_
+- Justice FCU → **JUSTICE** (Chantilly, VA) via `validated` — _MQL_
+- Kohler Credit Union - GAC 2026 → **KOHLER** (Sheboygan, WI) via `validated` — _MQL_
+- Lampco FCU - GAC 2026 → **LAMPCO** (ANDERSON, IN) via `validated` — _MQL_
+- Mayo Credit Union → **MAYO EMPLOYEES** (ROCHESTER, MN) via `validated` — _MQL_
+- Navy Federal Credit Union - GAC 2026 → **NAVY FEDERAL CREDIT UNION** (VIENNA, VA) via `validated` — _MQL_
+- Nebraska Energy Federal Credit Union → **NEBRASKA ENERGY** (COLUMBUS, NE) via `validated` — _MQL_
+- Numerica Credit Union - GAC 2026 → **NUMERICA** (Spokane Valley, WA) via `validated` — _MQL_
+- Patelco Credit Union - Digital Storefront → **PATELCO** (Dublin, CA) via `validated` — _MQL_
+- PFCU → **PFCU** (Portland, MI) via `validated` — _MQL_
+- Pima Federal CU → **PIMA** (Tucson, AZ) via `validated` — _MQL_
+- Pioneer Federal Credit Union → **PIONEER** (MOUNTAIN HOME, ID) via `validated` — _MQL_
+- Rize Federal Credit Union → **RIZE** (EL MONTE, CA) via `validated` — _MQL_
+- Rogue Credit Union - GAC 2026 → **ROGUE** (Medford, OR) via `validated` — _MQL_
+- Selfreliance Federal Credit Union - GAC 2026 → **SELFRELIANCE** (Chicago, IL) via `validated` — _MQL_
+- Signal Financial Federal Credit Union - GAC 2026 → **SIGNAL FINANCIAL** (Kensington, MD) via `validated` — _MQL_
+- Simplicity Credit Union - GAC 2026 → **SIMPLICITY** (Marshfield, WI) via `validated` — _MQL_
+- SIU Credit Union - GAC 2026 → **SIU** (Carbondale, IL) via `validated` — _MQL_
+- Telco Community Credit Union - GAC 2026 → **TELCO COMMUNITY CREDIT UNION** (Candler, NC) via `validated` — _MQL_
+- Trax Credit Union - GAC 2026 → **TRAX** (Tampa, FL) via `validated` — _MQL_
+- Trius Federal Credit Union - GAC 2026 → **TRIUS** (Kearney, NE) via `validated` — _MQL_
+- Truity Credit Union → **TRUITY** (Bartlesville, OK) via `validated` — _MQL_
+- United States Senate Federal Credit Union - GAC 2026 → **UNITED STATES SENATE** (Alexandria, VA) via `validated` — _MQL_
+- United Teletech Financial - GAC 2026 → **UNITED TELETECH FINANCIAL** (TINTON FALLS, NJ) via `validated` — _MQL_
+- University of Toledo Credit Union → **UNIVERSITY OF TOLEDO** (Toledo, OH) via `validated` — _MQL_
+- Via Credit Union → **VIA CREDIT UNION** (Marion, IN) via `validated` — _MQL_
+- Ardent Credit Union - Digital Storefront → **ARDENT** (Phila, PA) via `validated` — _MQL_
+- AMERICAN LAKE CREDIT UNION → **AMERICAN LAKE** (Lakewood, WA) via `validated` — _MQL_
 - Horizon Credit Union (WA) → **HORIZON** (Spokane Valley, WA) via `name+state` — _SQL_
 - Capital Credit Union (WI) - Digital Storefront → **CAPITAL** (Green Bay, WI) via `name+state` — _sales stage_
 - Heartland Credit Union (WI) - Digital Storefront → **HEARTLAND** (Madison, WI) via `name+state` — _sales stage_
@@ -244,7 +483,7 @@ Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 - FOOTHILL (cu-12425): had "mql", sales stage sheet says "proposal-sent" → kept "proposal-sent"
 - PIONEER (cu-9247): had "mql", sales stage sheet says "verbal-commitment" → kept "verbal-commitment"
 
-## Unmatched / needs human review (347)
+## Unmatched / needs human review (330)
 
 These rows were NOT imported. Resolve manually in the UI (find the FI and set
 its stage/owner/fit) or fix the workbook and re-run the import.
@@ -449,19 +688,14 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **A+ Federal Credit Union** — _MQL_: empty name after normalization
 - **SunWest Federal Credit Union** — _MQL_: ambiguous name
 - **AA Credit Union** — _MQL_: no confident match (best 0.00)
-- **Landmark Credit Union** — _MQL_: ambiguous name
-- **Firefighters Credit Union** — _MQL_: ambiguous name
-- **Family Savings Credit Union** — _MQL_: ambiguous name
 - **Kaiser Permanente Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **Linnarea Credit Union** — _MQL_: no confident match (best 0.00)
 - **Credit Union of Southern California** — _MQL_: no confident match (best 0.50 = CALIFORNIA, GLENDALE CA)
-- **Financial Partners Credit Union** — _MQL_: ambiguous name
 - **Linn Area Credit Union** — _MQL_: no confident match (best 0.50 = AREA, ABERDEEN SD)
 - **Contego International** — _MQL_: no confident match (best 0.33 = International Bank of Commerce, Laredo TX)
 - **Metro Federal Credit Union** — _MQL_: ambiguous name
 - **MWA Financial Federal Credit Union** — _MQL_: no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)
 - **Ohio Health Credit Union** — _MQL_: no confident match (best 0.50 = CREDIT UNION OF OHIO, Hilliard OH)
-- **Superior Credit Union** — _MQL_: ambiguous name
 - **Guardian Credit Union** — _MQL_: ambiguous name
 - **TrueSky Credit Union** — _MQL_: no confident match (best 0.00)
 - **Clackamas Federal Credit Union** — _MQL_: no confident match (best 0.00)
@@ -472,7 +706,6 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **MidAmerican Credit Union** — _MQL_: no confident match (best 0.00)
 - **Ohio University Credit Union** — _MQL_: no confident match (best 0.50 = UNIVERSITY, AUSTIN TX)
 - **Pacific Marine Credit Union** — _MQL_: no confident match (best 0.50 = MARINE, La Crosse WI)
-- **Public Service Credit Union** — _MQL_: ambiguous name
 - **Community Choice Credit Union** — _MQL_: ambiguous name
 - **CPD Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **Summit Federal Credit Union** — _MQL_: ambiguous name
@@ -480,9 +713,7 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **C1st Credit Union** — _MQL_: no confident match (best 0.00)
 - **Cape Cod 5 Credit Union** — _MQL_: no confident match (best 0.33 = CAPE, Clarksburg WV)
 - **Capital Credit Union** — _MQL_: ambiguous name
-- **Great Lakes Credit Union** — _MQL_: ambiguous name
 - **IHMVCU** — _MQL_: no confident match (best 0.00)
-- **Members Choice Credit Union** — _MQL_: ambiguous name
 - **Missoula Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **Missouri Credit Union** — _MQL_: no confident match (best 0.50 = MISSOURI CENTRAL, Lees Summit MO)
 - **Southern California Edison Federal Credit Union** — _MQL_: no confident match (best 0.33 = CALIFORNIA, GLENDALE CA)
@@ -499,13 +730,11 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **AmeriFirst Credit Union** — _MQL_: no confident match (best 0.00)
 - **BECU** — _MQL_: no confident match (best 0.00)
 - **BRT Employees Federal Credit Union** — _MQL_: no confident match (best 0.50 = STATE EMPLOYEES', RALEIGH NC)
-- **Consumers Credit Union** — _MQL_: ambiguous name
 - **DCCU (DuPont Community Credit Union)** — _MQL_: no confident match (best 0.00)
 - **FAFCU Credit Union** — _MQL_: no confident match (best 0.00)
 - **Hawaii USA Federal Credit Union** — _MQL_: no confident match (best 0.50 = HAWAII STATE, Honolulu HI)
 - **Houston Area Community Credit Union** — _MQL_: no confident match (best 0.67 = AREA COMMUNITY, GRAND FORKS ND)
 - **IHMVCU (IH Mississippi Valley Credit Union)** — _MQL_: no confident match (best 0.00)
-- **Members 1st Federal Credit Union** — _MQL_: ambiguous name
 - **Metro Credit Union** — _MQL_: ambiguous name
 - **Metro West Alliance Federal Credit Union** — _MQL_: no confident match (best 0.50 = WEST METRO SCHOOLS, Hopkins MN)
 - **Michigan Medicine Federal Credit Union** — _MQL_: no confident match (best 0.33 = LAKE MICHIGAN, Grand Rapids MI)
@@ -517,7 +746,6 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **US Eagle Federal Credit Union** — _MQL_: no confident match (best 0.50 = EAGLE, ATCHISON KS)
 - **useaglefcu.org** — _MQL_: no confident match (best 0.00)
 - **ValleyStrong Credit Union** — _MQL_: no confident match (best 0.00)
-- **Community 1st Credit Union** — _MQL_: ambiguous name
 - **717 Credit Union** — _MQL_: no confident match (best 0.00)
 - **P1FCU** — _MQL_: no confident match (best 0.00)
 - **Credit Union of Texas** — _MQL_: ambiguous name
@@ -532,24 +760,18 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **Self Reliance New York Federal Credit Union** — _MQL_: no confident match (best 0.40 = SELF RELIANCE FINANCIAL, New York NY)
 - **University Federal Credit Union** — _MQL_: ambiguous name
 - **Barbados Public Workers Coop CU Ltd** — _MQL_: no confident match (best 0.20 = WORKERS, Littleton MA)
-- **Commonwealth CU** — _MQL_: ambiguous name
-- **Indiana State University FCU** — _MQL_: ambiguous name
-- **Plus CU** — _MQL_: ambiguous name
 - **Rising Above Enterprises** — _MQL_: no confident match (best 0.25 = AFGM ENTERPRISES, Cheektowaga NY)
 - **AACUC - GAC 2026 Referral Opportunity** — _MQL_: no confident match (best 0.00)
 - **AFCU** — _MQL_: no confident match (best 0.00)
 - **Cal Coast** — _MQL_: no confident match (best 0.33 = Third Coast Bank, Humble TX)
 - **DOCFCU** — _MQL_: no confident match (best 0.00)
-- **Education First Credit Union** — _MQL_: ambiguous name
 - **FECCA Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **First Financial Federal Credit Union** — _MQL_: ambiguous name
-- **Foothills Credit Union** — _MQL_: ambiguous name
 - **HAPO** — _MQL_: no confident match (best 0.50 = HAPO COMMUNITY, Richland WA)
 - **HRCU** — _MQL_: no confident match (best 0.00)
 - **Intelliplan Financial** — _MQL_: no confident match (best 0.50 = Financial Federal Bank, Memphis TN)
 - **IU Credit Union** — _MQL_: no confident match (best 0.00)
 - **IUCU** — _MQL_: no confident match (best 0.00)
-- **Mayo Credit Union** — _MQL_: no confident match (best 0.50 = MAYO EMPLOYEES, ROCHESTER MN)
 - **MDDC - GAC 2026** — _MQL_: no confident match (best 0.00)
 - **ORNLFCU** — _MQL_: no confident match (best 0.00)
 - **ORSA Credit Union** — _MQL_: no confident match (best 0.00)
