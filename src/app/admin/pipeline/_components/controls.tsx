@@ -1,8 +1,76 @@
 "use client";
 
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BRANCH_STAGES, MAIN_STAGES, STAGE_LABELS } from "../_lib/stages";
 import type { Channel, StageId } from "../_lib/types";
+
+const OTHER = "__other__";
+
+/**
+ * Dropdown of known options + "Other…" that reveals a free-text field.
+ * The current value is shown even if it isn't one of the options (e.g. a
+ * previously-entered Other value), so nothing is silently lost.
+ */
+export function OptionOrOther({
+  value,
+  options,
+  placeholder = "Not set",
+  onChange,
+  className,
+}: {
+  value: string | null | undefined;
+  options: string[];
+  placeholder?: string;
+  onChange: (v: string | undefined) => void;
+  className?: string;
+}) {
+  const known = value != null && value !== "" && options.includes(value);
+  const [isOther, setIsOther] = useState(value != null && value !== "" && !known);
+
+  const selectValue = isOther ? OTHER : (value ?? "");
+  return (
+    <div className="space-y-1.5">
+      <select
+        value={selectValue}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === OTHER) {
+            setIsOther(true);
+            onChange(value && !options.includes(value) ? value : "");
+          } else {
+            setIsOther(false);
+            onChange(v || undefined);
+          }
+        }}
+        onClick={(e) => e.stopPropagation()}
+        className={cn(
+          "w-full text-sm rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-700",
+          "hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300 cursor-pointer",
+          className,
+        )}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+        <option value={OTHER}>Other…</option>
+      </select>
+      {isOther && (
+        <input
+          autoFocus
+          defaultValue={value && !options.includes(value) ? value : ""}
+          placeholder="Type a value…"
+          onClick={(e) => e.stopPropagation()}
+          onBlur={(e) => onChange(e.target.value.trim() || undefined)}
+          className="w-full text-sm rounded-lg border border-slate-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-300"
+        />
+      )}
+    </div>
+  );
+}
 
 export function StageSelect({
   value,

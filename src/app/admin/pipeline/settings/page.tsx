@@ -33,7 +33,7 @@ export default function PipelineSettingsPage() {
     const header = [
       "id", "name", "type", "city", "state", "assets",
       "stage", "owner", "platform_fit", "lead_source", "channel", "referral_partner",
-      "arr", "closed_year", "notes", "updated_at",
+      "core_system", "los", "home_banking", "arr", "closed_year", "notes", "updated_at",
     ];
     const esc = (v: unknown) => {
       const s = String(v ?? "");
@@ -48,6 +48,7 @@ export default function PipelineSettingsPage() {
           fi.id, fi.name, fi.type, fi.city, fi.state, fi.assets,
           rec.stage ?? "", rec.owner ?? "", rec.platformFit ? "true" : "",
           rec.leadSource ?? "", rec.channel ?? "direct", rec.referralPartner ?? "",
+          rec.coreSystem ?? "", rec.los ?? "", rec.homeBanking ?? "",
           rec.arr ?? "", rec.closedYear ?? "", rec.notes ?? "", rec.updatedAt,
         ]
           .map(esc)

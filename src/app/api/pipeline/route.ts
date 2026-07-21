@@ -46,6 +46,9 @@ export async function PATCH(req: NextRequest) {
       !merged.leadSource &&
       !merged.channel &&
       !merged.referralPartner &&
+      !merged.coreSystem &&
+      !merged.los &&
+      !merged.homeBanking &&
       !merged.notes &&
       merged.arr == null;
     if (isEmpty) delete state.records[fiId];

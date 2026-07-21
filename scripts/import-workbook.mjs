@@ -7,6 +7,11 @@
 // Outputs: src/data/pipeline-seed.json
 //          scripts/data/import-report.md
 //
+// NOTE: this regenerates the seed from scratch. If you re-run it, also re-run
+//   node scripts/import-los-core.mjs
+// afterward to re-apply the TruStage Core/LOS attributes (they live only in
+// that list, not the workbook).
+//
 // Matching rules: workbook rows NEVER create FI records — they only attach
 // pipeline data to canonical FDIC/NCUA institutions. Rows that can't be
 // matched confidently are skipped and listed in the report for human review,

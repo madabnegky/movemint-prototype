@@ -6,7 +6,7 @@ import { usePipeline } from "../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
 import { inAssetBand } from "../_lib/universe";
 import type { FI } from "../_lib/types";
-import { OwnerSelect, StageSelect, TypeBadge } from "./controls";
+import { OptionOrOther, OwnerSelect, StageSelect, TypeBadge } from "./controls";
 
 export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }) {
   const { state, updateRecord } = usePipeline();
@@ -185,6 +185,42 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
               </span>
             </div>
           )}
+
+          <div className="space-y-3 rounded-lg border border-slate-100 p-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Tech stack
+            </span>
+            <label className="block">
+              <span className="text-xs font-semibold text-slate-500 mb-1 block">
+                Core banking system
+              </span>
+              <OptionOrOther
+                value={rec?.coreSystem}
+                options={state.settings.coreOptions ?? []}
+                onChange={(v) => updateRecord(fi.id, { coreSystem: v })}
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-slate-500 mb-1 block">
+                Loan origination system (LOS)
+              </span>
+              <OptionOrOther
+                value={rec?.los}
+                options={state.settings.losOptions ?? []}
+                onChange={(v) => updateRecord(fi.id, { los: v })}
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-slate-500 mb-1 block">
+                Home banking provider
+              </span>
+              <OptionOrOther
+                value={rec?.homeBanking}
+                options={state.settings.homeBankingOptions ?? []}
+                onChange={(v) => updateRecord(fi.id, { homeBanking: v })}
+              />
+            </label>
+          </div>
 
           <label className="block">
             <span className="text-xs font-semibold text-slate-500 mb-1 block">Notes</span>

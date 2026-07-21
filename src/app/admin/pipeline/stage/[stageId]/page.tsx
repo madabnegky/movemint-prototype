@@ -28,6 +28,9 @@ export default function StageListPage({
   const [stateFilter, setStateFilter] = useState("all");
   const [ownerFilter, setOwnerFilter] = useState("all");
   const [channelFilter, setChannelFilter] = useState<"all" | "direct" | "referral">("all");
+  const [coreFilter, setCoreFilter] = useState("all");
+  const [losFilter, setLosFilter] = useState("all");
+  const [showTech, setShowTech] = useState(false);
   const [yearFilter, setYearFilter] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("assets");
   const [sortDesc, setSortDesc] = useState(true);
@@ -72,6 +75,12 @@ export default function StageListPage({
         (fi) => (state.records[fi.id]?.channel ?? "direct") === channelFilter,
       );
     }
+    if (coreFilter !== "all") {
+      out = out.filter((fi) => (state.records[fi.id]?.coreSystem ?? "") === coreFilter);
+    }
+    if (losFilter !== "all") {
+      out = out.filter((fi) => (state.records[fi.id]?.los ?? "") === losFilter);
+    }
     const dir = sortDesc ? -1 : 1;
     const rec = (fi: FI) => state.records[fi.id];
     out = [...out].sort((a, b) => {
@@ -89,7 +98,27 @@ export default function StageListPage({
       }
     });
     return out;
-  }, [members, state, search, typeFilter, stateFilter, ownerFilter, channelFilter, yearFilter, sortKey, sortDesc]);
+  }, [members, state, search, typeFilter, stateFilter, ownerFilter, channelFilter, coreFilter, losFilter, yearFilter, sortKey, sortDesc]);
+
+  // Distinct core/LOS values present in this list, for the filter dropdowns.
+  const coreValues = useMemo(() => {
+    if (!state) return [];
+    const s = new Set<string>();
+    for (const fi of members) {
+      const v = state.records[fi.id]?.coreSystem;
+      if (v) s.add(v);
+    }
+    return [...s].sort();
+  }, [members, state]);
+  const losValues = useMemo(() => {
+    if (!state) return [];
+    const s = new Set<string>();
+    for (const fi of members) {
+      const v = state.records[fi.id]?.los;
+      if (v) s.add(v);
+    }
+    return [...s].sort();
+  }, [members, state]);
 
   const isClosedView = stageId === "closed-won" || stageId === "closed-lost";
   const closedYearOptions = useMemo(() => {
@@ -244,6 +273,51 @@ export default function StageListPage({
           <option value="direct">Direct</option>
           <option value="referral">Referral</option>
         </select>
+        {coreValues.length > 0 && (
+          <select
+            value={coreFilter}
+            onChange={(e) => {
+              setCoreFilter(e.target.value);
+              setPage(0);
+            }}
+            className="text-sm rounded-lg border border-slate-200 bg-white px-3 py-2 max-w-50"
+          >
+            <option value="all">All cores</option>
+            {coreValues.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
+        )}
+        {losValues.length > 0 && (
+          <select
+            value={losFilter}
+            onChange={(e) => {
+              setLosFilter(e.target.value);
+              setPage(0);
+            }}
+            className="text-sm rounded-lg border border-slate-200 bg-white px-3 py-2 max-w-50"
+          >
+            <option value="all">All LOS</option>
+            {losValues.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
+        )}
+        <button
+          onClick={() => setShowTech((v) => !v)}
+          className={cn(
+            "text-sm font-medium rounded-lg border px-3 py-2 transition-colors",
+            showTech
+              ? "bg-slate-900 text-white border-slate-900"
+              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50",
+          )}
+        >
+          {showTech ? "Hide tech columns" : "Show tech columns"}
+        </button>
         {isClosedView && closedYearOptions.length > 0 && (
           <select
             value={yearFilter}
@@ -344,6 +418,12 @@ export default function StageListPage({
                   {rec?.leadSource && (
                     <div className="text-[11px] text-teal-600 mt-1">{rec.leadSource}</div>
                   )}
+                  {(rec?.coreSystem || rec?.los) && (
+                    <div className="text-[11px] text-slate-400 mt-1 space-x-2">
+                      {rec?.coreSystem && <span>Core: {rec.coreSystem}</span>}
+                      {rec?.los && <span>LOS: {rec.los}</span>}
+                    </div>
+                  )}
                 </div>
               </div>
               <div
@@ -397,6 +477,9 @@ export default function StageListPage({
               <Th label="Fit" />
               <Th label="Lead Source" />
               <Th label="Channel" />
+              {showTech && <Th label="Core" />}
+              {showTech && <Th label="LOS" />}
+              {showTech && <Th label="Home Banking" />}
               <Th label="Stage" k="stage" />
               <Th label="Owner" k="owner" />
             </tr>
@@ -446,6 +529,21 @@ export default function StageListPage({
                   <td className="px-3 py-2 whitespace-nowrap">
                     <ChannelBadge channel={rec?.channel} partner={rec?.referralPartner} />
                   </td>
+                  {showTech && (
+                    <td className="px-3 py-2 text-xs text-slate-500 max-w-40 truncate">
+                      {rec?.coreSystem ?? ""}
+                    </td>
+                  )}
+                  {showTech && (
+                    <td className="px-3 py-2 text-xs text-slate-500 max-w-40 truncate">
+                      {rec?.los ?? ""}
+                    </td>
+                  )}
+                  {showTech && (
+                    <td className="px-3 py-2 text-xs text-slate-500 max-w-40 truncate">
+                      {rec?.homeBanking ?? ""}
+                    </td>
+                  )}
                   <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                     <StageSelect
                       value={rec?.stage ?? null}
@@ -464,7 +562,7 @@ export default function StageListPage({
             })}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={10} className="px-3 py-10 text-center text-slate-400">
+                <td colSpan={showTech ? 13 : 10} className="px-3 py-10 text-center text-slate-400">
                   No institutions match.
                 </td>
               </tr>

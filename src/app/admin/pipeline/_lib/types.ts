@@ -49,6 +49,10 @@ export interface PipelineRecord {
   channel?: Channel;
   /** Referral partner name, when channel is "referral". */
   referralPartner?: string;
+  /** Tech stack (seeded from the TruStage LOS/Core list, editable per FI). */
+  coreSystem?: string;
+  los?: string;
+  homeBanking?: string;
   notes?: string;
   arr?: number; // per-deal ARR override, dollars
   /** Calendar year a closed-won / closed-lost deal is attributed to. */
@@ -61,6 +65,11 @@ export interface PipelineSettings {
   salesGoal: number;
   defaultDealArr: number;
   stageProbabilities: Record<StageId, number>;
+  /** Common values offered as dropdown options for each tech attribute
+   *  (an "Other…" choice always reveals a free-text field on top of these). */
+  coreOptions?: string[];
+  losOptions?: string[];
+  homeBankingOptions?: string[];
 }
 
 export interface PipelineState {
