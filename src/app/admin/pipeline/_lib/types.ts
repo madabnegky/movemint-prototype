@@ -36,12 +36,19 @@ export type TierId = "universe" | "addressable" | "active-pursuit";
 /** Everything a stage list page can show. */
 export type ListId = TierId | StageId;
 
+/** Sales channel: a direct deal vs one sourced through a referral partner. */
+export type Channel = "direct" | "referral";
+
 export interface PipelineRecord {
   fiId: string;
   stage: StageId | null; // null = no deal; FI sits in the sizing tiers only
   owner: string | null;
   platformFit?: boolean;
   leadSource?: string;
+  /** Direct vs referral. Absent = treated as direct. */
+  channel?: Channel;
+  /** Referral partner name, when channel is "referral". */
+  referralPartner?: string;
   notes?: string;
   arr?: number; // per-deal ARR override, dollars
   /** Calendar year a closed-won / closed-lost deal is attributed to. */

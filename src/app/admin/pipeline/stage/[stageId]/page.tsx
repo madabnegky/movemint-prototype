@@ -8,7 +8,7 @@ import { usePipeline } from "../../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets, isListId } from "../../_lib/stages";
 import { listMembers } from "../../_lib/universe";
 import type { FI, StageId } from "../../_lib/types";
-import { OwnerSelect, StageSelect, TypeBadge } from "../../_components/controls";
+import { ChannelBadge, OwnerSelect, StageSelect, TypeBadge } from "../../_components/controls";
 import { FIDrawer } from "../../_components/FIDrawer";
 
 const PAGE_SIZE = 100;
@@ -27,6 +27,7 @@ export default function StageListPage({
   const [typeFilter, setTypeFilter] = useState<"all" | "bank" | "cu">("all");
   const [stateFilter, setStateFilter] = useState("all");
   const [ownerFilter, setOwnerFilter] = useState("all");
+  const [channelFilter, setChannelFilter] = useState<"all" | "direct" | "referral">("all");
   const [yearFilter, setYearFilter] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("assets");
   const [sortDesc, setSortDesc] = useState(true);
@@ -66,6 +67,11 @@ export default function StageListPage({
     if (yearFilter !== "all") {
       out = out.filter((fi) => String(state.records[fi.id]?.closedYear ?? "") === yearFilter);
     }
+    if (channelFilter !== "all") {
+      out = out.filter(
+        (fi) => (state.records[fi.id]?.channel ?? "direct") === channelFilter,
+      );
+    }
     const dir = sortDesc ? -1 : 1;
     const rec = (fi: FI) => state.records[fi.id];
     out = [...out].sort((a, b) => {
@@ -83,7 +89,7 @@ export default function StageListPage({
       }
     });
     return out;
-  }, [members, state, search, typeFilter, stateFilter, ownerFilter, yearFilter, sortKey, sortDesc]);
+  }, [members, state, search, typeFilter, stateFilter, ownerFilter, channelFilter, yearFilter, sortKey, sortDesc]);
 
   const isClosedView = stageId === "closed-won" || stageId === "closed-lost";
   const closedYearOptions = useMemo(() => {
@@ -226,6 +232,18 @@ export default function StageListPage({
             </option>
           ))}
         </select>
+        <select
+          value={channelFilter}
+          onChange={(e) => {
+            setChannelFilter(e.target.value as typeof channelFilter);
+            setPage(0);
+          }}
+          className="text-sm rounded-lg border border-slate-200 bg-white px-3 py-2"
+        >
+          <option value="all">All channels</option>
+          <option value="direct">Direct</option>
+          <option value="referral">Referral</option>
+        </select>
         {isClosedView && closedYearOptions.length > 0 && (
           <select
             value={yearFilter}
@@ -319,6 +337,9 @@ export default function StageListPage({
                         <span className="w-1.5 h-1.5 rounded-full bg-violet-500" /> fit
                       </span>
                     )}
+                    {rec?.channel === "referral" && (
+                      <ChannelBadge channel={rec.channel} partner={rec.referralPartner} />
+                    )}
                   </div>
                   {rec?.leadSource && (
                     <div className="text-[11px] text-teal-600 mt-1">{rec.leadSource}</div>
@@ -375,6 +396,7 @@ export default function StageListPage({
               <Th label="Assets" k="assets" className="text-right" />
               <Th label="Fit" />
               <Th label="Lead Source" />
+              <Th label="Channel" />
               <Th label="Stage" k="stage" />
               <Th label="Owner" k="owner" />
             </tr>
@@ -421,6 +443,9 @@ export default function StageListPage({
                   <td className="px-3 py-2 text-xs text-slate-500 whitespace-nowrap max-w-[120px] truncate">
                     {rec?.leadSource ?? ""}
                   </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <ChannelBadge channel={rec?.channel} partner={rec?.referralPartner} />
+                  </td>
                   <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                     <StageSelect
                       value={rec?.stage ?? null}
@@ -439,7 +464,7 @@ export default function StageListPage({
             })}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-3 py-10 text-center text-slate-400">
+                <td colSpan={10} className="px-3 py-10 text-center text-slate-400">
                   No institutions match.
                 </td>
               </tr>

@@ -15,10 +15,12 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
   // Local buffers for free-text fields so we only save on blur.
   const [notes, setNotes] = useState("");
   const [arr, setArr] = useState("");
+  const [partner, setPartner] = useState("");
   useEffect(() => {
     setNotes(rec?.notes ?? "");
     setArr(rec?.arr != null ? String(rec.arr) : "");
-  }, [fi?.id, rec?.notes, rec?.arr]);
+    setPartner(rec?.referralPartner ?? "");
+  }, [fi?.id, rec?.notes, rec?.arr, rec?.referralPartner]);
 
   if (!fi || !state) return null;
 
@@ -100,6 +102,46 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
               </select>
             </label>
           )}
+
+          <div className="space-y-2">
+            <span className="text-xs font-semibold text-slate-500 block">Sales channel</span>
+            <div className="flex gap-2">
+              {(["direct", "referral"] as const).map((ch) => {
+                const active = (rec?.channel ?? "direct") === ch;
+                return (
+                  <button
+                    key={ch}
+                    onClick={() =>
+                      updateRecord(fi.id, {
+                        channel: ch,
+                        // Clear the partner name when switching back to direct.
+                        referralPartner: ch === "direct" ? undefined : rec?.referralPartner,
+                      })
+                    }
+                    className={
+                      "flex-1 text-sm font-medium rounded-lg border px-3 py-2 transition-colors " +
+                      (active
+                        ? ch === "referral"
+                          ? "bg-violet-600 text-white border-violet-600"
+                          : "bg-slate-900 text-white border-slate-900"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50")
+                    }
+                  >
+                    {ch === "direct" ? "Direct" : "Referral"}
+                  </button>
+                );
+              })}
+            </div>
+            {rec?.channel === "referral" && (
+              <input
+                value={partner}
+                onChange={(e) => setPartner(e.target.value)}
+                onBlur={() => updateRecord(fi.id, { referralPartner: partner || undefined })}
+                placeholder="Referral partner name…"
+                className="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
+              />
+            )}
+          </div>
 
           <label className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3 cursor-pointer hover:bg-slate-50">
             <span>

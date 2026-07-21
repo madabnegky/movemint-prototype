@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { BRANCH_STAGES, MAIN_STAGES, STAGE_LABELS } from "../_lib/stages";
-import type { StageId } from "../_lib/types";
+import type { Channel, StageId } from "../_lib/types";
 
 export function StageSelect({
   value,
@@ -88,6 +88,31 @@ export function TypeBadge({ type }: { type: "bank" | "cu" }) {
       )}
     >
       {type === "cu" ? "CU" : "Bank"}
+    </span>
+  );
+}
+
+export function ChannelBadge({
+  channel,
+  partner,
+}: {
+  channel?: Channel;
+  partner?: string;
+}) {
+  const isReferral = channel === "referral";
+  return (
+    <span className="inline-flex items-center gap-1">
+      <span
+        className={cn(
+          "inline-block text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5",
+          isReferral ? "bg-violet-50 text-violet-600" : "bg-slate-100 text-slate-500",
+        )}
+      >
+        {isReferral ? "Referral" : "Direct"}
+      </span>
+      {isReferral && partner && (
+        <span className="text-[11px] text-slate-500 truncate max-w-28">{partner}</span>
+      )}
     </span>
   );
 }

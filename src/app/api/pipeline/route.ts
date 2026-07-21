@@ -35,12 +35,17 @@ export async function PATCH(req: NextRequest) {
   const applyRecord = (fiId: string, p: Partial<PipelineRecord>) => {
     const existing = state.records[fiId] ?? { fiId, stage: null, owner: null, updatedAt: now };
     const merged: PipelineRecord = { ...existing, ...p, fiId, updatedAt: now };
+    // Normalize the channel default so a plain "direct" toggle doesn't create
+    // a record that carries no other information.
+    if (merged.channel === "direct" && !merged.referralPartner) delete merged.channel;
     // Drop records that carry no information so the overlay stays small.
     const isEmpty =
       !merged.stage &&
       !merged.owner &&
       !merged.platformFit &&
       !merged.leadSource &&
+      !merged.channel &&
+      !merged.referralPartner &&
       !merged.notes &&
       merged.arr == null;
     if (isEmpty) delete state.records[fiId];
