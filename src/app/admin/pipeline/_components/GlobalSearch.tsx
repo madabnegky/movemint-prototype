@@ -19,6 +19,7 @@ export function GlobalSearch() {
   const [drawerFi, setDrawerFi] = useState<FI | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const records = state?.records;
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (q.length < 2) return [];
@@ -32,13 +33,26 @@ export function GlobalSearch() {
       else if (name.includes(q)) score = 1;
       else if (city.startsWith(q)) score = 0.5;
       else if (city.includes(q)) score = 0.25;
+      // Also match on a contact's name or email so a deal can be found by person.
+      if (score === 0) {
+        const contacts = records?.[fi.id]?.contacts;
+        if (
+          contacts?.some(
+            (c) =>
+              c.name.toLowerCase().includes(q) ||
+              (c.email && c.email.toLowerCase().includes(q)),
+          )
+        ) {
+          score = 0.4;
+        }
+      }
       if (score > 0) scored.push({ fi, score });
     }
     scored.sort(
       (a, b) => b.score - a.score || b.fi.assets - a.fi.assets,
     );
     return scored.slice(0, MAX_RESULTS).map((s) => s.fi);
-  }, [query]);
+  }, [query, records]);
 
   // Reset the highlighted row whenever the result set changes.
   useEffect(() => setActive(0), [query]);

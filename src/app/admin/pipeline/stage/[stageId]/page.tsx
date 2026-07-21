@@ -424,6 +424,12 @@ export default function StageListPage({
                       {rec?.los && <span>LOS: {rec.los}</span>}
                     </div>
                   )}
+                  {rec?.contacts?.[0] && (
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Contact: {rec.contacts[0].name}
+                      {rec.contacts.length > 1 && ` +${rec.contacts.length - 1}`}
+                    </div>
+                  )}
                 </div>
               </div>
               <div
@@ -482,6 +488,7 @@ export default function StageListPage({
               {showTech && <Th label="Home Banking" />}
               <Th label="Stage" k="stage" />
               <Th label="Owner" k="owner" />
+              <Th label="Primary Contact" />
             </tr>
           </thead>
           <tbody>
@@ -557,12 +564,24 @@ export default function StageListPage({
                       onChange={(owner) => updateRecord(fi.id, { owner })}
                     />
                   </td>
+                  <td className="px-3 py-2 text-xs whitespace-nowrap">
+                    {rec?.contacts?.[0] ? (
+                      <span className="text-slate-600">
+                        {rec.contacts[0].name}
+                        {rec.contacts.length > 1 && (
+                          <span className="text-slate-400"> +{rec.contacts.length - 1}</span>
+                        )}
+                      </span>
+                    ) : (
+                      <span className="text-slate-300">—</span>
+                    )}
+                  </td>
                 </tr>
               );
             })}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={showTech ? 13 : 10} className="px-3 py-10 text-center text-slate-400">
+                <td colSpan={showTech ? 14 : 11} className="px-3 py-10 text-center text-slate-400">
                   No institutions match.
                 </td>
               </tr>

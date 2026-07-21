@@ -333,6 +333,27 @@ function cleanOwner(raw) {
   return hit ?? s;
 }
 
+// Parses "Name (email);Name (email);..." into a contact list. Handles entries
+// with no email (name only) and stray whitespace.
+function parseContacts(raw) {
+  const s = String(raw ?? "").trim();
+  if (!s) return [];
+  return s
+    .split(";")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const m = part.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+      if (m) {
+        const name = m[1].trim();
+        const email = m[2].trim();
+        return { name: name || email, ...(email ? { email } : {}) };
+      }
+      return { name: part };
+    })
+    .filter((c) => c.name);
+}
+
 // ---------- Read workbook ----------
 const wb = XLSX.readFile(WB_PATH);
 function sheetRows(name, headerCol) {
@@ -498,6 +519,8 @@ for (const [sheet, fallbackStage] of [
     auditMatch(sheet, row["Deal Name"], res);
     const rec = getRecord(res.fi);
     if (owner) rec.owner = owner; // deal owner beats company owner
+    const contacts = parseContacts(row["Associated Contact"]);
+    if (contacts.length && !rec.contacts) rec.contacts = contacts;
     applyStage(res.fi, stage, `${sheet} sheet`);
   }
   trackSheet(sheet, rows.length, matched, rows.length - matched);

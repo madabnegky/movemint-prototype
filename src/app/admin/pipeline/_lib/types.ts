@@ -39,6 +39,13 @@ export type ListId = TierId | StageId;
 /** Sales channel: a direct deal vs one sourced through a referral partner. */
 export type Channel = "direct" | "referral";
 
+/** A person we're working with at an institution. First in the list is primary. */
+export interface Contact {
+  name: string;
+  email?: string;
+  title?: string;
+}
+
 export interface PipelineRecord {
   fiId: string;
   stage: StageId | null; // null = no deal; FI sits in the sizing tiers only
@@ -49,6 +56,8 @@ export interface PipelineRecord {
   channel?: Channel;
   /** Referral partner name, when channel is "referral". */
   referralPartner?: string;
+  /** People we're working with at this institution (first = primary). */
+  contacts?: Contact[];
   /** Tech stack (seeded from the TruStage LOS/Core list, editable per FI). */
   coreSystem?: string;
   los?: string;

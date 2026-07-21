@@ -1,12 +1,125 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
 import { inAssetBand } from "../_lib/universe";
-import type { FI } from "../_lib/types";
+import type { Contact, FI } from "../_lib/types";
 import { OptionOrOther, OwnerSelect, StageSelect, TypeBadge } from "./controls";
+
+function ContactsEditor({
+  contacts,
+  onChange,
+}: {
+  contacts: Contact[];
+  onChange: (next: Contact[]) => void;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [title, setTitle] = useState("");
+
+  const add = () => {
+    const n = name.trim();
+    if (!n) return;
+    onChange([
+      ...contacts,
+      { name: n, ...(email.trim() ? { email: email.trim() } : {}), ...(title.trim() ? { title: title.trim() } : {}) },
+    ]);
+    setName("");
+    setEmail("");
+    setTitle("");
+  };
+  const remove = (i: number) => onChange(contacts.filter((_, idx) => idx !== i));
+  const makePrimary = (i: number) => {
+    if (i === 0) return;
+    const next = [...contacts];
+    const [c] = next.splice(i, 1);
+    onChange([c, ...next]);
+  };
+
+  return (
+    <div className="space-y-2">
+      {contacts.length === 0 && (
+        <p className="text-xs text-slate-400">No contacts yet.</p>
+      )}
+      {contacts.map((c, i) => (
+        <div
+          key={i}
+          className="flex items-start justify-between gap-2 rounded-lg border border-slate-100 px-3 py-2"
+        >
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-slate-800 flex items-center gap-2">
+              {c.name}
+              {i === 0 && (
+                <span className="text-[10px] font-bold uppercase tracking-wide bg-emerald-50 text-emerald-600 rounded px-1.5 py-0.5">
+                  Primary
+                </span>
+              )}
+            </div>
+            {c.title && <div className="text-xs text-slate-400">{c.title}</div>}
+            {c.email && (
+              <a
+                href={`mailto:${c.email}`}
+                className="text-xs text-teal-600 hover:underline break-all"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {c.email}
+              </a>
+            )}
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {i !== 0 && (
+              <button
+                onClick={() => makePrimary(i)}
+                title="Make primary"
+                className="text-[11px] text-slate-400 hover:text-slate-700"
+              >
+                ★
+              </button>
+            )}
+            <button
+              onClick={() => remove(i)}
+              title="Remove contact"
+              className="text-slate-300 hover:text-red-500"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      ))}
+      <div className="space-y-1.5 pt-1">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Contact name"
+          className="w-full text-sm rounded-lg border border-slate-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-300"
+        />
+        <div className="flex gap-1.5">
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email (optional)"
+            className="flex-1 min-w-0 text-sm rounded-lg border border-slate-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-300"
+          />
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title (optional)"
+            className="w-28 text-sm rounded-lg border border-slate-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-300"
+          />
+        </div>
+        <button
+          onClick={add}
+          disabled={!name.trim()}
+          className="inline-flex items-center gap-1.5 text-xs font-medium bg-slate-900 text-white rounded-lg px-3 py-1.5 hover:bg-slate-700 disabled:opacity-40"
+        >
+          <Plus className="w-3.5 h-3.5" /> Add contact
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }) {
   const { state, updateRecord } = usePipeline();
@@ -80,6 +193,18 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
                 className="w-full"
               />
             </label>
+          </div>
+
+          <div className="space-y-2 rounded-lg border border-slate-100 p-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Contacts
+            </span>
+            <ContactsEditor
+              contacts={rec?.contacts ?? []}
+              onChange={(contacts) =>
+                updateRecord(fi.id, { contacts: contacts.length ? contacts : undefined })
+              }
+            />
           </div>
 
           {(rec?.stage === "closed-won" || rec?.stage === "closed-lost") && (
