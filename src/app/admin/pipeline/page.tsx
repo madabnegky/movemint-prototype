@@ -12,7 +12,12 @@ import {
   STAGE_LABELS,
   fmtMoney,
 } from "./_lib/stages";
-import { closedYears, computeMetrics, countMembers } from "./_lib/universe";
+import {
+  closedYears,
+  computeMetrics,
+  countMembers,
+  previousYearsClosed,
+} from "./_lib/universe";
 import type { ListId, PipelineState } from "./_lib/types";
 import { GlobalSearch } from "./_components/GlobalSearch";
 import { UnmatchedPanel } from "./_components/UnmatchedPanel";
@@ -133,8 +138,9 @@ function GoalTracker({ state }: { state: PipelineState }) {
 }
 
 function Funnel({ state }: { state: PipelineState }) {
-  const m = computeMetrics(state);
-  const counts = FUNNEL_ROWS.map((id) => ({ id, ...countMembers(id, state) }));
+  const m = computeMetrics(state, new Date().getFullYear());
+  // Closed rows show current-year deals only; prior years live in their own box.
+  const counts = FUNNEL_ROWS.map((id) => ({ id, ...countMembers(id, state, true) }));
   const max = Math.max(...counts.map((c) => c.total), 1);
   // sqrt scale keeps late stages visible next to the 8,500-FI universe
   const scale = (n: number) => Math.max(Math.sqrt(n / max) * 100, n > 0 ? 4 : 2);
@@ -274,6 +280,45 @@ function BranchPanel({ state }: { state: PipelineState }) {
   );
 }
 
+function PreviousYearsPanel({ state }: { state: PipelineState }) {
+  const prior = previousYearsClosed(state);
+  if (prior.total === 0) return null;
+  const rows: { id: "closed-won" | "closed-lost"; label: string; count: number }[] = [
+    { id: "closed-won", label: "Closed Won", count: prior.won },
+    { id: "closed-lost", label: "Closed Lost", count: prior.lost },
+  ];
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 border-l-4 border-l-slate-300 shadow-sm p-5">
+      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+        Previous Years
+      </h3>
+      <p className="text-xs text-slate-400 leading-relaxed mb-4">
+        Deals closed before {new Date().getFullYear()}. Kept for the record but excluded from the
+        current pipeline and this year’s goal.
+      </p>
+      <div className="space-y-3">
+        {rows.map(({ id, label, count }) => (
+          <Link
+            key={id}
+            href={`/admin/pipeline/stage/${id}`}
+            className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 -mx-2 hover:bg-slate-50 transition-colors"
+          >
+            <span className="text-[13px] font-semibold text-slate-600">{label}</span>
+            <span
+              className={cn(
+                "text-xl font-bold tabular-nums",
+                id === "closed-won" ? "text-emerald-500" : "text-slate-400",
+              )}
+            >
+              {count}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function PipelineDashboard() {
   const { state, loading } = usePipeline();
 
@@ -339,7 +384,10 @@ export default function PipelineDashboard() {
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4 items-start">
         <Funnel state={state} />
-        <BranchPanel state={state} />
+        <div className="space-y-4">
+          <BranchPanel state={state} />
+          <PreviousYearsPanel state={state} />
+        </div>
       </div>
     </div>
   );

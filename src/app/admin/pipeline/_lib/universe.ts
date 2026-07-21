@@ -28,8 +28,25 @@ export function isPlatformFit(fi: FI, records: Record<string, PipelineRecord>): 
   return records[fi.id]?.platformFit === true;
 }
 
-/** FIs belonging to a tier or stage list. */
-export function listMembers(listId: ListId, state: PipelineState): FI[] {
+const CURRENT_YEAR = new Date().getFullYear();
+
+/** A closed-won/closed-lost record counts as "current year" if its closedYear
+ *  is this year or unset (legacy records default to current). */
+export function isCurrentYearClose(rec: { closedYear?: number } | undefined): boolean {
+  return (rec?.closedYear ?? CURRENT_YEAR) === CURRENT_YEAR;
+}
+
+/**
+ * FIs belonging to a tier or stage list.
+ * @param currentYearOnly  when true, closed-won/closed-lost lists include only
+ *   deals attributed to the current year (used by the dashboard funnel so prior
+ *   years live in their own panel instead).
+ */
+export function listMembers(
+  listId: ListId,
+  state: PipelineState,
+  currentYearOnly = false,
+): FI[] {
   const records = state.records;
   switch (listId) {
     case "universe":
@@ -41,8 +58,15 @@ export function listMembers(listId: ListId, state: PipelineState): FI[] {
       return UNIVERSE.filter(
         (fi) => inAssetBand(fi) && isPlatformFit(fi, records) && !records[fi.id]?.stage,
       );
-    default:
-      return UNIVERSE.filter((fi) => records[fi.id]?.stage === listId);
+    default: {
+      const closed = listId === "closed-won" || listId === "closed-lost";
+      return UNIVERSE.filter((fi) => {
+        const rec = records[fi.id];
+        if (rec?.stage !== listId) return false;
+        if (closed && currentYearOnly && !isCurrentYearClose(rec)) return false;
+        return true;
+      });
+    }
   }
 }
 
@@ -52,11 +76,32 @@ export interface FunnelCounts {
   bank: number;
 }
 
-export function countMembers(listId: ListId, state: PipelineState): FunnelCounts {
-  const members = listMembers(listId, state);
+export function countMembers(
+  listId: ListId,
+  state: PipelineState,
+  currentYearOnly = false,
+): FunnelCounts {
+  const members = listMembers(listId, state, currentYearOnly);
   let cu = 0;
   for (const fi of members) if (fi.type === "cu") cu++;
   return { total: members.length, cu, bank: members.length - cu };
+}
+
+/** Count of prior-year closed deals (won + lost), for the "Previous Years" box. */
+export function previousYearsClosed(state: PipelineState): {
+  won: number;
+  lost: number;
+  total: number;
+} {
+  let won = 0;
+  let lost = 0;
+  for (const rec of Object.values(state.records)) {
+    if ((rec.stage === "closed-won" || rec.stage === "closed-lost") && !isCurrentYearClose(rec)) {
+      if (rec.stage === "closed-won") won++;
+      else lost++;
+    }
+  }
+  return { won, lost, total: won + lost };
 }
 
 /** Weighted value of a single FI's deal. */
@@ -92,11 +137,14 @@ export function computeMetrics(state: PipelineState, year?: number): PipelineMet
   );
   for (const rec of Object.values(state.records)) {
     if (!rec.stage) continue;
+    const isClosed = rec.stage === "closed-won" || rec.stage === "closed-lost";
+    // When scoping to a year, exclude closed deals from other years entirely
+    // (both their $ and their counts) so the dashboard is internally consistent.
+    if (isClosed && year != null && (rec.closedYear ?? year) !== year) continue;
     const wv = weightedValue(rec, state);
     stageArr[rec.stage] = (stageArr[rec.stage] ?? 0) + wv;
     if (openStages.has(rec.stage)) weightedPipeline += wv;
     if (rec.stage === "closed-won") {
-      if (year != null && rec.closedYear !== year) continue;
       closedWonCount++;
       closedWonArr += dealValue(rec, state);
     }
