@@ -1,0 +1,1696 @@
+{
+  "generatedAt": "2026-07-20T23:37:47.713Z",
+  "count": 169,
+  "rows": [
+    {
+      "id": "unmatched-0",
+      "name": "Fire First Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = FIRST, Chandler AZ)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-1",
+      "name": "Mountain View Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = MOUNTAIN, Waynesville NC)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-2",
+      "name": "First Community Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-3",
+      "name": "TopLine Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = TOPLINE FINANCIAL, Maple Grove MN)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-4",
+      "name": "Schools Financial Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-5",
+      "name": "AAA Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-6",
+      "name": "Merrimack Valley Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = VALLEY, Brownsville TX)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-7",
+      "name": "San Francisco Firefighters Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.67 = SAN FRANCISCO, San Francisco CA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-8",
+      "name": "Sullivan Financial Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-9",
+      "name": "UW Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-10",
+      "name": "Sun West Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = CREDIT UNION WEST, Glendale AZ)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-11",
+      "name": "UNIFY Financial Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-12",
+      "name": "State Employees Credit Union of New Mexico",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.40 = NEW YORK TIMES EMPLOYEES, NEW YORK NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-13",
+      "name": "Sandia Laboratory Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = SANDIA AREA, Albuquerque NM)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-14",
+      "name": "Seattle Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = SEATTLE METROPOLITAN, Seattle WA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-15",
+      "name": "BFS Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-16",
+      "name": "ComChoice Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-17",
+      "name": "Community First Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-18",
+      "name": "Heartland Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-19",
+      "name": "A+ Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "empty name after normalization",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-20",
+      "name": "SunWest Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-21",
+      "name": "AA Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-22",
+      "name": "Landmark Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-23",
+      "name": "Firefighters Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-24",
+      "name": "Family Savings Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-25",
+      "name": "Kaiser Permanente Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-26",
+      "name": "Linnarea Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-27",
+      "name": "Credit Union of Southern California",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = CALIFORNIA, GLENDALE CA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-28",
+      "name": "Financial Partners Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-29",
+      "name": "Linn Area Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = AREA, ABERDEEN SD)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-30",
+      "name": "Contego International",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = International Bank of Commerce, Laredo TX)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-31",
+      "name": "Metro Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-32",
+      "name": "MWA Financial Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-33",
+      "name": "Ohio Health Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = CREDIT UNION OF OHIO, Hilliard OH)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-34",
+      "name": "Superior Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage; Events"
+      }
+    },
+    {
+      "id": "unmatched-35",
+      "name": "Guardian Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-36",
+      "name": "TrueSky Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-37",
+      "name": "Clackamas Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-38",
+      "name": "Community Wide Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = COMMUNITY TRUST, Gurnee IL)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-39",
+      "name": "CU SoCal",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-40",
+      "name": "GE Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-41",
+      "name": "Members Own Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = MEMBERS, WINSTON SALEM NC)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-42",
+      "name": "MidAmerican Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-43",
+      "name": "Ohio University Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = UNIVERSITY, AUSTIN TX)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-44",
+      "name": "Pacific Marine Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = MARINE, La Crosse WI)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-45",
+      "name": "Public Service Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-46",
+      "name": "Community Choice Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage; Events"
+      }
+    },
+    {
+      "id": "unmatched-47",
+      "name": "CPD Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-48",
+      "name": "Summit Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-49",
+      "name": "BH Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-50",
+      "name": "C1st Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-51",
+      "name": "Cape Cod 5 Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = CAPE, Clarksburg WV)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-52",
+      "name": "Capital Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-53",
+      "name": "Great Lakes Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-54",
+      "name": "IHMVCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-55",
+      "name": "Members Choice Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-56",
+      "name": "Missoula Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-57",
+      "name": "Missouri Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = MISSOURI CENTRAL, Lees Summit MO)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-58",
+      "name": "Southern California Edison Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = CALIFORNIA, GLENDALE CA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-59",
+      "name": "Sun Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-60",
+      "name": "Wise Public Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = PUBLIC SERVICE, Romulus MI)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-61",
+      "name": "WPCCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-62",
+      "name": "BR Telco Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = TELCO, TARBORO NC)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-63",
+      "name": "Credit Union of Colorado",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-64",
+      "name": "Firefighters & Safety Employees Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = STATE EMPLOYEES', RALEIGH NC)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-65",
+      "name": "USS Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-66",
+      "name": "5Point Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-67",
+      "name": "Advanced Technology Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = TECHNOLOGY, SAN JOSE CA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-68",
+      "name": "AFCU (America First Credit Union)",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-69",
+      "name": "AmeriFirst Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-70",
+      "name": "BECU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-71",
+      "name": "BRT Employees Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = STATE EMPLOYEES', RALEIGH NC)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-72",
+      "name": "Consumers Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-73",
+      "name": "DCCU (DuPont Community Credit Union)",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-74",
+      "name": "FAFCU Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-75",
+      "name": "Hawaii USA Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = HAWAII STATE, Honolulu HI)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-76",
+      "name": "Houston Area Community Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.67 = AREA COMMUNITY, GRAND FORKS ND)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-77",
+      "name": "IHMVCU (IH Mississippi Valley Credit Union)",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-78",
+      "name": "Members 1st Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-79",
+      "name": "Metro Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-80",
+      "name": "Metro West Alliance Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = WEST METRO SCHOOLS, Hopkins MN)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-81",
+      "name": "Michigan Medicine Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = LAKE MICHIGAN, Grand Rapids MI)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-82",
+      "name": "Professional Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = CONSUMERS PROFESSIONAL, LANSING MI)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-83",
+      "name": "RIA Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-84",
+      "name": "SunWest Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-85",
+      "name": "uCredit",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-86",
+      "name": "University Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-87",
+      "name": "US Eagle Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = EAGLE, ATCHISON KS)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-88",
+      "name": "useaglefcu.org",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-89",
+      "name": "ValleyStrong Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-90",
+      "name": "Community 1st Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage; Events"
+      }
+    },
+    {
+      "id": "unmatched-91",
+      "name": "717 Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-92",
+      "name": "P1FCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-93",
+      "name": "Credit Union of Texas",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-94",
+      "name": "Credit Union One",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-95",
+      "name": "Gen Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-96",
+      "name": "Horizon Zero Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = HORIZON, Spokane Valley WA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-97",
+      "name": "MAPS Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-98",
+      "name": "NIH Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-99",
+      "name": "OBEE Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-100",
+      "name": "PremierOne Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-101",
+      "name": "SCU Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-102",
+      "name": "Self Reliance New York Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.40 = SELF RELIANCE FINANCIAL, New York NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-103",
+      "name": "University Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "AiVantage"
+      }
+    },
+    {
+      "id": "unmatched-104",
+      "name": "Barbados Public Workers Coop CU Ltd",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.20 = WORKERS, Littleton MA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Event List"
+      }
+    },
+    {
+      "id": "unmatched-105",
+      "name": "Commonwealth CU",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Event List"
+      }
+    },
+    {
+      "id": "unmatched-106",
+      "name": "Indiana State University FCU",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Event List"
+      }
+    },
+    {
+      "id": "unmatched-107",
+      "name": "Plus CU",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Event List"
+      }
+    },
+    {
+      "id": "unmatched-108",
+      "name": "Rising Above Enterprises",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.25 = AFGM ENTERPRISES, Cheektowaga NY)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Event List"
+      }
+    },
+    {
+      "id": "unmatched-109",
+      "name": "AACUC - GAC 2026 Referral Opportunity",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-110",
+      "name": "AFCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-111",
+      "name": "Cal Coast",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.33 = Third Coast Bank, Humble TX)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-112",
+      "name": "DOCFCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-113",
+      "name": "Education First Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-114",
+      "name": "FECCA Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-115",
+      "name": "First Financial Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-116",
+      "name": "Foothills Credit Union",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-117",
+      "name": "HAPO",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = HAPO COMMUNITY, Richland WA)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-118",
+      "name": "HRCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-119",
+      "name": "Intelliplan Financial",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = Financial Federal Bank, Memphis TN)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-120",
+      "name": "IU Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-121",
+      "name": "IUCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-122",
+      "name": "Mayo Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = MAYO EMPLOYEES, ROCHESTER MN)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-123",
+      "name": "MDDC - GAC 2026",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-124",
+      "name": "ORNLFCU",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-125",
+      "name": "ORSA Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-126",
+      "name": "Pediment - GAC 2026 Potential Referral Partner",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-127",
+      "name": "Prismm - GAC 2026 Referral Opportunity",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-128",
+      "name": "Tarrant County Credit Union  - GAC 2026",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.50 = THE COUNTY, Presque Isle ME)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-129",
+      "name": "The League of Credit Unions & Affiliates - GAC 2026 Referral Partner",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.25 = ST. COLMAN & AFFILIATES, Cleveland OH)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-130",
+      "name": "The Summit Federal Credit Union - GAC 2026",
+      "sheet": "MQL",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-131",
+      "name": "UK Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-132",
+      "name": "UK Federal Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-133",
+      "name": "Vault - GAC 2026 Referall Opp",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-134",
+      "name": "WCCU Credit Union",
+      "sheet": "MQL",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "mql",
+        "leadSource": "Events"
+      }
+    },
+    {
+      "id": "unmatched-135",
+      "name": "Community Credit Union of Lynn - New Deal",
+      "sheet": "SQL",
+      "reason": "no confident match (best 0.50 = COMMUNITY TRUST, Gurnee IL)",
+      "intended": {
+        "stage": "qualified",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-136",
+      "name": "Advantage One Credit Union - New Deal",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-137",
+      "name": "A+ Federal Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "empty name after normalization",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-138",
+      "name": "Credit Union 1 Alaska",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.50 = CREDIT UNION 1, Lombard IL)",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-139",
+      "name": "Sun Federal Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-140",
+      "name": "Family Savings Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-141",
+      "name": "SCU CU",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-142",
+      "name": "H E B FEDERAL CREDIT UNION",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-143",
+      "name": "North Coast Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-144",
+      "name": "OBee Credit Union",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-145",
+      "name": "Heartland Credit Union - Kansas - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-146",
+      "name": "Meridian Trust Federal Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-147",
+      "name": "U Of I Community Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.50 = U. S. I., Deer Park TX)",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-148",
+      "name": "Garden Savings Federal Credit Union",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-149",
+      "name": "Service 1st Federal Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "short-term-nurture",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-150",
+      "name": "Great Lakes Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "long-term-nurture",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-151",
+      "name": "Pediment - GAC 2026 Potential Referral Partner",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "disqualified",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-152",
+      "name": "The League of Credit Unions & Affiliates - GAC 2026 Referral Partner",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.25 = ST. COLMAN & AFFILIATES, Cleveland OH)",
+      "intended": {
+        "stage": "disqualified",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-153",
+      "name": "Louisiana Federal Credit Union - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.50 = SOUTHWEST LOUISIANA, Lake Charles LA)",
+      "intended": {
+        "stage": "disqualified",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-154",
+      "name": "Members Choice Credit Union (Houston, TX)",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "discovery-complete",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-155",
+      "name": "BECU - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "discovery-complete",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-156",
+      "name": "Tarrant County Credit Union  - GAC 2026",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.50 = THE COUNTY, Presque Isle ME)",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-157",
+      "name": "Prismm - GAC 2026 Referral Opportunity",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Amaha Selassie"
+      }
+    },
+    {
+      "id": "unmatched-158",
+      "name": "MDDC - GAC 2026",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Amaha Selassie"
+      }
+    },
+    {
+      "id": "unmatched-159",
+      "name": "AACUC - GAC 2026 Referral Opportunity",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Amaha Selassie"
+      }
+    },
+    {
+      "id": "unmatched-160",
+      "name": "Community 1st Credit Union",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-161",
+      "name": "The Summit Federal Credit Union - GAC 2026",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Robbie Sink"
+      }
+    },
+    {
+      "id": "unmatched-162",
+      "name": "PSECU - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "warm-lead",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-163",
+      "name": "Vault - GAC 2026 Referall Opp",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "bad-contact-info",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-164",
+      "name": "Education First FCU - Digital Storefront",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "bad-contact-info",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-165",
+      "name": "America's Credit Union",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "bad-contact-info",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-166",
+      "name": "Airforce Federal Credit Union",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.00)",
+      "intended": {
+        "stage": "bad-contact-info",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-167",
+      "name": "Community Credit Union of Lynn - New Deal",
+      "sheet": "sales stage",
+      "reason": "no confident match (best 0.50 = COMMUNITY TRUST, Gurnee IL)",
+      "intended": {
+        "stage": "qualified",
+        "owner": "Avery Flynn"
+      }
+    },
+    {
+      "id": "unmatched-168",
+      "name": "Granite Credit Union - GAC 2026",
+      "sheet": "sales stage",
+      "reason": "ambiguous name",
+      "intended": {
+        "stage": "closed-lost",
+        "owner": "Avery Flynn"
+      }
+    }
+  ]
+}

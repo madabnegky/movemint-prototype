@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,24 +12,19 @@ import {
   STAGE_LABELS,
   fmtMoney,
 } from "./_lib/stages";
-import { computeMetrics, countMembers } from "./_lib/universe";
+import { closedYears, computeMetrics, countMembers } from "./_lib/universe";
 import type { ListId, PipelineState } from "./_lib/types";
 import { GlobalSearch } from "./_components/GlobalSearch";
+import { UnmatchedPanel } from "./_components/UnmatchedPanel";
 
 const FUNNEL_ROWS: ListId[] = [
   "universe",
-  "addressable-asset",
-  "addressable-fit",
+  "addressable",
   "active-pursuit",
   ...MAIN_STAGES,
 ];
 
-const SIZING_ROWS = new Set<ListId>([
-  "universe",
-  "addressable-asset",
-  "addressable-fit",
-  "active-pursuit",
-]);
+const SIZING_ROWS = new Set<ListId>(["universe", "addressable", "active-pursuit"]);
 
 function Kpi({
   label,
@@ -56,7 +52,9 @@ function Kpi({
 }
 
 function GoalTracker({ state }: { state: PipelineState }) {
-  const m = computeMetrics(state);
+  const years = closedYears(state);
+  const [year, setYear] = useState(years[0]);
+  const m = computeMetrics(state, year);
   const goal = Math.max(state.settings.salesGoal, 1);
   const wonPct = Math.min((m.closedWonCount / goal) * 100, 100);
   const projected = Math.min(m.projectedDeals, goal);
@@ -66,8 +64,21 @@ function GoalTracker({ state }: { state: PipelineState }) {
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-            {new Date().getFullYear()} Sales Goal — Pace to Target
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              Sales Goal — Pace to Target
+            </span>
+            <select
+              value={year}
+              onChange={(e) => setYear(Number(e.target.value))}
+              className="text-[11px] font-semibold rounded border border-slate-200 bg-white px-1.5 py-0.5 text-slate-600"
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="text-3xl font-bold text-emerald-600">
             {m.closedWonCount}
@@ -275,8 +286,7 @@ export default function PipelineDashboard() {
   }
 
   const universe = countMembers("universe", state);
-  const asset = countMembers("addressable-asset", state);
-  const fit = countMembers("addressable-fit", state);
+  const addressable = countMembers("addressable", state);
   const pursuit = countMembers("active-pursuit", state);
   const m = computeMetrics(state);
   const openDeals = OPEN_FUNNEL_STAGES.reduce(
@@ -288,7 +298,9 @@ export default function PipelineDashboard() {
     <div className="space-y-6">
       <GlobalSearch />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <UnmatchedPanel />
+
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
         <Kpi
           label="Universe"
           value={universe.total.toLocaleString()}
@@ -296,18 +308,11 @@ export default function PipelineDashboard() {
           href="/admin/pipeline/stage/universe"
         />
         <Kpi
-          label="Addressable · Assets"
-          value={asset.total.toLocaleString()}
-          sub={`$250M–$50B · ${asset.cu.toLocaleString()} CU · ${asset.bank.toLocaleString()} bank`}
-          accent="text-blue-600"
-          href="/admin/pipeline/stage/addressable-asset"
-        />
-        <Kpi
-          label="Addressable · Fit"
-          value={fit.total.toLocaleString()}
-          sub={`+ platform fit · ${fit.cu.toLocaleString()} CU · ${fit.bank.toLocaleString()} bank`}
+          label="Addressable Market"
+          value={addressable.total.toLocaleString()}
+          sub={`$250M–$50B + fit · ${addressable.cu.toLocaleString()} CU · ${addressable.bank.toLocaleString()} bank`}
           accent="text-violet-600"
-          href="/admin/pipeline/stage/addressable-fit"
+          href="/admin/pipeline/stage/addressable"
         />
         <Kpi
           label="Active Pursuit"

@@ -57,6 +57,13 @@ export async function PATCH(req: NextRequest) {
     case "settings":
       state.settings = { ...state.settings, ...patch.patch };
       break;
+    case "resolveUnmatched": {
+      if (patch.fiId && patch.patch) applyRecord(patch.fiId, patch.patch);
+      const resolved = new Set(state.resolvedUnmatched ?? []);
+      resolved.add(patch.unmatchedId);
+      state.resolvedUnmatched = [...resolved];
+      break;
+    }
     case "reset": {
       const fresh = seedState();
       await writeState(fresh);

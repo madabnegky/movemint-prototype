@@ -25,6 +25,7 @@ const REPO_ROOT = join(__dirname, "..");
 const WB_PATH = join(__dirname, "data/kyle-workbook-sales-pipeline.xlsx");
 const OUT_SEED = join(REPO_ROOT, "src/data/pipeline-seed.json");
 const OUT_REPORT = join(__dirname, "data/import-report.md");
+const OUT_UNMATCHED = join(REPO_ROOT, "src/data/pipeline-unmatched.json");
 
 // ---------- Universe ----------
 const banks = JSON.parse(readFileSync(join(REPO_ROOT, "src/data/universe-banks.json"))).institutions;
@@ -180,6 +181,12 @@ function matchFI(rawName, { city = null, stateHint = null, type = null, assets =
     const qTokens = tokens(name);
     const qSet = new Set(qTokens);
     if (qSet.size > 0) {
+      // Containment direction matters. WITH a city to corroborate, either
+      // direction is safe (city filters false positives). WITHOUT a city, only
+      // accept when the query's full token set is contained in the candidate
+      // (query "1st security bank" ⊆ candidate "1st security bank of
+      // washington") AND at least two tokens overlap — this stops a 1-token
+      // universe name like "MOUNTAIN" from swallowing "Mountain View CU".
       const contained = [];
       for (const fi of universe) {
         if (t && fi.type !== t) continue;
@@ -187,16 +194,21 @@ function matchFI(rawName, { city = null, stateHint = null, type = null, assets =
         for (const alias of nameAliases(fi.name)) {
           const cSet = new Set(tokens(alias));
           if (cSet.size === 0) continue;
-          const small = qSet.size <= cSet.size ? qSet : cSet;
-          const large = qSet.size <= cSet.size ? cSet : qSet;
-          if ([...small].every((tok) => large.has(tok))) {
+          let ok;
+          if (city) {
+            const small = qSet.size <= cSet.size ? qSet : cSet;
+            const large = qSet.size <= cSet.size ? cSet : qSet;
+            ok = [...small].every((tok) => large.has(tok));
+          } else {
+            const qInC = [...qSet].every((tok) => cSet.has(tok));
+            ok = qInC && qSet.size >= 2;
+          }
+          if (ok) {
             if (!contained.includes(fi)) contained.push(fi);
             break;
           }
         }
       }
-      // With a city, containment must also agree on city; without one,
-      // containment must be globally unique.
       const pool = city
         ? contained.filter((f) => cityKey(f.city) === cityKey(city))
         : contained;
@@ -227,8 +239,11 @@ function matchFI(rawName, { city = null, stateHint = null, type = null, assets =
           runnerUp = score;
         }
       }
+      // Without a city, a fuzzy win on a 1-token name is almost always a
+      // coincidence ("Mayo" ~ "Mayo Employees"). Require ≥2 query tokens there.
       const threshold = city ? 0.5 : 0.85;
-      if (best && bestScore >= threshold && bestScore - runnerUp >= 0.1) {
+      const enoughTokens = city ? true : qTokens.length >= 2;
+      if (best && enoughTokens && bestScore >= threshold && bestScore - runnerUp >= 0.1) {
         return { fi: best, method: `fuzzy(${bestScore.toFixed(2)})` };
       }
       return {
@@ -272,10 +287,9 @@ const STAGE_MAP = {
   "closed lost": "closed-lost",
 };
 // Rank for collapsing duplicates: furthest-along wins. Branch states beat
-// MQL/SQL (the deal sheet is fresher signal) but lose to active deal stages.
+// MQL (the deal sheet is fresher signal) but lose to active deal stages.
 const STAGE_RANK = {
   mql: 1,
-  sql: 2,
   "short-term-nurture": 3,
   "long-term-nurture": 3,
   disqualified: 3,
@@ -337,6 +351,10 @@ function getRecord(fi) {
   return records.get(fi.id);
 }
 
+// The workbook is the current pipeline snapshot, so closed deals in it are
+// attributed to the data-as-of year. Users can re-attribute in the drawer.
+const DATA_YEAR = 2026;
+
 function applyStage(fi, stage, source) {
   const rec = getRecord(fi);
   if (rec.stage && rec.stage !== stage) {
@@ -347,6 +365,11 @@ function applyStage(fi, stage, source) {
     rec.stage = keep;
   } else {
     rec.stage = stage;
+  }
+  if (rec.stage === "closed-won" || rec.stage === "closed-lost") {
+    rec.closedYear = DATA_YEAR;
+  } else {
+    delete rec.closedYear;
   }
 }
 
@@ -390,14 +413,19 @@ for (const [sheet, type] of [
   let matched = 0;
   for (const row of rows) {
     const res = matchFI(row["Financial Institution"]);
+    const src = String(row["Lead Source"] ?? "").trim();
     if (!res.fi) {
-      report.unmatched.push({ sheet: "MQL", name: row["Financial Institution"], reason: res.reason });
+      report.unmatched.push({
+        sheet: "MQL",
+        name: row["Financial Institution"],
+        reason: res.reason,
+        intended: { stage: "mql", leadSource: src || undefined },
+      });
       continue;
     }
     matched++;
     auditMatch("MQL", row["Financial Institution"], res);
     const rec = getRecord(res.fi);
-    const src = String(row["Lead Source"] ?? "").trim();
     if (src) rec.leadSource = src;
     applyStage(res.fi, "mql", "MQL sheet");
   }
@@ -405,8 +433,12 @@ for (const [sheet, type] of [
 }
 
 // --- SQL + sales stage → deal stages + owner ---
+// The "Sales Qualified" stage was removed from the pipeline. Both sheets carry
+// the real stage in a "Deal Stage" / "Time in Current Stage" cell (the SQL
+// sheet's rows all read "Qualified"), so there is no SQL fallback — a row with
+// no recognizable stage is reported, not force-assigned.
 for (const [sheet, fallbackStage] of [
-  ["SQL", "sql"],
+  ["SQL", null],
   ["sales stage", null],
 ]) {
   const rows = sheetRows(sheet, "Deal Name");
@@ -427,15 +459,20 @@ for (const [sheet, fallbackStage] of [
       report.unmatched.push({ sheet, name: row["Deal Name"], reason: "no recognizable stage value" });
       continue;
     }
+    const owner = cleanOwner(row["Deal owner"]);
     const res = matchFI(row["Deal Name"]);
     if (!res.fi) {
-      report.unmatched.push({ sheet, name: row["Deal Name"], reason: res.reason });
+      report.unmatched.push({
+        sheet,
+        name: row["Deal Name"],
+        reason: res.reason,
+        intended: { stage, owner: owner || undefined },
+      });
       continue;
     }
     matched++;
     auditMatch(sheet, row["Deal Name"], res);
     const rec = getRecord(res.fi);
-    const owner = cleanOwner(row["Deal owner"]);
     if (owner) rec.owner = owner; // deal owner beats company owner
     applyStage(res.fi, stage, `${sheet} sheet`);
   }
@@ -457,7 +494,6 @@ const seed = {
     defaultDealArr: 75000,
     stageProbabilities: {
       mql: 0,
-      sql: 0.02,
       "warm-lead": 0.05,
       qualified: 0.35,
       "discovery-scheduled": 0.4,
@@ -529,6 +565,24 @@ const lines = [
   "",
 ];
 writeFileSync(OUT_REPORT, lines.join("\n"));
+
+// Machine-readable unmatched list, consumed by the in-app "Unmatched from
+// workbook" panel so these can be resolved by hand without leaving the tool.
+// Only rows that carry an intended stage (MQL / deal sheets) are actionable;
+// the Addressable-sheet misses only imply platform fit and are less urgent.
+const unmatchedOut = report.unmatched
+  .filter((u) => u.intended)
+  .map((u, i) => ({
+    id: `unmatched-${i}`,
+    name: String(u.name).trim(),
+    sheet: u.sheet,
+    reason: u.reason,
+    intended: u.intended,
+  }));
+writeFileSync(
+  OUT_UNMATCHED,
+  JSON.stringify({ generatedAt: now, count: unmatchedOut.length, rows: unmatchedOut }, null, 2),
+);
 
 console.log(`Wrote ${records.size} seed records to ${OUT_SEED}`);
 console.log(`Report: ${OUT_REPORT}`);

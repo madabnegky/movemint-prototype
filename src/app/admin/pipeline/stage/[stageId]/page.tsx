@@ -27,6 +27,7 @@ export default function StageListPage({
   const [typeFilter, setTypeFilter] = useState<"all" | "bank" | "cu">("all");
   const [stateFilter, setStateFilter] = useState("all");
   const [ownerFilter, setOwnerFilter] = useState("all");
+  const [yearFilter, setYearFilter] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("assets");
   const [sortDesc, setSortDesc] = useState(true);
   const [page, setPage] = useState(0);
@@ -62,6 +63,9 @@ export default function StageListPage({
           : state.records[fi.id]?.owner === ownerFilter,
       );
     }
+    if (yearFilter !== "all") {
+      out = out.filter((fi) => String(state.records[fi.id]?.closedYear ?? "") === yearFilter);
+    }
     const dir = sortDesc ? -1 : 1;
     const rec = (fi: FI) => state.records[fi.id];
     out = [...out].sort((a, b) => {
@@ -79,7 +83,18 @@ export default function StageListPage({
       }
     });
     return out;
-  }, [members, state, search, typeFilter, stateFilter, ownerFilter, sortKey, sortDesc]);
+  }, [members, state, search, typeFilter, stateFilter, ownerFilter, yearFilter, sortKey, sortDesc]);
+
+  const isClosedView = stageId === "closed-won" || stageId === "closed-lost";
+  const closedYearOptions = useMemo(() => {
+    if (!state || !isClosedView) return [];
+    const ys = new Set<number>();
+    for (const fi of members) {
+      const y = state.records[fi.id]?.closedYear;
+      if (y) ys.add(y);
+    }
+    return [...ys].sort((a, b) => b - a);
+  }, [members, state, isClosedView]);
 
   if (loading || !state) {
     return (
@@ -211,6 +226,23 @@ export default function StageListPage({
             </option>
           ))}
         </select>
+        {isClosedView && closedYearOptions.length > 0 && (
+          <select
+            value={yearFilter}
+            onChange={(e) => {
+              setYearFilter(e.target.value);
+              setPage(0);
+            }}
+            className="text-sm rounded-lg border border-slate-200 bg-white px-3 py-2"
+          >
+            <option value="all">All years</option>
+            {closedYearOptions.map((y) => (
+              <option key={y} value={String(y)}>
+                {y}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {selected.size > 0 && (

@@ -34,9 +34,8 @@ export function listMembers(listId: ListId, state: PipelineState): FI[] {
   switch (listId) {
     case "universe":
       return UNIVERSE;
-    case "addressable-asset":
-      return UNIVERSE.filter(inAssetBand);
-    case "addressable-fit":
+    case "addressable":
+      // True addressable market: within the asset band AND a platform fit.
       return UNIVERSE.filter((fi) => inAssetBand(fi) && isPlatformFit(fi, records));
     case "active-pursuit":
       return UNIVERSE.filter(
@@ -79,7 +78,11 @@ export interface PipelineMetrics {
   stageArr: Record<string, number>; // real weighted $ per stage
 }
 
-export function computeMetrics(state: PipelineState): PipelineMetrics {
+/**
+ * @param year  when set, closed-won/lost counts include only deals attributed
+ *              to that calendar year (open-pipeline math is unaffected).
+ */
+export function computeMetrics(state: PipelineState, year?: number): PipelineMetrics {
   let weightedPipeline = 0;
   let closedWonCount = 0;
   let closedWonArr = 0;
@@ -93,6 +96,7 @@ export function computeMetrics(state: PipelineState): PipelineMetrics {
     stageArr[rec.stage] = (stageArr[rec.stage] ?? 0) + wv;
     if (openStages.has(rec.stage)) weightedPipeline += wv;
     if (rec.stage === "closed-won") {
+      if (year != null && rec.closedYear !== year) continue;
       closedWonCount++;
       closedWonArr += dealValue(rec, state);
     }
@@ -100,4 +104,15 @@ export function computeMetrics(state: PipelineState): PipelineMetrics {
   const projectedDeals =
     closedWonCount + Math.round(weightedPipeline / state.settings.defaultDealArr);
   return { weightedPipeline, closedWonCount, closedWonArr, projectedDeals, stageArr };
+}
+
+/** Distinct closed years present in the data, newest first (always includes the current year). */
+export function closedYears(state: PipelineState): number[] {
+  const years = new Set<number>([new Date().getFullYear()]);
+  for (const rec of Object.values(state.records)) {
+    if ((rec.stage === "closed-won" || rec.stage === "closed-lost") && rec.closedYear) {
+      years.add(rec.closedYear);
+    }
+  }
+  return [...years].sort((a, b) => b - a);
 }

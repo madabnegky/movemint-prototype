@@ -2,7 +2,6 @@ import type { BranchStageId, ListId, MainStageId, StageId, TierId } from "./type
 
 export const MAIN_STAGES: MainStageId[] = [
   "mql",
-  "sql",
   "warm-lead",
   "qualified",
   "discovery-scheduled",
@@ -24,20 +23,13 @@ export const BRANCH_STAGES: BranchStageId[] = [
 
 export const ALL_STAGES: StageId[] = [...MAIN_STAGES, ...BRANCH_STAGES];
 
-export const TIERS: TierId[] = [
-  "universe",
-  "addressable-asset",
-  "addressable-fit",
-  "active-pursuit",
-];
+export const TIERS: TierId[] = ["universe", "addressable", "active-pursuit"];
 
 export const STAGE_LABELS: Record<ListId, string> = {
   universe: "Universe",
-  "addressable-asset": "Addressable — Asset Size",
-  "addressable-fit": "Addressable — Asset + Platform Fit",
+  addressable: "Addressable Market",
   "active-pursuit": "Active Pursuit",
   mql: "Marketing Qualified",
-  sql: "Sales Qualified",
   "warm-lead": "Warm Lead",
   qualified: "Qualified",
   "discovery-scheduled": "Discovery Scheduled",

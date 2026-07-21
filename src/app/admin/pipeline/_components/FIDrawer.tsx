@@ -55,7 +55,17 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
               <span className="text-xs font-semibold text-slate-500 mb-1 block">Stage</span>
               <StageSelect
                 value={rec?.stage ?? null}
-                onChange={(stage) => updateRecord(fi.id, { stage })}
+                onChange={(stage) => {
+                  const isClosed = stage === "closed-won" || stage === "closed-lost";
+                  updateRecord(fi.id, {
+                    stage,
+                    // Default a newly-closed deal to the current year; clear the
+                    // attribution when it moves back to an open stage.
+                    closedYear: isClosed
+                      ? (rec?.closedYear ?? new Date().getFullYear())
+                      : undefined,
+                  });
+                }}
                 className="w-full"
               />
             </label>
@@ -69,6 +79,27 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
               />
             </label>
           </div>
+
+          {(rec?.stage === "closed-won" || rec?.stage === "closed-lost") && (
+            <label className="block">
+              <span className="text-xs font-semibold text-slate-500 mb-1 block">
+                {rec.stage === "closed-won" ? "Win" : "Loss"} attributed to year
+              </span>
+              <select
+                value={rec.closedYear ?? new Date().getFullYear()}
+                onChange={(e) => updateRecord(fi.id, { closedYear: Number(e.target.value) })}
+                className="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
+              >
+                {Array.from({ length: 8 }, (_, i) => new Date().getFullYear() + 1 - i).map(
+                  (y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ),
+                )}
+              </select>
+            </label>
+          )}
 
           <label className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3 cursor-pointer hover:bg-slate-50">
             <span>

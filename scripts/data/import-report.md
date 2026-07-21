@@ -1,6 +1,6 @@
 # Workbook Import Report
 
-Generated: 2026-07-20T22:28:45.728Z
+Generated: 2026-07-20T23:37:47.713Z
 Universe: 4257 banks + 4336 CUs
 
 ## Per-sheet match results
@@ -8,16 +8,16 @@ Universe: 4257 banks + 4336 CUs
 | Sheet | Rows | Matched | Skipped |
 |---|---|---|---|
 | Addressable Banks | 881 | 768 | 113 |
-| Addressable CUs | 880 | 817 | 63 |
-| MQL | 384 | 262 | 122 |
+| Addressable CUs | 880 | 815 | 65 |
+| MQL | 384 | 249 | 135 |
 | SQL | 7 | 6 | 1 |
 | sales stage | 178 | 145 | 33 |
 
 ## Seeded pipeline state
 
-- Records with any data: 1450
-- Platform fit: 1320
-- mql: 171
+- Records with any data: 1441
+- Platform fit: 1319
+- mql: 162
 - short-term-nurture: 81
 - long-term-nurture: 8
 - bad-contact-info: 5
@@ -32,7 +32,7 @@ Universe: 4257 banks + 4336 CUs
 - closed-lost: 2
 - closed-won: 3
 
-## Non-exact matches — spot-check these (150)
+## Non-exact matches — spot-check these (135)
 
 Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 
@@ -137,7 +137,6 @@ Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 - Great Lakes Credit Union → **GREAT LAKES** (BANNOCKBURN, IL) via `name+assets` — _Addressable CUs_
 - Patriot Federal Credit Union → **PATRIOT** (CHAMBERSBURG, PA) via `name+assets` — _Addressable CUs_
 - The County Federal Credit Union → **THE COUNTY** (Presque Isle, ME) via `name+assets` — _Addressable CUs_
-- Widget Federal Credit Union DBA Widget Financial → **WIDGET** (Erie, PA) via `containment+assets` — _Addressable CUs_
 - Metro CU Federal Credit Union → **METRO** (Chelsea, MA) via `name+assets` — _Addressable CUs_
 - Carolina Trust Federal Credit Union → **CAROLINA TRUST** (MYRTLE BEACH, SC) via `name+assets` — _Addressable CUs_
 - Mutual Federal Credit Union → **MUTUAL** (Vicksburg, MS) via `name+assets` — _Addressable CUs_
@@ -165,22 +164,8 @@ Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 - Members Choice Credit Union → **MEMBERS CHOICE** (Houston, TX) via `name+assets` — _Addressable CUs_
 - Champion Credit Union → **CHAMPION** (Canton, NC) via `name+assets` — _Addressable CUs_
 - The County Federal Credit Union → **THE COUNTY** (Presque Isle, ME) via `name+assets` — _Addressable CUs_
-- Innovations FCU → **INNOVATIONS FINANCIAL** (PANAMA CITY, FL) via `contain` — _Addressable CUs_
-- Mountain View Federal Credit Union → **MOUNTAIN** (Waynesville, NC) via `contain` — _MQL_
-- TopLine Federal Credit Union → **TOPLINE FINANCIAL** (Maple Grove, MN) via `contain` — _MQL_
-- Sullivan Financial Credit Union → **FINANCIAL TRUST** (Cheektowaga, NY) via `contain` — _MQL_
-- UNIFY Financial Credit Union → **FINANCIAL TRUST** (Cheektowaga, NY) via `contain` — _MQL_
-- Seattle Credit Union → **SEATTLE METROPOLITAN** (Seattle, WA) via `contain` — _MQL_
-- Linn Area Credit Union → **AREA** (ABERDEEN, SD) via `contain` — _MQL_
-- MWA Financial Federal Credit Union → **FINANCIAL TRUST** (Cheektowaga, NY) via `contain` — _MQL_
-- Cape Cod 5 Credit Union → **CAPE** (Clarksburg, WV) via `contain` — _MQL_
-- BR Telco Federal Credit Union → **TELCO** (TARBORO, NC) via `contain` — _MQL_
-- Advanced Technology Federal Credit Union → **TECHNOLOGY** (SAN JOSE, CA) via `contain` — _MQL_
-- Financial Advantage Federal Credit Union → **ADVANTAGE FINANCIAL** (WASHINGTON, DC) via `fuzzy(1.00)` — _MQL_
-- US Eagle Federal Credit Union → **EAGLE** (ATCHISON, KS) via `contain` — _MQL_
-- Barbados Public Workers Coop CU Ltd → **WORKERS** (Littleton, MA) via `contain` — _MQL_
-- HAPO → **HAPO COMMUNITY** (Richland, WA) via `contain` — _MQL_
-- Mayo Credit Union → **MAYO EMPLOYEES** (ROCHESTER, MN) via `contain` — _MQL_
+- Illinois University Credit Union → **UNIVERSITY OF ILLINOIS COMMUNITY** (Champaign, IL) via `contain` — _MQL_
+- Financial Advantage Federal Credit Union → **ADVANTAGE FINANCIAL** (WASHINGTON, DC) via `contain` — _MQL_
 - Horizon Credit Union (WA) → **HORIZON** (Spokane Valley, WA) via `name+state` — _SQL_
 - Capital Credit Union (WI) - Digital Storefront → **CAPITAL** (Green Bay, WI) via `name+state` — _sales stage_
 - Heartland Credit Union (WI) - Digital Storefront → **HEARTLAND** (Madison, WI) via `name+state` — _sales stage_
@@ -259,7 +244,7 @@ Accepted via containment/fuzzy/disambiguation rather than an exact name match.
 - FOOTHILL (cu-12425): had "mql", sales stage sheet says "proposal-sent" → kept "proposal-sent"
 - PIONEER (cu-9247): had "mql", sales stage sheet says "verbal-commitment" → kept "verbal-commitment"
 
-## Unmatched / needs human review (332)
+## Unmatched / needs human review (347)
 
 These rows were NOT imported. Resolve manually in the UI (find the FI and set
 its stage/owner/fit) or fix the workbook and re-run the import.
@@ -432,24 +417,31 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **Firefly Credit Union** (Burnsville) — _Addressable CUs_: no confident match (best 0.00)
 - **SCU Credit Union** (Brockton) — _Addressable CUs_: no confident match (best 0.00)
 - **University of Virginia Community CU** — _Addressable CUs_: no confident match (best 0.67 = VIRGINIA STATE UNIVERSITY, South Chesterfi VA)
+- **Widget Federal Credit Union DBA Widget Financial** — _Addressable CUs_: no confident match (best 0.33 = WIDGET, Erie PA)
 - **Credit Union of Southern California** — _Addressable CUs_: no confident match (best 0.50 = CALIFORNIA, GLENDALE CA)
 - **Maine Savings Federal Credit Union** — _Addressable CUs_: ambiguous name
 - **Marine Federal Credit Union** — _Addressable CUs_: ambiguous name
 - **Marine Credit Union** — _Addressable CUs_: ambiguous name
 - **Digital Federal Credit Union** — _Addressable CUs_: no confident match (best 0.00)
 - **orsa credit union** (Plymouth) — _Addressable CUs_: no confident match (best 0.00)
+- **Innovations FCU** — _Addressable CUs_: no confident match (best 0.50 = INNOVATIONS FINANCIAL, PANAMA CITY FL)
 - **7 17 Credit Union** — _Addressable CUs_: no confident match (best 0.25 = THD DISTRICT 17, Bryan TX)
 - **Rrcu** (Texarkana) — _Addressable CUs_: no confident match (best 0.00)
 - **Fire First Federal Credit Union** — _MQL_: no confident match (best 0.50 = FIRST, Chandler AZ)
+- **Mountain View Federal Credit Union** — _MQL_: no confident match (best 0.50 = MOUNTAIN, Waynesville NC)
 - **First Community Credit Union** — _MQL_: ambiguous name
+- **TopLine Federal Credit Union** — _MQL_: no confident match (best 0.50 = TOPLINE FINANCIAL, Maple Grove MN)
 - **Schools Financial Credit Union** — _MQL_: no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)
 - **AAA Credit Union** — _MQL_: no confident match (best 0.00)
 - **Merrimack Valley Credit Union** — _MQL_: no confident match (best 0.50 = VALLEY, Brownsville TX)
 - **San Francisco Firefighters Credit Union** — _MQL_: no confident match (best 0.67 = SAN FRANCISCO, San Francisco CA)
+- **Sullivan Financial Credit Union** — _MQL_: no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)
 - **UW Credit Union** — _MQL_: no confident match (best 0.00)
 - **Sun West Federal Credit Union** — _MQL_: no confident match (best 0.50 = CREDIT UNION WEST, Glendale AZ)
+- **UNIFY Financial Credit Union** — _MQL_: no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)
 - **State Employees Credit Union of New Mexico** — _MQL_: no confident match (best 0.40 = NEW YORK TIMES EMPLOYEES, NEW YORK NY)
 - **Sandia Laboratory Federal Credit Union** — _MQL_: no confident match (best 0.33 = SANDIA AREA, Albuquerque NM)
+- **Seattle Credit Union** — _MQL_: no confident match (best 0.50 = SEATTLE METROPOLITAN, Seattle WA)
 - **BFS Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **ComChoice Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **Community First Credit Union** — _MQL_: ambiguous name
@@ -459,14 +451,15 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **AA Credit Union** — _MQL_: no confident match (best 0.00)
 - **Landmark Credit Union** — _MQL_: ambiguous name
 - **Firefighters Credit Union** — _MQL_: ambiguous name
-- **Illinois University Credit Union** — _MQL_: no confident match (best 0.67 = UNIVERSITY OF ILLINOIS COMMUNITY, Champaign IL)
 - **Family Savings Credit Union** — _MQL_: ambiguous name
 - **Kaiser Permanente Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **Linnarea Credit Union** — _MQL_: no confident match (best 0.00)
 - **Credit Union of Southern California** — _MQL_: no confident match (best 0.50 = CALIFORNIA, GLENDALE CA)
 - **Financial Partners Credit Union** — _MQL_: ambiguous name
+- **Linn Area Credit Union** — _MQL_: no confident match (best 0.50 = AREA, ABERDEEN SD)
 - **Contego International** — _MQL_: no confident match (best 0.33 = International Bank of Commerce, Laredo TX)
 - **Metro Federal Credit Union** — _MQL_: ambiguous name
+- **MWA Financial Federal Credit Union** — _MQL_: no confident match (best 0.50 = FINANCIAL TRUST, Cheektowaga NY)
 - **Ohio Health Credit Union** — _MQL_: no confident match (best 0.50 = CREDIT UNION OF OHIO, Hilliard OH)
 - **Superior Credit Union** — _MQL_: ambiguous name
 - **Guardian Credit Union** — _MQL_: ambiguous name
@@ -485,6 +478,7 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **Summit Federal Credit Union** — _MQL_: ambiguous name
 - **BH Credit Union** — _MQL_: no confident match (best 0.00)
 - **C1st Credit Union** — _MQL_: no confident match (best 0.00)
+- **Cape Cod 5 Credit Union** — _MQL_: no confident match (best 0.33 = CAPE, Clarksburg WV)
 - **Capital Credit Union** — _MQL_: ambiguous name
 - **Great Lakes Credit Union** — _MQL_: ambiguous name
 - **IHMVCU** — _MQL_: no confident match (best 0.00)
@@ -495,10 +489,12 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **Sun Federal Credit Union** — _MQL_: ambiguous name
 - **Wise Public Credit Union** — _MQL_: no confident match (best 0.33 = PUBLIC SERVICE, Romulus MI)
 - **WPCCU** — _MQL_: no confident match (best 0.00)
+- **BR Telco Federal Credit Union** — _MQL_: no confident match (best 0.50 = TELCO, TARBORO NC)
 - **Credit Union of Colorado** — _MQL_: ambiguous name
 - **Firefighters & Safety Employees Credit Union** — _MQL_: no confident match (best 0.33 = STATE EMPLOYEES', RALEIGH NC)
 - **USS Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **5Point Credit Union** — _MQL_: no confident match (best 0.00)
+- **Advanced Technology Federal Credit Union** — _MQL_: no confident match (best 0.50 = TECHNOLOGY, SAN JOSE CA)
 - **AFCU (America First Credit Union)** — _MQL_: no confident match (best 0.00)
 - **AmeriFirst Credit Union** — _MQL_: no confident match (best 0.00)
 - **BECU** — _MQL_: no confident match (best 0.00)
@@ -518,6 +514,7 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **SunWest Credit Union** — _MQL_: ambiguous name
 - **uCredit** — _MQL_: no confident match (best 0.00)
 - **University Credit Union** — _MQL_: ambiguous name
+- **US Eagle Federal Credit Union** — _MQL_: no confident match (best 0.50 = EAGLE, ATCHISON KS)
 - **useaglefcu.org** — _MQL_: no confident match (best 0.00)
 - **ValleyStrong Credit Union** — _MQL_: no confident match (best 0.00)
 - **Community 1st Credit Union** — _MQL_: ambiguous name
@@ -534,6 +531,7 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **SCU Credit Union** — _MQL_: no confident match (best 0.00)
 - **Self Reliance New York Federal Credit Union** — _MQL_: no confident match (best 0.40 = SELF RELIANCE FINANCIAL, New York NY)
 - **University Federal Credit Union** — _MQL_: ambiguous name
+- **Barbados Public Workers Coop CU Ltd** — _MQL_: no confident match (best 0.20 = WORKERS, Littleton MA)
 - **Commonwealth CU** — _MQL_: ambiguous name
 - **Indiana State University FCU** — _MQL_: ambiguous name
 - **Plus CU** — _MQL_: ambiguous name
@@ -546,10 +544,12 @@ its stage/owner/fit) or fix the workbook and re-run the import.
 - **FECCA Federal Credit Union** — _MQL_: no confident match (best 0.00)
 - **First Financial Federal Credit Union** — _MQL_: ambiguous name
 - **Foothills Credit Union** — _MQL_: ambiguous name
+- **HAPO** — _MQL_: no confident match (best 0.50 = HAPO COMMUNITY, Richland WA)
 - **HRCU** — _MQL_: no confident match (best 0.00)
 - **Intelliplan Financial** — _MQL_: no confident match (best 0.50 = Financial Federal Bank, Memphis TN)
 - **IU Credit Union** — _MQL_: no confident match (best 0.00)
 - **IUCU** — _MQL_: no confident match (best 0.00)
+- **Mayo Credit Union** — _MQL_: no confident match (best 0.50 = MAYO EMPLOYEES, ROCHESTER MN)
 - **MDDC - GAC 2026** — _MQL_: no confident match (best 0.00)
 - **ORNLFCU** — _MQL_: no confident match (best 0.00)
 - **ORSA Credit Union** — _MQL_: no confident match (best 0.00)

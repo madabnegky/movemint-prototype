@@ -29,16 +29,27 @@ export function seedState(): PipelineState {
   return structuredClone(SEED);
 }
 
+// The "sql" (Sales Qualified) stage was retired. Any record or settings key
+// persisted before that maps forward to "qualified" so old blobs stay valid.
+function migrate(state: PipelineState): PipelineState {
+  for (const rec of Object.values(state.records)) {
+    if ((rec.stage as string) === "sql") rec.stage = "qualified";
+  }
+  const probs = state.settings?.stageProbabilities as Record<string, number> | undefined;
+  if (probs && "sql" in probs) delete probs.sql;
+  return state;
+}
+
 export async function readState(): Promise<PipelineState> {
   if (blobsAvailable()) {
     const store = await getBlobStore();
     const raw = await store.get(KEY, { type: "json" });
-    if (raw) return raw as PipelineState;
+    if (raw) return migrate(raw as PipelineState);
     return seedState();
   }
   try {
     const raw = await fs.readFile(DEV_FILE, "utf8");
-    return JSON.parse(raw) as PipelineState;
+    return migrate(JSON.parse(raw) as PipelineState);
   } catch {
     return seedState();
   }

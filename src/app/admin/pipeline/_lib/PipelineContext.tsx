@@ -27,6 +27,11 @@ interface PipelineContextValue {
     patch: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">>,
   ) => void;
   updateSettings: (patch: Partial<PipelineSettings>) => void;
+  resolveUnmatched: (
+    unmatchedId: string,
+    fiId: string | null,
+    patch?: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">>,
+  ) => void;
   resetToSeed: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -117,6 +122,24 @@ export function PipelineProvider({ children }: { children: React.ReactNode }) {
     [send],
   );
 
+  const resolveUnmatched = useCallback<PipelineContextValue["resolveUnmatched"]>(
+    (unmatchedId, fiId, patch) => {
+      setState((prev) => {
+        if (!prev) return prev;
+        const now = new Date().toISOString();
+        const records = { ...prev.records };
+        if (fiId && patch) {
+          const existing = records[fiId] ?? { fiId, stage: null, owner: null, updatedAt: now };
+          records[fiId] = { ...existing, ...patch, fiId, updatedAt: now };
+        }
+        const resolvedUnmatched = [...(prev.resolvedUnmatched ?? []), unmatchedId];
+        return { ...prev, records, resolvedUnmatched, updatedAt: now };
+      });
+      void send({ type: "resolveUnmatched", unmatchedId, fiId, patch });
+    },
+    [send],
+  );
+
   const resetToSeed = useCallback(async () => {
     setSaveStatus("saving");
     const res = await fetch("/api/pipeline", {
@@ -141,6 +164,7 @@ export function PipelineProvider({ children }: { children: React.ReactNode }) {
         updateRecord,
         updateRecords,
         updateSettings,
+        resolveUnmatched,
         resetToSeed,
         refresh,
       }}

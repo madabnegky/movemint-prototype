@@ -11,7 +11,6 @@ export interface FI {
 
 export type MainStageId =
   | "mql"
-  | "sql"
   | "warm-lead"
   | "qualified"
   | "discovery-scheduled"
@@ -32,7 +31,7 @@ export type BranchStageId =
 export type StageId = MainStageId | BranchStageId;
 
 /** Computed funnel tiers — never stored, always derived from universe + records. */
-export type TierId = "universe" | "addressable-asset" | "addressable-fit" | "active-pursuit";
+export type TierId = "universe" | "addressable" | "active-pursuit";
 
 /** Everything a stage list page can show. */
 export type ListId = TierId | StageId;
@@ -45,6 +44,8 @@ export interface PipelineRecord {
   leadSource?: string;
   notes?: string;
   arr?: number; // per-deal ARR override, dollars
+  /** Calendar year a closed-won / closed-lost deal is attributed to. */
+  closedYear?: number;
   updatedAt: string;
 }
 
@@ -58,7 +59,18 @@ export interface PipelineSettings {
 export interface PipelineState {
   records: Record<string, PipelineRecord>;
   settings: PipelineSettings;
+  /** IDs of workbook-unmatched rows that have been linked or dismissed. */
+  resolvedUnmatched?: string[];
   updatedAt: string;
+}
+
+/** A workbook row that couldn't be auto-matched, for in-app resolution. */
+export interface UnmatchedRow {
+  id: string;
+  name: string;
+  sheet: string;
+  reason: string;
+  intended: { stage?: StageId; owner?: string; leadSource?: string };
 }
 
 /** PATCH payloads accepted by /api/pipeline */
@@ -66,4 +78,12 @@ export type PipelinePatch =
   | { type: "record"; fiId: string; patch: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">> }
   | { type: "records"; fiIds: string[]; patch: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">> }
   | { type: "settings"; patch: Partial<PipelineSettings> }
+  // Link an unmatched workbook row to a chosen FI (applies patch + marks the
+  // row resolved) or dismiss it (fiId null, patch omitted).
+  | {
+      type: "resolveUnmatched";
+      unmatchedId: string;
+      fiId: string | null;
+      patch?: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">>;
+    }
   | { type: "reset" };
