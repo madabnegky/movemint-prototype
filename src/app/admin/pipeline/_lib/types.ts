@@ -111,4 +111,7 @@ export type PipelinePatch =
       fiId: string | null;
       patch?: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">>;
     }
+  // Undo a resolution — the row returns to the Unmatched panel. Does not
+  // touch any record the resolve may have created (correct that separately).
+  | { type: "unresolveUnmatched"; unmatchedId: string }
   | { type: "reset" };

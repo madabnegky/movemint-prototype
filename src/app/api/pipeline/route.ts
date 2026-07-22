@@ -73,6 +73,12 @@ export async function PATCH(req: NextRequest) {
       state.resolvedUnmatched = [...resolved];
       break;
     }
+    case "unresolveUnmatched": {
+      state.resolvedUnmatched = (state.resolvedUnmatched ?? []).filter(
+        (id) => id !== patch.unmatchedId,
+      );
+      break;
+    }
     case "reset": {
       const fresh = seedState();
       await writeState(fresh);
