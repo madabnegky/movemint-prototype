@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
-import { UNIVERSE } from "../_lib/universe";
+import { searchInstitutions } from "../_lib/universe";
 import type { FI } from "../_lib/types";
 import { TypeBadge } from "./controls";
 import { FIDrawer } from "./FIDrawer";
@@ -20,39 +20,10 @@ export function GlobalSearch() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const records = state?.records;
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (q.length < 2) return [];
-    const scored: Array<{ fi: FI; score: number }> = [];
-    for (const fi of UNIVERSE) {
-      const name = fi.name.toLowerCase();
-      const city = fi.city.toLowerCase();
-      let score = 0;
-      if (name.startsWith(q)) score = 3;
-      else if (name.includes(` ${q}`)) score = 2;
-      else if (name.includes(q)) score = 1;
-      else if (city.startsWith(q)) score = 0.5;
-      else if (city.includes(q)) score = 0.25;
-      // Also match on a contact's name or email so a deal can be found by person.
-      if (score === 0) {
-        const contacts = records?.[fi.id]?.contacts;
-        if (
-          contacts?.some(
-            (c) =>
-              c.name.toLowerCase().includes(q) ||
-              (c.email && c.email.toLowerCase().includes(q)),
-          )
-        ) {
-          score = 0.4;
-        }
-      }
-      if (score > 0) scored.push({ fi, score });
-    }
-    scored.sort(
-      (a, b) => b.score - a.score || b.fi.assets - a.fi.assets,
-    );
-    return scored.slice(0, MAX_RESULTS).map((s) => s.fi);
-  }, [query, records]);
+  const results = useMemo(
+    () => searchInstitutions(query, MAX_RESULTS, records),
+    [query, records],
+  );
 
   // Reset the highlighted row whenever the result set changes.
   useEffect(() => setActive(0), [query]);

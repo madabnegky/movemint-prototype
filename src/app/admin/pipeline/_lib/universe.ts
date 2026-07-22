@@ -15,6 +15,99 @@ export const UNIVERSE: FI[] = [
 
 export const FI_BY_ID: Map<string, FI> = new Map(UNIVERSE.map((fi) => [fi.id, fi]));
 
+// ---- Institution search ----
+// NCUA/FDIC store terse official names ("SUN" for "Sun Federal Credit Union"),
+// so a plain substring search misses the names people actually type. This
+// normalizes filler words out of both the query and candidate names before
+// matching, and ranks by how well the significant tokens line up.
+const SEARCH_STOP = new Set(
+  "federal credit union fcu cu bank banking national association na the of and a inc co company trust savings ssb fsb".split(
+    " ",
+  ),
+);
+function searchTokens(s: string): string[] {
+  return s
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w && !SEARCH_STOP.has(w));
+}
+
+/**
+ * Ranked institution search over the universe. Matches on normalized name
+ * tokens (so "Sun Federal Credit Union" finds "SUN") and on city, then sorts
+ * by match quality and assets. Returns up to `limit` results.
+ *
+ * @param records  optional overlay so the search can also match a linked
+ *   contact's name or email (used by the global search).
+ */
+export function searchInstitutions(
+  query: string,
+  limit = 12,
+  records?: Record<string, PipelineRecord>,
+): FI[] {
+  const raw = query.trim().toLowerCase();
+  if (raw.length < 2) return [];
+  const qTokens = searchTokens(query);
+  const scored: Array<{ fi: FI; score: number }> = [];
+
+  for (const fi of UNIVERSE) {
+    const nameLc = fi.name.toLowerCase();
+    const cityLc = fi.city.toLowerCase();
+    const nTokens = searchTokens(fi.name);
+    let score = 0;
+
+    // Raw substring on the full name is the strongest signal.
+    if (nameLc.startsWith(raw)) score = 100;
+    else if (nameLc.includes(raw)) score = 70;
+
+    // Token overlap catches terse official names vs typed-out names.
+    if (qTokens.length) {
+      const nSet = new Set(nTokens);
+      const shared = qTokens.filter((t) => nSet.has(t)).length;
+      if (shared) {
+        // Exact normalized-name equality is the best token signal: "Sun
+        // Federal Credit Union" and "SUN" both reduce to {sun}, which should
+        // beat "SUN EAST" ({sun,east}).
+        const exact = shared === qTokens.length && shared === nTokens.length;
+        const allQueryMatched = shared === qTokens.length;
+        // Fewer extra tokens on the candidate ranks higher within a tier.
+        const extra = nTokens.length - shared;
+        if (exact) score = Math.max(score, 95);
+        else if (allQueryMatched) score = Math.max(score, 55 + shared - extra);
+        else score = Math.max(score, 30 + shared * 5 - extra);
+      }
+    }
+
+    // City is a weaker match.
+    if (score === 0) {
+      if (cityLc.startsWith(raw)) score = 12;
+      else if (cityLc.includes(raw)) score = 6;
+    }
+
+    // Contact name/email is the weakest, so a deal can be found by person.
+    if (score === 0 && records) {
+      const contacts = records[fi.id]?.contacts;
+      if (
+        contacts?.some(
+          (c) =>
+            c.name.toLowerCase().includes(raw) ||
+            (c.email && c.email.toLowerCase().includes(raw)),
+        )
+      ) {
+        score = 4;
+      }
+    }
+
+    if (score > 0) scored.push({ fi, score });
+  }
+
+  scored.sort((a, b) => b.score - a.score || b.fi.assets - a.fi.assets);
+  return scored.slice(0, limit).map((s) => s.fi);
+}
+
 export const UNIVERSE_META = {
   banks: (banksData as UniverseFile).meta,
   cus: (cusData as UniverseFile).meta,

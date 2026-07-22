@@ -5,7 +5,7 @@ import { AlertTriangle, ChevronDown, ChevronRight, X } from "lucide-react";
 import unmatchedData from "@/data/pipeline-unmatched.json";
 import { usePipeline } from "../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
-import { UNIVERSE } from "../_lib/universe";
+import { searchInstitutions } from "../_lib/universe";
 import type { FI, StageId, UnmatchedRow } from "../_lib/types";
 import { TypeBadge } from "./controls";
 
@@ -38,16 +38,7 @@ function looksMismatched(rowName: string, fiName: string): boolean {
 
 function LinkSearch({ onPick }: { onPick: (fi: FI) => void }) {
   const [q, setQ] = useState("");
-  const results = useMemo(() => {
-    const query = q.trim().toLowerCase();
-    if (query.length < 2) return [];
-    return UNIVERSE.filter(
-      (fi) =>
-        fi.name.toLowerCase().includes(query) || fi.city.toLowerCase().includes(query),
-    )
-      .sort((a, b) => b.assets - a.assets)
-      .slice(0, 6);
-  }, [q]);
+  const results = useMemo(() => searchInstitutions(q, 10), [q]);
 
   return (
     <div className="relative">
