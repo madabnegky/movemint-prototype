@@ -22,7 +22,12 @@ function blobsAvailable(): boolean {
 
 async function getBlobStore() {
   const { getStore } = await import("@netlify/blobs");
-  return getStore(STORE_NAME);
+  // Strong consistency is required: PATCH does a read-modify-write, and with
+  // the default eventual consistency the read can return a value up to 60s
+  // stale, silently clobbering a concurrent edit (e.g. resolving several
+  // unmatched MQLs in a row would drop all but the last). Strong consistency
+  // guarantees the read-before-write sees the latest committed state.
+  return getStore({ name: STORE_NAME, consistency: "strong" });
 }
 
 export function seedState(): PipelineState {
