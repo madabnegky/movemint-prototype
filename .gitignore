@@ -52,3 +52,14 @@ next-env.d.ts
 # sales pipeline local dev persistence
 .pipeline-dev-store.json
 scripts/ncua-tmp/
+
+# Local Netlify folder
+.netlify
+
+# GT America is licensed (Grilli Type EULA) and this repo is public.
+# The font files must not enter version control. They live locally for dev and
+# are delivered to Netlify out-of-band (see public/fonts/README.md).
+/public/fonts/*.woff2
+/public/fonts/*.woff
+/public/fonts/*.otf
+/public/fonts/*.ttf
