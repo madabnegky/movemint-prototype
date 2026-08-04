@@ -1,12 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { Plus, Trash2, X } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
 import { inAssetBand } from "../_lib/universe";
+import { CONTACT_TYPES } from "../_lib/types";
 import type { Contact, FI } from "../_lib/types";
 import { OptionOrOther, OwnerSelect, StageSelect, TypeBadge } from "./controls";
+
+/** Today as "YYYY-MM-DD" in the user's own timezone (toISOString would use UTC
+ *  and roll over a day early for anyone west of Greenwich). */
+function todayISO(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate(),
+  ).padStart(2, "0")}`;
+}
+
+/** "Today" / "Yesterday" / "12 days ago" for a "YYYY-MM-DD" date. Parsed
+ *  field-by-field: `new Date("2026-08-03")` is UTC midnight, which displays as
+ *  the previous day in any negative-offset timezone. */
+function daysAgoLabel(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return "";
+  const then = new Date(y, m - 1, d);
+  const now = new Date();
+  const days = Math.round(
+    (new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() - then.getTime()) /
+      86_400_000,
+  );
+  if (days === 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 0) return `In ${-days} day${days === -1 ? "" : "s"}`;
+  return `${days} days ago`;
+}
 
 function ContactsEditor({
   contacts,
@@ -122,18 +151,7 @@ function ContactsEditor({
 }
 
 export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }) {
-  const { state, updateRecord } = usePipeline();
-  const rec = fi ? state?.records[fi.id] : undefined;
-
-  // Local buffers for free-text fields so we only save on blur.
-  const [notes, setNotes] = useState("");
-  const [arr, setArr] = useState("");
-  const [partner, setPartner] = useState("");
-  useEffect(() => {
-    setNotes(rec?.notes ?? "");
-    setArr(rec?.arr != null ? String(rec.arr) : "");
-    setPartner(rec?.referralPartner ?? "");
-  }, [fi?.id, rec?.notes, rec?.arr, rec?.referralPartner]);
+  const { state } = usePipeline();
 
   if (!fi || !state) return null;
 
@@ -164,7 +182,31 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
           </button>
         </div>
 
-        <div className="px-6 py-5 space-y-5">
+        {/* Keyed on the FI so the body remounts when the drawer switches records.
+            That reset is load-bearing: the free-text buffers below and
+            OptionOrOther's "Other…" toggle are local state that would otherwise
+            carry over from the previously-viewed FI. */}
+        <DrawerBody key={fi.id} fi={fi} />
+      </aside>
+    </>
+  );
+}
+
+function DrawerBody({ fi }: { fi: FI }) {
+  const { state, updateRecord } = usePipeline();
+  const rec = state?.records[fi.id];
+
+  // Local buffers for free-text fields so we only save on blur. Seeded from the
+  // record on mount; the parent's key={fi.id} remounts this on every FI switch,
+  // so they never need to be re-synced from a later render.
+  const [notes, setNotes] = useState(rec?.notes ?? "");
+  const [arr, setArr] = useState(rec?.arr != null ? String(rec.arr) : "");
+  const [partner, setPartner] = useState(rec?.referralPartner ?? "");
+
+  if (!state) return null;
+
+  return (
+    <div className="px-6 py-5 space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <label className="block">
               <span className="text-xs font-semibold text-slate-500 mb-1 block">Stage</span>
@@ -193,6 +235,64 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
                 className="w-full"
               />
             </label>
+          </div>
+
+          <div className="space-y-2 rounded-lg border border-slate-100 p-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Last contact
+              </span>
+              {(rec?.lastContact || rec?.lastContactType) && (
+                <button
+                  onClick={() =>
+                    updateRecord(fi.id, {
+                      lastContact: undefined,
+                      lastContactType: undefined,
+                    })
+                  }
+                  title="Clear last contact"
+                  className="p-1 rounded text-slate-300 hover:bg-slate-100 hover:text-red-500"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            <label className="block">
+              <span className="text-xs font-semibold text-slate-500 mb-1 block">Date</span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={rec?.lastContact ?? ""}
+                  // Capped at today — a "last" contact can't be in the future.
+                  max={todayISO()}
+                  onChange={(e) =>
+                    updateRecord(fi.id, { lastContact: e.target.value || undefined })
+                  }
+                  className="flex-1 min-w-0 text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                />
+                <button
+                  onClick={() => updateRecord(fi.id, { lastContact: todayISO() })}
+                  className="text-xs font-medium text-slate-600 border border-slate-200 rounded-lg px-2.5 py-2 hover:bg-slate-50 shrink-0"
+                >
+                  Today
+                </button>
+              </div>
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-semibold text-slate-500 mb-1 block">Type</span>
+              <OptionOrOther
+                value={rec?.lastContactType}
+                options={[...CONTACT_TYPES]}
+                placeholder="Not set"
+                onChange={(v) => updateRecord(fi.id, { lastContactType: v })}
+              />
+            </label>
+
+            <span className="text-xs text-slate-400 block">
+              {rec?.lastContact ? daysAgoLabel(rec.lastContact) : "No contact logged yet."}
+            </span>
           </div>
 
           <div className="space-y-2 rounded-lg border border-slate-100 p-3">
@@ -265,6 +365,24 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
                 placeholder="Referral partner name…"
                 className="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
               />
+            )}
+            {/* Read-only: the partner pipeline's drawer is the single writer for
+                this link, so the two sides can't disagree. */}
+            {rec?.partnerId && (
+              <div className="flex items-center justify-between gap-2 rounded-lg border border-violet-200 bg-violet-50/60 px-3 py-2">
+                <span className="min-w-0">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-violet-500 block">
+                    Sourced via partner
+                  </span>
+                  <span className="text-sm text-slate-700 truncate block">{rec.partnerId}</span>
+                </span>
+                <Link
+                  href="/admin/partners/stage/all"
+                  className="text-xs font-medium text-violet-600 hover:text-violet-800 shrink-0"
+                >
+                  View
+                </Link>
+              </div>
             )}
           </div>
 
@@ -359,14 +477,12 @@ export function FIDrawer({ fi, onClose }: { fi: FI | null; onClose: () => void }
             />
           </label>
 
-          {rec?.stage && (
-            <div className="text-xs text-slate-400">
-              Currently in <b className="text-slate-600">{STAGE_LABELS[rec.stage]}</b>
-              {rec.updatedAt && <> · updated {new Date(rec.updatedAt).toLocaleString()}</>}
-            </div>
-          )}
+      {rec?.stage && (
+        <div className="text-xs text-slate-400">
+          Currently in <b className="text-slate-600">{STAGE_LABELS[rec.stage]}</b>
+          {rec.updatedAt && <> · updated {new Date(rec.updatedAt).toLocaleString()}</>}
         </div>
-      </aside>
-    </>
+      )}
+    </div>
   );
 }

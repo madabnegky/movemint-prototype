@@ -1,0 +1,762 @@
+{
+  "partners": {
+    "vericast": {
+      "id": "vericast",
+      "name": "Vericast",
+      "companyType": "Fintech / Marketing",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "45",
+        "value": 45,
+        "qualifier": "exact"
+      },
+      "reachNotes": "45 active FI clients (source: Vericast_Client_List_2026.xlsx, HubSpot CRM)",
+      "primaryFocus": "Member marketing & account acquisition",
+      "website": "https://vericast.com",
+      "notes": "Full reseller.  Rev share based on per record charge.",
+      "owner": null,
+      "revShare": {
+        "model": "per-record",
+        "isReseller": true,
+        "notes": "Rev share based on per record charge."
+      },
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "trustage": {
+      "id": "trustage",
+      "name": "TruStage",
+      "companyType": "CUSO / Insurance & Fintech",
+      "categories": [
+        "cuso",
+        "fintech"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "~4,000",
+        "value": 4000,
+        "qualifier": "approx"
+      },
+      "reachNotes": "Serves 93% of ~4,300 U.S. credit unions; $6B+ annual revenue",
+      "primaryFocus": "Insurance, payments & lending for CUs",
+      "website": "https://trustage.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "tyfone": {
+      "id": "tyfone",
+      "name": "Tyfone",
+      "companyType": "Fintech / Digital Banking",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "~50+",
+        "value": 50,
+        "qualifier": "min"
+      },
+      "reachNotes": "Ongoing new client announcements in 2025–26; exact total not publicly disclosed",
+      "primaryFocus": "Digital banking platform (nFinia) for CUs & community banks",
+      "website": "https://tyfone.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "aivantage": {
+      "id": "aivantage",
+      "name": "AiVantage",
+      "companyType": "CUSO / AI & Analytics",
+      "categories": [
+        "cuso"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "~5–10",
+        "value": 8,
+        "qualifier": "range"
+      },
+      "reachNotes": "Early-stage CUSO; multiple CU equity investors (TopLine, Our Community CU); exact client count not public",
+      "primaryFocus": "AI tools, data & automation for CUs",
+      "website": "https://aivantage.io",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "ignitefi": {
+      "id": "ignitefi",
+      "name": "IgniteFI",
+      "companyType": "Consulting / Advisory",
+      "categories": [
+        "consulting"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "N/A",
+        "value": null,
+        "qualifier": "na"
+      },
+      "reachNotes": "Consulting & advisory firm (Fractional Fintech, FINNECT platform); client count not applicable in traditional sense",
+      "primaryFocus": "CU-fintech partnerships & go-to-market strategy",
+      "website": "https://ignitefi.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "nuuvia": {
+      "id": "nuuvia",
+      "name": "Nuuvia",
+      "companyType": "Fintech / Youth Banking",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "~50",
+        "value": 50,
+        "qualifier": "approx"
+      },
+      "reachNotes": "Nearly 50 FI clients; focus on youth banking & financial literacy for CUs and community banks",
+      "primaryFocus": "Youth banking & Gen Z engagement",
+      "website": "https://nuuvia.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "payfinia": {
+      "id": "payfinia",
+      "name": "Payfinia",
+      "companyType": "Real time payments",
+      "categories": [
+        "other"
+      ],
+      "stage": "signed",
+      "fiReach": {
+        "raw": "30",
+        "value": 30,
+        "qualifier": "exact"
+      },
+      "reachNotes": "~30 community FI clients; launched IPX platform in Nov 2024; adding RTP network in 2026",
+      "primaryFocus": "Embedded instant payments (FedNow & RTP) for CUs",
+      "website": "https://payfinia.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "navanta": {
+      "id": "navanta",
+      "name": "Navanta",
+      "companyType": "Managed Services / Technology",
+      "categories": [
+        "managed-services"
+      ],
+      "stage": "active",
+      "fiReach": {
+        "raw": "700+",
+        "value": 700,
+        "qualifier": "min"
+      },
+      "reachNotes": "700+ community FIs; formed from merger of UFS, BankOnIT, Safe Systems & Quest Analytics (March 2026)",
+      "primaryFocus": "IT, core banking, security & compliance for CUs & community banks",
+      "website": "https://navanta.com",
+      "notes": "Evaluating it they are able to provide marketing services.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "cornerstone-advisors": {
+      "id": "cornerstone-advisors",
+      "name": "Cornerstone Advisors",
+      "companyType": "",
+      "categories": [],
+      "stage": "active",
+      "fiReach": {
+        "raw": "",
+        "value": null,
+        "qualifier": "na"
+      },
+      "notes": "Hope to add marketing services/execution as part of strategy engagements.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "synergent": {
+      "id": "synergent",
+      "name": "Synergent",
+      "companyType": "CUSO / Core Processing",
+      "categories": [
+        "cuso",
+        "core-processor"
+      ],
+      "stage": "active",
+      "fiReach": {
+        "raw": "200+",
+        "value": 200,
+        "qualifier": "min"
+      },
+      "reachNotes": "67 CUs on Symitar/Episys core; 200+ served with broader operational solutions",
+      "primaryFocus": "Core processing & payments for Maine & NE credit unions",
+      "website": "https://synergentcorp.com",
+      "notes": "Refactoring their marketing services.  Replacing former leader of group.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "posh-ai": {
+      "id": "posh-ai",
+      "name": "Posh.ai",
+      "companyType": "Fintech / AI",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "dormant",
+      "fiReach": {
+        "raw": "125+",
+        "value": 125,
+        "qualifier": "min"
+      },
+      "reachNotes": "125+ FI clients; 300+ deployments; avg 12× ROI reported",
+      "primaryFocus": "Conversational AI & virtual assistants for banks & CUs",
+      "website": "https://posh.ai",
+      "notes": "Waiting to get their SDK.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "aviary-ai": {
+      "id": "aviary-ai",
+      "name": "Aviary.ai",
+      "companyType": "CUSO / AI Voice",
+      "categories": [
+        "cuso"
+      ],
+      "stage": "active",
+      "fiReach": {
+        "raw": "~15–20",
+        "value": 18,
+        "qualifier": "range"
+      },
+      "reachNotes": "Early-stage CUSO (launched Feb 2024); exact client count not public; known clients include BCU, Skyla CU",
+      "primaryFocus": "Outbound AI voice agents for CUs & banks",
+      "website": "https://helloaviary.ai",
+      "notes": "Partnering on GHS.  In contract review.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "vertice-ai": {
+      "id": "vertice-ai",
+      "name": "Vertice.ai",
+      "companyType": "Fintech / AI Analytics",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "active",
+      "fiReach": {
+        "raw": "50",
+        "value": 50,
+        "qualifier": "exact"
+      },
+      "reachNotes": "Signed 50th client as milestone; focus on community banks & CUs",
+      "primaryFocus": "AI-powered member growth & predictive analytics",
+      "website": "https://verticeanalytics.ai",
+      "notes": "Partnering on GHS.  Reviewing agreement.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "banno-jack-henry": {
+      "id": "banno-jack-henry",
+      "name": "Banno (Jack Henry)",
+      "companyType": "Fintech / Digital Banking",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "contacted",
+      "fiReach": {
+        "raw": "300+",
+        "value": 300,
+        "qualifier": "min"
+      },
+      "reachNotes": "300+ FIs on Banno Digital Platform; Jack Henry serves ~7,500 clients overall",
+      "primaryFocus": "Digital banking platform for CUs & community banks",
+      "website": "https://jackhenry.com/banno",
+      "notes": "Waiting until new deck is ready.  Will meet at AFT.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "mahalo-banking": {
+      "id": "mahalo-banking",
+      "name": "Mahalo Banking",
+      "companyType": "Fintech / Digital Banking",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "contacted",
+      "fiReach": {
+        "raw": "~50",
+        "value": 50,
+        "qualifier": "approx"
+      },
+      "reachNotes": "No public total; multiple batches of signings in 2024–25 (7+ in Dec 2024, multiple in 2025); est. ~50 CU clients",
+      "primaryFocus": "Digital banking platform exclusively for credit unions",
+      "website": "https://mahalobanking.com",
+      "notes": "Considering attending conference.  Tight with Corelation.  We know Jim.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "velera": {
+      "id": "velera",
+      "name": "Velera",
+      "companyType": "CUSO / Payments",
+      "categories": [
+        "cuso"
+      ],
+      "stage": "dormant",
+      "fiReach": {
+        "raw": "4,000+",
+        "value": 4000,
+        "qualifier": "min"
+      },
+      "reachNotes": "4,000+ FIs; formerly PSCU/Co-op Solutions; one of the largest CUSOs in the U.S. — Note: listed as 'Valera' in pipeline",
+      "primaryFocus": "Card processing, payments & digital solutions for CUs",
+      "website": "https://velera.com",
+      "notes": "They are most interested in a data play (if we use their data) but great opportunity for Movemint cross sell for their outbound contact center.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "switchthink": {
+      "id": "switchthink",
+      "name": "SwitchThink",
+      "companyType": "CUSO / IT Services",
+      "categories": [
+        "cuso"
+      ],
+      "stage": "dormant",
+      "fiReach": {
+        "raw": "~175",
+        "value": 175,
+        "qualifier": "approx"
+      },
+      "reachNotes": "150 CUs at end of 2024 + 25 new in 2025 = ~175 total; Corelation KeyStone-focused",
+      "primaryFocus": "Cloud hosting, IT & advisory for Corelation KeyStone CUs",
+      "website": "https://switchthink.com",
+      "notes": "Only interested if Desert Financial wants to really leverage.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "mi-league-mcul": {
+      "id": "mi-league-mcul",
+      "name": "MI League (MCUL)",
+      "companyType": "Trade Association",
+      "categories": [
+        "trade-association"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "172",
+        "value": 172,
+        "qualifier": "exact"
+      },
+      "reachNotes": "~172 member CUs in Michigan; $101B assets; serves 61% of MI population — trade association, not a tech vendor",
+      "primaryFocus": "Advocacy, compliance & services for Michigan CUs",
+      "website": "https://mcul.org",
+      "notes": "They do have a sale arm.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "cocc": {
+      "id": "cocc",
+      "name": "COCC",
+      "companyType": "Core Processor / CUSO",
+      "categories": [
+        "cuso",
+        "core-processor"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "~175",
+        "value": 175,
+        "qualifier": "approx"
+      },
+      "reachNotes": "~175 banks & CUs in 13 Northeast states; client-owned co-op; avg 17-year client tenure",
+      "primaryFocus": "Core banking & digital solutions for NE banks & CUs",
+      "website": "https://cocc.com",
+      "notes": "Will meet at AFT.  Nuuvia is working on a partnership.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "cora-fka-finastra": {
+      "id": "cora-fka-finastra",
+      "name": "Cora (fka Finastra)",
+      "companyType": "Core Processor / Fintech",
+      "categories": [
+        "fintech",
+        "core-processor"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "Hundreds",
+        "value": null,
+        "qualifier": "unknown"
+      },
+      "reachNotes": "Acquired Finastra's Phoenix core, Malauzai digital banking & analytics in June 2026; serves hundreds of US banks & CUs",
+      "primaryFocus": "Core banking, digital banking & analytics for community FIs",
+      "website": "https://coragroup.com",
+      "notes": "Brian Brunner can make intro when our pitch is ready.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "glia": {
+      "id": "glia",
+      "name": "Glia",
+      "companyType": "Fintech / CX Platform",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "500+",
+        "value": 500,
+        "qualifier": "min"
+      },
+      "reachNotes": "500+ banks, CUs & insurance companies worldwide; digital-first customer service",
+      "primaryFocus": "Digital customer service & AI for FIs",
+      "website": "https://glia.com",
+      "notes": "Could become a competitor.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "eltropy": {
+      "id": "eltropy",
+      "name": "Eltropy",
+      "companyType": "Fintech / Communications AI",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "750",
+        "value": 750,
+        "qualifier": "exact"
+      },
+      "reachNotes": "750 FIs (up from 650 at start of 2025); added 100+ new FI clients in 2025",
+      "primaryFocus": "AI-powered conversations & communications for CUs & banks",
+      "website": "https://eltropy.com",
+      "notes": "Offers API play.  Could become a competitor.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "candescent": {
+      "id": "candescent",
+      "name": "Candescent",
+      "companyType": "Fintech / Digital Banking",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "1,300",
+        "value": 1300,
+        "qualifier": "exact"
+      },
+      "reachNotes": "1,300 banks & CUs; 30M registered users; formerly NCR Digital Insight, acquired by Veritas Capital",
+      "primaryFocus": "Digital banking platform for community banks & CUs",
+      "website": "https://candescent.com",
+      "notes": "Integrated with them now but no referral.  Tight with cornerstone.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "dci-data-center-inc": {
+      "id": "dci-data-center-inc",
+      "name": "DCI (Data Center Inc.)",
+      "companyType": "Core Processor",
+      "categories": [
+        "core-processor"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "~150–200",
+        "value": 175,
+        "qualifier": "range"
+      },
+      "reachNotes": "Exact count not public; client-owned by community banks; 60+ years experience; primarily serves community banks",
+      "primaryFocus": "Core banking (iCore360) & digital banking for community banks",
+      "website": "https://datacenterinc.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "baker-hill": {
+      "id": "baker-hill",
+      "name": "Baker Hill",
+      "companyType": "Fintech / Lending",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "500",
+        "value": 500,
+        "qualifier": "exact"
+      },
+      "reachNotes": "500 FI clients; 20%+ of top 150 U.S. banks; 20%+ of top 25 U.S. CUs; $7B+ monthly originations",
+      "primaryFocus": "Loan origination & risk management for banks & CUs",
+      "website": "https://bakerhill.com",
+      "notes": "Follow up with deck.  Most interested in offers vis bureau.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "interface-ai": {
+      "id": "interface-ai",
+      "name": "Interface.ai",
+      "companyType": "Fintech / AI",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "~100",
+        "value": 100,
+        "qualifier": "approx"
+      },
+      "reachNotes": "~100 community FIs; 500M+ total conversations processed; 1.5M conversations/day",
+      "primaryFocus": "Agentic AI (voice, chat, employee) for CUs & banks",
+      "website": "https://interface.ai",
+      "notes": "Offers API option.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "corelation": {
+      "id": "corelation",
+      "name": "Corelation",
+      "companyType": "Core Processor",
+      "categories": [
+        "core-processor"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "300+",
+        "value": 300,
+        "qualifier": "min"
+      },
+      "reachNotes": "Surpassed 300 total CU clients in Q1 2026; 38 new signings in 2025 (record year)",
+      "primaryFocus": "Core processing (KeyStone) exclusively for credit unions",
+      "website": "https://corelationinc.com",
+      "notes": "Close with Santo and Tyfone.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "srm": {
+      "id": "srm",
+      "name": "SRM",
+      "companyType": "Consulting",
+      "categories": [
+        "consulting"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "",
+        "value": null,
+        "qualifier": "na"
+      },
+      "notes": "Mark can make intro.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "engage-fi": {
+      "id": "engage-fi",
+      "name": "Engage FI",
+      "companyType": "Consulting",
+      "categories": [
+        "consulting"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "",
+        "value": null,
+        "qualifier": "na"
+      },
+      "notes": "Santo can make intro.",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "accesssoftek": {
+      "id": "accesssoftek",
+      "name": "AccessSoftek",
+      "companyType": "Fintech / Digital Banking",
+      "categories": [
+        "fintech"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "400+",
+        "value": 400,
+        "qualifier": "min"
+      },
+      "reachNotes": "400+ CUs and banks on Access Digital platform",
+      "primaryFocus": "Digital & mobile banking for CUs and community banks",
+      "website": "https://accesssoftek.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "csi-computer-services-inc": {
+      "id": "csi-computer-services-inc",
+      "name": "CSI (Computer Services Inc.)",
+      "companyType": "Core Processor / Fintech",
+      "categories": [
+        "fintech",
+        "core-processor"
+      ],
+      "stage": "not-contacted",
+      "fiReach": {
+        "raw": "3,000+",
+        "value": 3000,
+        "qualifier": "min"
+      },
+      "reachNotes": "3,000+ organizations on NuPoint platform; primarily community banks; 60 years experience",
+      "primaryFocus": "Core banking, digital banking & cybersecurity for community banks",
+      "website": "https://csiweb.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "cu-answers": {
+      "id": "cu-answers",
+      "name": "CU*Answers",
+      "companyType": "CUSO / Core Processing",
+      "categories": [
+        "cuso",
+        "core-processor"
+      ],
+      "stage": "contacted",
+      "fiReach": {
+        "raw": "210+",
+        "value": 210,
+        "qualifier": "min"
+      },
+      "reachNotes": "210+ CUs in 34 states; $31B in assets; 2.1M+ members",
+      "primaryFocus": "Core processing (CU*BASE) & digital banking for CUs",
+      "website": "https://cuanswers.com",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    },
+    "corelation-league": {
+      "id": "corelation-league",
+      "name": "Corelation League",
+      "companyType": "League",
+      "categories": [
+        "trade-association"
+      ],
+      "stage": "contacted",
+      "fiReach": {
+        "raw": "",
+        "value": null,
+        "qualifier": "na"
+      },
+      "primaryFocus": "Advocacy.",
+      "notes": "Caronline is a friend.  Can speak with their CGO.  But likely not a fit",
+      "owner": null,
+      "imported": true,
+      "createdAt": "2026-08-04T14:39:21.398Z",
+      "updatedAt": "2026-08-04T14:39:21.398Z"
+    }
+  },
+  "settings": {
+    "owners": [
+      "Robbie Sink",
+      "Avery Flynn",
+      "Elise Cushing",
+      "Amaha Selassie",
+      "BDR (Insource)"
+    ],
+    "stageProbabilities": {
+      "not-contacted": 0,
+      "contacted": 0.1,
+      "active": 0.4,
+      "signed": 1,
+      "dormant": 0.05,
+      "not-a-fit": 0
+    },
+    "companyTypeOptions": [
+      "CUSO / AI & Analytics",
+      "CUSO / AI Voice",
+      "CUSO / Core Processing",
+      "CUSO / IT Services",
+      "CUSO / Insurance & Fintech",
+      "CUSO / Payments",
+      "Consulting",
+      "Consulting / Advisory",
+      "Core Processor",
+      "Core Processor / CUSO",
+      "Core Processor / Fintech",
+      "Fintech / AI",
+      "Fintech / AI Analytics",
+      "Fintech / CX Platform",
+      "Fintech / Communications AI",
+      "Fintech / Digital Banking",
+      "Fintech / Lending",
+      "Fintech / Marketing",
+      "Fintech / Youth Banking",
+      "League",
+      "Managed Services / Technology",
+      "Real time payments",
+      "Trade Association"
+    ],
+    "signedGoal": 12
+  },
+  "updatedAt": "2026-08-04T14:39:21.398Z"
+}

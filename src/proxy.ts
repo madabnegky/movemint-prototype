@@ -49,5 +49,7 @@ export const config = {
     "/admin/pricing-model/:path*",
     "/admin/pipeline/:path*",
     "/api/pipeline/:path*",
+    "/admin/partners/:path*",
+    "/api/partners/:path*",
   ],
 };

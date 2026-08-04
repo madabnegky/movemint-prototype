@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readState, seedState, writeState } from "./_lib/store";
+import { isEmptyRecord, readState, seedState, writeState } from "./_lib/store";
 import type {
   PipelinePatch,
   PipelineRecord,
@@ -39,20 +39,7 @@ export async function PATCH(req: NextRequest) {
     // a record that carries no other information.
     if (merged.channel === "direct" && !merged.referralPartner) delete merged.channel;
     // Drop records that carry no information so the overlay stays small.
-    const isEmpty =
-      !merged.stage &&
-      !merged.owner &&
-      !merged.platformFit &&
-      !merged.leadSource &&
-      !merged.channel &&
-      !merged.referralPartner &&
-      !merged.coreSystem &&
-      !merged.los &&
-      !merged.homeBanking &&
-      !(merged.contacts && merged.contacts.length) &&
-      !merged.notes &&
-      merged.arr == null;
-    if (isEmpty) delete state.records[fiId];
+    if (isEmptyRecord(merged)) delete state.records[fiId];
     else state.records[fiId] = merged;
   };
 

@@ -53,6 +53,14 @@ next-env.d.ts
 .pipeline-dev-store.json
 scripts/ncua-tmp/
 
+# partner pipeline local dev persistence
+.partner-dev-store.json
+
+# The partner pipeline source workbook is never committed — it holds the CEO's
+# working notes. It was imported once into src/data/partner-seed.json; partners
+# are managed in-app from there. See scripts/import-partners.mjs.
+Movemint_Partner_Pipeline*.xlsx
+
 # Local Netlify folder
 .netlify
 
@@ -63,3 +71,6 @@ scripts/ncua-tmp/
 /public/fonts/*.woff
 /public/fonts/*.otf
 /public/fonts/*.ttf
+
+# Live-state snapshots (contain pipeline data — keep out of git)
+/backups

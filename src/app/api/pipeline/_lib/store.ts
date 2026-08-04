@@ -7,7 +7,7 @@
 import { promises as fs } from "node:fs";
 import { join } from "node:path";
 import seed from "@/data/pipeline-seed.json";
-import type { PipelineState } from "@/app/admin/pipeline/_lib/types";
+import type { PipelineRecord, PipelineState } from "@/app/admin/pipeline/_lib/types";
 
 const STORE_NAME = "sales-pipeline";
 const KEY = "state";
@@ -34,14 +34,72 @@ export function seedState(): PipelineState {
   return structuredClone(SEED);
 }
 
-// The "sql" (Sales Qualified) stage was retired. Any record or settings key
-// persisted before that maps forward to "qualified" so old blobs stay valid.
+/**
+ * True when a record carries no information worth persisting. The overlay is
+ * keyed over ~8,500 FIs, so records that hold nothing are pruned to keep it
+ * small. Shared with /api/partners, which can create bare records when linking
+ * an FI to a partner and must prune them again on unlink.
+ */
+export function isEmptyRecord(
+  rec: Omit<PipelineRecord, "fiId" | "updatedAt"> & Partial<Pick<PipelineRecord, "fiId">>,
+): boolean {
+  return (
+    !rec.stage &&
+    !rec.owner &&
+    !rec.platformFit &&
+    !rec.leadSource &&
+    !rec.channel &&
+    !rec.referralPartner &&
+    !rec.partnerId &&
+    !rec.coreSystem &&
+    !rec.los &&
+    !rec.homeBanking &&
+    !(rec.contacts && rec.contacts.length) &&
+    !rec.notes &&
+    !rec.lastContact &&
+    !rec.lastContactType &&
+    rec.arr == null
+  );
+}
+
+// Stages retired in the 2026-07 funnel redefinition, mapped onto their nearest
+// surviving stage so historical blobs keep working. All of these were empty in
+// production at the time of the change; the mapping is a safety net for any
+// blob (or local dev store) written before the deploy.
+const RETIRED_STAGES: Record<string, string> = {
+  // "sql" predates the redefinition — it was folded into "qualified", which is
+  // now labelled "Sales Qualified Lead". Same destination, different reason.
+  sql: "qualified",
+  // Warm Lead was replaced by SQL as the post-MQL stage.
+  "warm-lead": "qualified",
+  // Discovery Scheduled / Demo Completed collapsed into Discovery Complete.
+  "discovery-scheduled": "discovery-complete",
+  "demo-completed": "discovery-complete",
+  // The three removal states collapsed into Closed Lost.
+  disqualified: "closed-lost",
+  "bad-contact-info": "closed-lost",
+  "signed-with-competitor": "closed-lost",
+};
+
+/** Probabilities for stages that may be missing from an older blob. */
+const DEFAULT_PROBS: Record<string, number> = {
+  "needs-contact": 0,
+  "contract-sent": 0.95,
+};
+
+// Forward-compat shims for blobs written before a schema change.
 function migrate(state: PipelineState): PipelineState {
   for (const rec of Object.values(state.records)) {
-    if ((rec.stage as string) === "sql") rec.stage = "qualified";
+    const mapped = RETIRED_STAGES[rec.stage as string];
+    if (mapped) rec.stage = mapped as PipelineState["records"][string]["stage"];
   }
   const probs = state.settings?.stageProbabilities as Record<string, number> | undefined;
-  if (probs && "sql" in probs) delete probs.sql;
+  if (probs) {
+    for (const dead of Object.keys(RETIRED_STAGES)) delete probs[dead];
+    for (const [id, p] of Object.entries(DEFAULT_PROBS)) {
+      if (!(id in probs)) probs[id] = p;
+    }
+  }
   return state;
 }
 
