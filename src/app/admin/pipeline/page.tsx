@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePipeline } from "./_lib/PipelineContext";
 import {
@@ -11,6 +11,7 @@ import {
   OPEN_FUNNEL_STAGES,
   STAGE_LABELS,
   fmtMoney,
+  stageLabel,
 } from "./_lib/stages";
 import {
   closedYears,
@@ -21,6 +22,9 @@ import {
 import type { ListId, PipelineState } from "./_lib/types";
 import { GlobalSearch } from "./_components/GlobalSearch";
 import { UnmatchedPanel } from "./_components/UnmatchedPanel";
+import { OpenDealsTable, PrintHeader } from "./_components/PrintReport";
+import { StageInfo } from "./_components/StageInfo";
+import { exportAllStages } from "./_lib/exportCsv";
 
 const FUNNEL_ROWS: ListId[] = [
   "universe",
@@ -37,17 +41,23 @@ function Kpi({
   sub,
   accent,
   href,
+  info,
 }: {
   label: string;
   value: string;
   sub?: string;
   accent?: string;
   href?: string;
+  /** Stage/tier whose definition to show behind an (i) icon. */
+  info?: ListId;
 }) {
   const card = (
     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-full transition-colors hover:border-slate-300">
-      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-        {label}
+      <div className="flex items-center gap-1.5 mb-1">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          {label}
+        </span>
+        {info && <StageInfo id={info} />}
       </div>
       <div className={cn("text-2xl font-bold text-slate-900", accent)}>{value}</div>
       {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
@@ -66,7 +76,7 @@ function GoalTracker({ state }: { state: PipelineState }) {
   const projPct = Math.min(((projected - m.closedWonCount) / goal) * 100, 100 - wonPct);
   const gap = Math.max(goal - m.projectedDeals, 0);
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6" data-print="block">
       <div className="flex items-start justify-between mb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -147,6 +157,18 @@ function Funnel({ state }: { state: PipelineState }) {
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <div className="flex items-center justify-between mb-3" data-print="hide">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          Funnel
+        </span>
+        <button
+          onClick={() => exportAllStages(state)}
+          title="Download every staged prospect as CSV — name, reg ID, location, assets, stage"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900"
+        >
+          <Download className="w-3.5 h-3.5" /> Export all stages
+        </button>
+      </div>
       <div className="space-y-1.5">
         {counts.map(({ id, total, cu, bank }) => {
           const sizing = SIZING_ROWS.has(id);
@@ -162,8 +184,11 @@ function Funnel({ state }: { state: PipelineState }) {
               href={`/admin/pipeline/stage/${id}`}
               className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3 rounded-lg px-2 py-1.5 sm:py-1 -mx-2 hover:bg-slate-50 transition-colors group"
             >
-              <div className="w-full sm:w-56 shrink-0 flex items-center gap-2 text-[13px] font-semibold text-slate-700">
-                <span className="truncate group-hover:text-slate-900">{STAGE_LABELS[id]}</span>
+              <div className="w-full sm:w-56 shrink-0 flex items-center gap-1.5 text-[13px] font-semibold text-slate-700">
+                <span className="truncate group-hover:text-slate-900">
+                  {stageLabel(id, true)}
+                </span>
+                <StageInfo id={id} />
                 <span className="ml-auto text-[10px] font-semibold text-slate-400 bg-slate-100 rounded px-1.5 py-0.5 tabular-nums">
                   {sizing ? "—" : `${Math.round((prob ?? 0) * 100)}%`}
                 </span>
@@ -255,8 +280,9 @@ function BranchPanel({ state }: { state: PipelineState }) {
               className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 -mx-2 hover:bg-slate-50 transition-colors"
             >
               <div>
-                <div className="text-[13px] font-semibold text-slate-700">
+                <div className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-700">
                   {STAGE_LABELS[id]}
+                  <StageInfo id={id} />
                 </div>
                 {isNurture && (
                   <div className="text-[11px] text-slate-400">
@@ -340,20 +366,31 @@ export default function PipelineDashboard() {
   );
 
   return (
-    <div className="space-y-6">
-      <GlobalSearch />
+    <div className="space-y-6" data-print="page">
+      <PrintHeader state={state} />
 
-      <UnmatchedPanel />
+      <div data-print="hide">
+        <GlobalSearch />
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div data-print="hide">
+        <UnmatchedPanel />
+      </div>
+
+      <div
+        className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
+        data-print="kpis"
+      >
         <Kpi
-          label="Universe"
+          label="Total Universe"
+          info="universe"
           value={universe.total.toLocaleString()}
           sub={`${universe.cu.toLocaleString()} CU · ${universe.bank.toLocaleString()} bank`}
           href="/admin/pipeline/stage/universe"
         />
         <Kpi
-          label="Addressable Market"
+          label="Total Addressable Market"
+          info="addressable"
           value={addressable.total.toLocaleString()}
           sub={`$250M–$50B + fit · ${addressable.cu.toLocaleString()} CU · ${addressable.bank.toLocaleString()} bank`}
           accent="text-violet-600"
@@ -361,6 +398,7 @@ export default function PipelineDashboard() {
         />
         <Kpi
           label="Active Pursuit"
+          info="active-pursuit"
           value={pursuit.total.toLocaleString()}
           sub="fit, no open deal yet"
           accent="text-amber-600"
@@ -382,13 +420,23 @@ export default function PipelineDashboard() {
 
       <GoalTracker state={state} />
 
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4 items-start">
-        <Funnel state={state} />
-        <div className="space-y-4">
+      <div
+        className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4 items-start"
+        data-print="stack"
+      >
+        <div data-print="flow">
+          <Funnel state={state} />
+        </div>
+        {/* Off the printed report: neither branch stages nor prior-year closes
+            are current pipeline. Hidden as a column so the report doesn't keep
+            the empty rail's spacing. Both stay on screen. */}
+        <div className="space-y-4" data-print="hide">
           <BranchPanel state={state} />
           <PreviousYearsPanel state={state} />
         </div>
       </div>
+
+      <OpenDealsTable state={state} />
     </div>
   );
 }

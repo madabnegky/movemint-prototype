@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Download, Loader2, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
 import { ALL_STAGES, STAGE_LABELS } from "../_lib/stages";
-import { FI_BY_ID } from "../_lib/universe";
+import { FI_BY_ID, regIdLabel, regIdOf } from "../_lib/universe";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -31,8 +31,12 @@ export default function PipelineSettingsPage() {
 
   const exportCsv = () => {
     const header = [
-      "id", "name", "type", "city", "state", "assets",
-      "stage", "owner", "platform_fit", "lead_source", "channel", "referral_partner",
+      // reg_id is the bare FDIC cert / NCUA charter number, split out from `id`
+      // so it can be matched against outside spreadsheets without editing.
+      "id", "reg_id", "reg_id_type", "name", "type", "city", "state", "assets",
+      // stage is the stored id ("qualified"); stage_label is what the UI shows
+      // ("Sales Qualified Lead"), which is what a reader will recognize.
+      "stage", "stage_label", "owner", "platform_fit", "lead_source", "channel", "referral_partner",
       "core_system", "los", "home_banking", "contacts", "arr", "closed_year", "notes", "updated_at",
     ];
     const esc = (v: unknown) => {
@@ -45,8 +49,9 @@ export default function PipelineSettingsPage() {
       if (!fi) continue;
       lines.push(
         [
-          fi.id, fi.name, fi.type, fi.city, fi.state, fi.assets,
-          rec.stage ?? "", rec.owner ?? "", rec.platformFit ? "true" : "",
+          fi.id, regIdOf(fi), regIdLabel(fi), fi.name, fi.type, fi.city, fi.state, fi.assets,
+          rec.stage ?? "", rec.stage ? STAGE_LABELS[rec.stage] : "",
+          rec.owner ?? "", rec.platformFit ? "true" : "",
           rec.leadSource ?? "", rec.channel ?? "direct", rec.referralPartner ?? "",
           rec.coreSystem ?? "", rec.los ?? "", rec.homeBanking ?? "",
           (rec.contacts ?? [])
@@ -58,7 +63,10 @@ export default function PipelineSettingsPage() {
           .join(","),
       );
     }
-    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    // BOM so Excel reads institution names as UTF-8 rather than mangling them.
+    const blob = new Blob(["﻿" + lines.join("\n")], {
+      type: "text/csv;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

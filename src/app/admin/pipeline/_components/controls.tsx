@@ -101,7 +101,7 @@ export function StageSelect({
           </option>
         ))}
       </optgroup>
-      <optgroup label="Nurture / Removed">
+      <optgroup label="Blocked / Nurture / Removed">
         {BRANCH_STAGES.map((s) => (
           <option key={s} value={s}>
             {STAGE_LABELS[s]}

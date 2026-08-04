@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
-import { searchInstitutions } from "../_lib/universe";
+import { regIdOf, searchInstitutions } from "../_lib/universe";
 import type { FI } from "../_lib/types";
 import { TypeBadge } from "./controls";
 import { FIDrawer } from "./FIDrawer";
@@ -75,7 +75,7 @@ export function GlobalSearch() {
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Search any institution by name or city…"
+          placeholder="Search by name, city, contact, or cert / charter ID…"
           className="w-full pl-10 pr-9 py-3 text-sm rounded-xl border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
         />
         {query && (
@@ -119,6 +119,11 @@ export function GlobalSearch() {
                           {fi.city}, {fi.state}
                         </span>
                         <span className="tabular-nums shrink-0">{fmtAssets(fi.assets)}</span>
+                        {/* Cert (bank) / charter (CU) number, so an id search
+                            visibly confirms what it matched. */}
+                        <span className="tabular-nums shrink-0 text-slate-400">
+                          {fi.type === "cu" ? "Charter" : "Cert"} {regIdOf(fi)}
+                        </span>
                       </div>
                     </div>
                     <div className="shrink-0 text-right">

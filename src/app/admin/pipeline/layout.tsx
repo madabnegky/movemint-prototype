@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cloud, CloudOff, Loader2, Settings } from "lucide-react";
+import { Cloud, CloudOff, Loader2, Printer, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PipelineProvider, usePipeline } from "./_lib/PipelineContext";
 
@@ -39,24 +39,36 @@ function PipelineChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" data-print="hide">
         <div className="flex items-center gap-6">
           <h1 className="text-2xl font-bold text-slate-900">
             <Link href="/admin/pipeline">Sales Pipeline</Link>
           </h1>
           <SaveIndicator />
         </div>
-        <Link
-          href="/admin/pipeline/settings"
-          className={cn(
-            "inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border transition-colors",
-            pathname === "/admin/pipeline/settings"
-              ? "bg-slate-900 text-white border-slate-900"
-              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50",
+        <div className="flex items-center gap-2">
+          {/* Dashboard only — the stage/settings pages have nothing to print. */}
+          {pathname === "/admin/pipeline" && (
+            <button
+              onClick={() => window.print()}
+              title="Opens your browser's print dialog — choose “Save as PDF”"
+              className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-50 transition-colors"
+            >
+              <Printer className="w-4 h-4" /> Save as PDF
+            </button>
           )}
-        >
-          <Settings className="w-4 h-4" /> Settings
-        </Link>
+          <Link
+            href="/admin/pipeline/settings"
+            className={cn(
+              "inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border transition-colors",
+              pathname === "/admin/pipeline/settings"
+                ? "bg-slate-900 text-white border-slate-900"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50",
+            )}
+          >
+            <Settings className="w-4 h-4" /> Settings
+          </Link>
+        </div>
       </div>
       {children}
     </div>

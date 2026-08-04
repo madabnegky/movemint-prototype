@@ -15,7 +15,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..");
 const args = process.argv.slice(2);
 const livePath = args.find((a) => !a.startsWith("--"));
-const outPath = args[args.indexOf("--out") + 1];
+const outIdx = args.indexOf("--out");
+// Guard the index: indexOf returns -1 when --out is absent, and args[0] is the
+// input dump — without this the script overwrites its own input in place.
+const outPath = outIdx >= 0 ? args[outIdx + 1] : null;
 
 const live = JSON.parse(readFileSync(livePath, "utf8"));
 const seed = JSON.parse(readFileSync(join(REPO_ROOT, "src/data/pipeline-seed.json")));

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:rebuild": "node scripts/import-tam-master.mjs && node scripts/import-los-core.mjs && node scripts/overlay-tam-attrs.mjs",
+    "universe:refresh": "node scripts/fetch-universe-banks.mjs && node scripts/fetch-universe-cus.mjs"
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.9",

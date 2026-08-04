@@ -2,10 +2,11 @@
 
 import { use, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Download, Loader2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePipeline } from "../../_lib/PipelineContext";
 import { STAGE_LABELS, fmtAssets, isListId } from "../../_lib/stages";
+import { exportList } from "../../_lib/exportCsv";
 import { listMembers } from "../../_lib/universe";
 import type { FI, StageId } from "../../_lib/types";
 import { ChannelBadge, OwnerSelect, StageSelect, TypeBadge } from "../../_components/controls";
@@ -203,6 +204,13 @@ export default function StageListPage({
         <span className="text-sm text-slate-400 tabular-nums">
           {filtered.length.toLocaleString()} institutions
         </span>
+        <button
+          onClick={() => exportList(stageId, state)}
+          title="Download this stage as CSV — name, reg ID, location, assets, stage"
+          className="ml-auto inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-50 transition-colors"
+        >
+          <Download className="w-4 h-4" /> Export CSV
+        </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">

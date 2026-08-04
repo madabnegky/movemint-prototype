@@ -32,6 +32,9 @@ interface PipelineContextValue {
     fiId: string | null,
     patch?: Partial<Omit<PipelineRecord, "fiId" | "updatedAt">>,
   ) => void;
+  /** Return a resolved row to the triage queue. Does NOT undo any record the
+   *  resolve created — correct that on the FI itself. */
+  unresolveUnmatched: (unmatchedId: string) => void;
   resetToSeed: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -140,6 +143,21 @@ export function PipelineProvider({ children }: { children: React.ReactNode }) {
     [send],
   );
 
+  const unresolveUnmatched = useCallback<PipelineContextValue["unresolveUnmatched"]>(
+    (unmatchedId) => {
+      setState((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          resolvedUnmatched: (prev.resolvedUnmatched ?? []).filter((id) => id !== unmatchedId),
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      void send({ type: "unresolveUnmatched", unmatchedId });
+    },
+    [send],
+  );
+
   const resetToSeed = useCallback(async () => {
     setSaveStatus("saving");
     const res = await fetch("/api/pipeline", {
@@ -165,6 +183,7 @@ export function PipelineProvider({ children }: { children: React.ReactNode }) {
         updateRecords,
         updateSettings,
         resolveUnmatched,
+        unresolveUnmatched,
         resetToSeed,
         refresh,
       }}

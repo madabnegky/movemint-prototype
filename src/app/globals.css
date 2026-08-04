@@ -91,3 +91,153 @@ body {
   background: var(--color-page);
   color: var(--color-contrast-black);
 }
+
+/* ── Print / Save-as-PDF ──────────────────────────────────────────────────────
+   Used by the Sales Pipeline dashboard's "Save as PDF" button. Everything the
+   reader doesn't need on paper is marked data-print="hide" at the source;
+   the report-only header is data-print="only". */
+
+@media print {
+  /* Kill app chrome: sidebar, top bars, anything explicitly opted out.
+     header covers the admin shell's sticky top bar, which sits outside the
+     pipeline layout and would otherwise print on page 1. */
+  aside,
+  nav,
+  header,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  /* The admin shell scrolls its content area; on paper it must flow. */
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body * {
+    overflow: visible !important;
+  }
+
+  /* Content column takes the full page once the sidebar is gone. */
+  main,
+  [data-print="page"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  [data-print="only"] {
+    display: block !important;
+  }
+
+  /* Bars, tags and KPI accents carry meaning — keep their colour. */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Stack the funnel/branch columns so nothing is cropped at the page edge. */
+  [data-print="stack"] {
+    display: block !important;
+  }
+  [data-print="stack"] > * + * {
+    margin-top: 12px;
+  }
+
+  /* Tailwind's responsive grid resolves to the smallest breakpoint when
+     printing, so the 5 KPI cards would stack 2-up over half a page. Force the
+     row and tighten the cards to keep the summary on one screenful. */
+  [data-print="kpis"] {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 6px !important;
+  }
+  [data-print="kpis"] > * {
+    padding: 8px !important;
+  }
+  [data-print="kpis"] .text-2xl {
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Screen spacing is generous by design; on paper it wastes whole pages. */
+  [data-print="page"] > * + * {
+    margin-top: 10px !important;
+  }
+  [data-print="page"] .p-6 {
+    padding: 10px !important;
+  }
+  [data-print="page"] .p-5 {
+    padding: 8px !important;
+  }
+  [data-print="page"] .space-y-6 > * + * {
+    margin-top: 10px !important;
+  }
+
+  /* Don't split a card across a page break.
+     NOT applied to the funnel: it's tall enough that avoiding a break pushes it
+     onto its own page and leaves the summary page two-thirds empty. Letting it
+     flow keeps the whole report to ~2 pages before the deal tables. */
+  [data-print="block"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  [data-print="flow"] {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  [data-print="break-before"] {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  /* Flatten interactive affordances. */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+  /* A <select> prints with a dropdown arrow and control chrome; strip it so the
+     chosen year reads as plain text. */
+  select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    border: 0 !important;
+    background: none !important;
+    padding: 0 !important;
+    font-weight: 600;
+  }
+  button {
+    border: 0 !important;
+    background: none !important;
+  }
+  [data-print="block"],
+  table {
+    box-shadow: none !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse;
+    font-size: 10px;
+  }
+  thead {
+    display: table-header-group; /* repeat headers on every page */
+  }
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    size: letter portrait;
+    margin: 14mm 12mm;
+  }
+}
+
+/* The print-only report header never shows on screen. */
+[data-print="only"] {
+  display: none;
+}

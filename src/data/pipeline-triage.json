@@ -1,0 +1,1278 @@
+[
+  {
+    "id": "triage-77488cffce76",
+    "name": "Community Credit Union of Lynn",
+    "sheet": "TAM_Master",
+    "class": "not-in-universe",
+    "reason": "Reg ID 67558 is not in the current FDIC/NCUA universe (merged, closed, or bad ID)",
+    "regId": "67558",
+    "fiType": "Credit Union",
+    "assets": null,
+    "intended": {
+      "stage": "qualified",
+      "owner": "Avery Flynn"
+    }
+  },
+  {
+    "id": "triage-72a393d5bcc0",
+    "name": "Merrimack Valley Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 2392816939,
+    "intended": {
+      "stage": "mql",
+      "owner": "Robbie Sink"
+    }
+  },
+  {
+    "id": "triage-57cce526c452",
+    "name": "UK Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1690639689,
+    "intended": {
+      "stage": "mql",
+      "owner": "Avery Flynn"
+    }
+  },
+  {
+    "id": "triage-32c9e5605352",
+    "name": "Missouri Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1585154769,
+    "intended": {
+      "stage": "mql",
+      "owner": "Robbie Sink"
+    }
+  },
+  {
+    "id": "triage-3c5684a6c774",
+    "name": "orsa credit union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1473596625,
+    "intended": {
+      "stage": "mql",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-6a6d851db0b5",
+    "name": "St. Mary's Bank",
+    "sheet": "TAM_Master",
+    "class": "wrong-registry",
+    "reason": "FI Type is \"Bank\" but Reg ID 63829 resolves in the other registry (cu-63829)",
+    "regId": "63829",
+    "fiType": "Bank",
+    "assets": 1477958742,
+    "intended": {
+      "owner": "Wendy Bamm"
+    }
+  },
+  {
+    "id": "triage-01965b700035",
+    "name": "Two Rivers Bank & Trust",
+    "sheet": "TAM_Master",
+    "class": "not-in-universe",
+    "reason": "Reg ID 58013 is not in the current FDIC/NCUA universe (merged, closed, or bad ID)",
+    "regId": "58013",
+    "fiType": "Bank",
+    "assets": 1197423000,
+    "intended": {
+      "owner": "Kevin Lutts"
+    }
+  },
+  {
+    "id": "triage-0e4bcf09ff64",
+    "name": "Field & Main Bank",
+    "sheet": "TAM_Master",
+    "class": "not-in-universe",
+    "reason": "Reg ID 13838 is not in the current FDIC/NCUA universe (merged, closed, or bad ID)",
+    "regId": "13838",
+    "fiType": "Bank",
+    "assets": 859712000,
+    "intended": {
+      "owner": "Kevin Polinsky"
+    }
+  },
+  {
+    "id": "triage-47719d7a997b",
+    "name": "STATE STREET B&TC",
+    "sheet": "TAM_Master",
+    "class": "not-in-universe",
+    "reason": "Reg ID 24938 is not in the current FDIC/NCUA universe (merged, closed, or bad ID)",
+    "regId": "24938",
+    "fiType": "Bank",
+    "assets": 351915000,
+    "intended": {
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-980fd51b8c9d",
+    "name": "Prosperity Bancshares, Inc.",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 43608962000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Andrew Davis"
+    }
+  },
+  {
+    "id": "triage-a56a5dee4233",
+    "name": "Manufacturers Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 7728868000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-691bb9ad91cb",
+    "name": "Wings Financial Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 4062622843,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-45df79c394ef",
+    "name": "Central Valley Community Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 3697225000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Andrew Davis"
+    }
+  },
+  {
+    "id": "triage-cc67b7e5fc7d",
+    "name": "OCCU",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 3565812740,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-9054ebf0ca0c",
+    "name": "Stearns Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 3296457000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Kevin Polinsky"
+    }
+  },
+  {
+    "id": "triage-74436e2ff344",
+    "name": "WECU®",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 3140000000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "BDR (Insource)"
+    }
+  },
+  {
+    "id": "triage-25cab89491b1",
+    "name": "Link Bank",
+    "sheet": "TAM_Master",
+    "class": "not-in-universe",
+    "reason": "Reg ID 14863 is not in the current FDIC/NCUA universe (merged, closed, or bad ID)",
+    "regId": "14863",
+    "fiType": "Bank",
+    "assets": 3117180000,
+    "intended": {
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-b74e05a9335a",
+    "name": "Santa Cruz County Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 2895001000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-c7ab2ea3fbcf",
+    "name": "First Bank Financial Centre",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 2609889000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-350ab613677f",
+    "name": "Wauchula State Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 2364087000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Kevin Lutts"
+    }
+  },
+  {
+    "id": "triage-6127005fac32",
+    "name": "Bank Of Putnam County",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 1670707000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-193fcca474ae",
+    "name": "UVA Community Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1625144795,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Christopher Tanner"
+    }
+  },
+  {
+    "id": "triage-263449085620",
+    "name": "Rrcu",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1586197039,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-4ea965539da2",
+    "name": "Firefly Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1319667925,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Craig Durkey"
+    }
+  },
+  {
+    "id": "triage-a8dfea79b77c",
+    "name": "sfcu - Sidney Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 1284752572,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Christopher Tanner"
+    }
+  },
+  {
+    "id": "triage-0bd506d46408",
+    "name": "FIRST ST BK OF THE FL",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 1188143000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-c39757fc1b52",
+    "name": "Premier Bank Rochester",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 1181367000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-0a7ebcaacaa4",
+    "name": "Taylor Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 993460000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Kevin Polinsky"
+    }
+  },
+  {
+    "id": "triage-1111c36a7a45",
+    "name": "Ukrainian Selfreliance Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 965724651,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-120ecc04a033",
+    "name": "First Bank Texas",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 965376000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Kirk Gibbon"
+    }
+  },
+  {
+    "id": "triage-10ad42396ae8",
+    "name": "BANK 34",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 915185000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-b64e4ac95987",
+    "name": "Xceed Financial Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 892624054,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Barry Kirby"
+    }
+  },
+  {
+    "id": "triage-fb96123364be",
+    "name": "CCCU",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 831188521,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Andrew Davis"
+    }
+  },
+  {
+    "id": "triage-d1e02768fd76",
+    "name": "South Carolina Community Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 785210000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-8ba693da5982",
+    "name": "BANK OF SF",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 767510000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-8de872d2c004",
+    "name": "Flagship Community Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 761702000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-76b3795eda3c",
+    "name": "Sonora Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 704745000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Kevin Polinsky"
+    }
+  },
+  {
+    "id": "triage-ef250d28f235",
+    "name": "Innovations FCU",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 674026581,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-81e5ad8687f6",
+    "name": "BANK & TC",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 644563000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-3968c7aa3db8",
+    "name": "FIRST FSB",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 578952000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-2833bad8aba5",
+    "name": "FSU Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 535759562,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-ec9d4d6f903d",
+    "name": "Widget Federal Credit Union DBA Widget Financial",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 485101526,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-92993b06315e",
+    "name": "Ohnward Bancshares, Inc.",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 444535000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Katie Stevens"
+    }
+  },
+  {
+    "id": "triage-99c553c7ebc2",
+    "name": "Ascu",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 437289648,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-18cfb366b957",
+    "name": "Peoples Trust",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 379999000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-0c9697b4844d",
+    "name": "Signal Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 369072784,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-cbfb652e99b6",
+    "name": "The Kearny County Bank",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 329115000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-04a4e9816bad",
+    "name": "FAST Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 328114326,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-ac87ab504a62",
+    "name": "Benchmark Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 323205997,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-47a8c47c7286",
+    "name": "FIRST FSB OF KY",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Bank",
+    "assets": 287849000,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-f2c51becd630",
+    "name": "NFCU",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 280359534,
+    "intended": {
+      "stage": "needs-contact",
+      "owner": "Amaha Selassie"
+    }
+  },
+  {
+    "id": "triage-6b7a21c653b3",
+    "name": "CBC Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "no-reg-id",
+    "reason": "No Reg ID — institution could not be identified",
+    "regId": "",
+    "fiType": "Credit Union",
+    "assets": 870759623,
+    "intended": {
+      "stage": "short-term-nurture",
+      "owner": "Robbie Sink"
+    }
+  },
+  {
+    "id": "triage-d9bcd7a83c15",
+    "name": "Maine Savings",
+    "sheet": "TAM_Master",
+    "class": "wrong-registry",
+    "reason": "FI Type is \"Bank\" but Reg ID 14565 resolves in the other registry (cu-14565)",
+    "regId": "14565",
+    "fiType": "Bank",
+    "assets": 852019615,
+    "intended": {
+      "stage": "long-term-nurture",
+      "owner": "BDR (Insource)"
+    }
+  },
+  {
+    "id": "triage-5149a0939ab1",
+    "name": "University of Wisconsin Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Robbie Sink",
+    "regId": "66492",
+    "fiType": "Credit Union",
+    "assets": 6604710840,
+    "intended": {}
+  },
+  {
+    "id": "triage-492a9522fb9f",
+    "name": "Del-One Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "13919",
+    "fiType": "Credit Union",
+    "assets": 984357529,
+    "intended": {}
+  },
+  {
+    "id": "triage-bfe94666a237",
+    "name": "Minnco Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Robbie Sink",
+    "regId": "63639",
+    "fiType": "Credit Union",
+    "assets": 612352554,
+    "intended": {}
+  },
+  {
+    "id": "triage-241afee05538",
+    "name": "Monterey Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Avery Flynn",
+    "regId": "97071",
+    "fiType": "Credit Union",
+    "assets": 356956250,
+    "intended": {}
+  },
+  {
+    "id": "triage-c770d5205917",
+    "name": "City National Bank",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Alex Cortada vs Craig Durkey",
+    "regId": "17281",
+    "fiType": "Bank",
+    "assets": 6741168000,
+    "intended": {}
+  },
+  {
+    "id": "triage-121ec612860e",
+    "name": "Central National Bank",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Kevin Lutts",
+    "regId": "4702",
+    "fiType": "Bank",
+    "assets": 5644142000,
+    "intended": {}
+  },
+  {
+    "id": "triage-ef7c2861a460",
+    "name": "Knoxville TVA Employees Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68085",
+    "fiType": "Credit Union",
+    "assets": 5233300545,
+    "intended": {}
+  },
+  {
+    "id": "triage-0c9c52c72299",
+    "name": "Tower Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "8333",
+    "fiType": "Credit Union",
+    "assets": 5003087741,
+    "intended": {}
+  },
+  {
+    "id": "triage-6400fc6f02e1",
+    "name": "North Shore Bank",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Alex Cortada vs Kevin Polinsky",
+    "regId": "26484",
+    "fiType": "Bank",
+    "assets": 3270641000,
+    "intended": {}
+  },
+  {
+    "id": "triage-061cc9c73846",
+    "name": "Credit Union 1",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Anna Kaminski",
+    "regId": "66157",
+    "fiType": "Credit Union",
+    "assets": 2637675407,
+    "intended": {}
+  },
+  {
+    "id": "triage-2283ffade91f",
+    "name": "FedChoice Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "150",
+    "fiType": "Credit Union",
+    "assets": 2423776519,
+    "intended": {}
+  },
+  {
+    "id": "triage-7a282e8201b6",
+    "name": "Lafayette Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "619",
+    "fiType": "Credit Union",
+    "assets": 2135201492,
+    "intended": {}
+  },
+  {
+    "id": "triage-5ccf5e1246ed",
+    "name": "Alabama Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "60823",
+    "fiType": "Credit Union",
+    "assets": 2060560304,
+    "intended": {}
+  },
+  {
+    "id": "triage-03e3c5cf9e1a",
+    "name": "Alabama One Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68595",
+    "fiType": "Credit Union",
+    "assets": 1508934847,
+    "intended": {}
+  },
+  {
+    "id": "triage-1f63fbd24862",
+    "name": "Webster First Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "24557",
+    "fiType": "Credit Union",
+    "assets": 1500185788,
+    "intended": {}
+  },
+  {
+    "id": "triage-ee6f8c52ddfa",
+    "name": "Leaders Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "61185",
+    "fiType": "Credit Union",
+    "assets": 1313495565,
+    "intended": {}
+  },
+  {
+    "id": "triage-f8b786e4ed57",
+    "name": "LAFCU",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68632",
+    "fiType": "Credit Union",
+    "assets": 1135722129,
+    "intended": {}
+  },
+  {
+    "id": "triage-e098917c7fa2",
+    "name": "Vermont Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "24405",
+    "fiType": "Credit Union",
+    "assets": 1129426930,
+    "intended": {}
+  },
+  {
+    "id": "triage-4a62b3b4b8ea",
+    "name": "Peach State Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "14676",
+    "fiType": "Credit Union",
+    "assets": 1112126031,
+    "intended": {}
+  },
+  {
+    "id": "triage-7ccaa6fbf9b1",
+    "name": "Greenville Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Robbie Sink vs Amaha Selassie",
+    "regId": "19116",
+    "fiType": "Credit Union",
+    "assets": 1024019679,
+    "intended": {}
+  },
+  {
+    "id": "triage-8b0092f5fc6d",
+    "name": "BrightStar Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "67347",
+    "fiType": "Credit Union",
+    "assets": 1012814455,
+    "intended": {}
+  },
+  {
+    "id": "triage-47ee72bfa73d",
+    "name": "Merck Sharp & Dohme Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "6574",
+    "fiType": "Credit Union",
+    "assets": 1011470884,
+    "intended": {}
+  },
+  {
+    "id": "triage-02be4e74aaee",
+    "name": "Nutmeg State Financial Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68657",
+    "fiType": "Credit Union",
+    "assets": 885226936,
+    "intended": {}
+  },
+  {
+    "id": "triage-6af5a0beddad",
+    "name": "Liberty Bay Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Andrew Davis vs Amaha Selassie",
+    "regId": "67541",
+    "fiType": "Credit Union",
+    "assets": 839905103,
+    "intended": {}
+  },
+  {
+    "id": "triage-420871eb8f85",
+    "name": "Direct Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "9071",
+    "fiType": "Credit Union",
+    "assets": 789820428,
+    "intended": {}
+  },
+  {
+    "id": "triage-b06358f8def7",
+    "name": "Reliant Community Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "20258",
+    "fiType": "Credit Union",
+    "assets": 765183763,
+    "intended": {}
+  },
+  {
+    "id": "triage-f3e864d4e215",
+    "name": "CPM Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "21971",
+    "fiType": "Credit Union",
+    "assets": 742023474,
+    "intended": {}
+  },
+  {
+    "id": "triage-61be53b0bd1c",
+    "name": "Dover Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "12443",
+    "fiType": "Credit Union",
+    "assets": 734930075,
+    "intended": {}
+  },
+  {
+    "id": "triage-4b4033f24897",
+    "name": "Armco Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "65291",
+    "fiType": "Credit Union",
+    "assets": 717642821,
+    "intended": {}
+  },
+  {
+    "id": "triage-59a8dd7e093b",
+    "name": "APL Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "9475",
+    "fiType": "Credit Union",
+    "assets": 709496512,
+    "intended": {}
+  },
+  {
+    "id": "triage-5d2cf9ae2769",
+    "name": "APCI Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Kevin Lutts vs Amaha Selassie",
+    "regId": "9607",
+    "fiType": "Credit Union",
+    "assets": 689285205,
+    "intended": {}
+  },
+  {
+    "id": "triage-e429db709a43",
+    "name": "Northern Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68696",
+    "fiType": "Credit Union",
+    "assets": 682119422,
+    "intended": {}
+  },
+  {
+    "id": "triage-457a3a78a594",
+    "name": "Members Heritage Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68661",
+    "fiType": "Credit Union",
+    "assets": 583593619,
+    "intended": {}
+  },
+  {
+    "id": "triage-231db7abe5de",
+    "name": "Commercial Bank",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Kevin Lutts vs Amaha Selassie",
+    "regId": "12246",
+    "fiType": "Bank",
+    "assets": 564421000,
+    "intended": {}
+  },
+  {
+    "id": "triage-ce9583934716",
+    "name": "Pittsford Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Tony Salamone vs Amaha Selassie",
+    "regId": "19085",
+    "fiType": "Credit Union",
+    "assets": 544711775,
+    "intended": {}
+  },
+  {
+    "id": "triage-6b992ebda0fd",
+    "name": "Advantage Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "24181",
+    "fiType": "Credit Union",
+    "assets": 481721412,
+    "intended": {}
+  },
+  {
+    "id": "triage-1f5e81379922",
+    "name": "Millbury Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Kevin Lutts vs Amaha Selassie",
+    "regId": "24543",
+    "fiType": "Credit Union",
+    "assets": 478270133,
+    "intended": {}
+  },
+  {
+    "id": "triage-4e45b2a321fd",
+    "name": "IAA Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Tony Salamone",
+    "regId": "68423",
+    "fiType": "Credit Union",
+    "assets": 414153328,
+    "intended": {}
+  },
+  {
+    "id": "triage-2337c7015696",
+    "name": "Acadia Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Kevin Lutts vs Amaha Selassie",
+    "regId": "15619",
+    "fiType": "Credit Union",
+    "assets": 408090064,
+    "intended": {}
+  },
+  {
+    "id": "triage-251fc24638c8",
+    "name": "Signature Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Amaha Selassie vs Robbie Sink",
+    "regId": "20061",
+    "fiType": "Credit Union",
+    "assets": 406669769,
+    "intended": {}
+  },
+  {
+    "id": "triage-f3bbd4cb45d4",
+    "name": "Park View Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Tony Salamone vs Amaha Selassie",
+    "regId": "19541",
+    "fiType": "Credit Union",
+    "assets": 406539993,
+    "intended": {}
+  },
+  {
+    "id": "triage-1aedbfa00b62",
+    "name": "Platinum Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Kevin Lutts vs Amaha Selassie",
+    "regId": "24631",
+    "fiType": "Credit Union",
+    "assets": 389926204,
+    "intended": {}
+  },
+  {
+    "id": "triage-5c68c6ea1407",
+    "name": "Piedmont Advantage Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "60160",
+    "fiType": "Credit Union",
+    "assets": 382545324,
+    "intended": {}
+  },
+  {
+    "id": "triage-e9bc427d09df",
+    "name": "Mass Bay Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68137",
+    "fiType": "Credit Union",
+    "assets": 367709928,
+    "intended": {}
+  },
+  {
+    "id": "triage-ac48178bd36a",
+    "name": "Orlando Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Andrew Davis vs Amaha Selassie",
+    "regId": "68706",
+    "fiType": "Credit Union",
+    "assets": 364212485,
+    "intended": {}
+  },
+  {
+    "id": "triage-e115e05380bf",
+    "name": "Minnesota Valley Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Kevin Polinsky vs Amaha Selassie",
+    "regId": "19440",
+    "fiType": "Credit Union",
+    "assets": 333914817,
+    "intended": {}
+  },
+  {
+    "id": "triage-797397fd3927",
+    "name": "Intrepid Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "68495",
+    "fiType": "Credit Union",
+    "assets": 310480028,
+    "intended": {}
+  },
+  {
+    "id": "triage-3144916bd21b",
+    "name": "Rockland Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "24224",
+    "fiType": "Credit Union",
+    "assets": 3736753187,
+    "intended": {}
+  },
+  {
+    "id": "triage-25fc56734032",
+    "name": "IDB Global Federal Credit Union",
+    "sheet": "TAM_Master",
+    "class": "owner-conflict",
+    "reason": "Duplicate rows assign different owners: Christopher Tanner vs Amaha Selassie",
+    "regId": "14176",
+    "fiType": "Credit Union",
+    "assets": 846328463,
+    "intended": {}
+  }
+]

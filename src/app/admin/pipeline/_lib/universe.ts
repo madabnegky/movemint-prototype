@@ -53,18 +53,34 @@ export function searchInstitutions(
   const qTokens = searchTokens(query);
   const scored: Array<{ fi: FI; score: number }> = [];
 
+  // A bare number is almost certainly an FDIC cert or NCUA charter, so match it
+  // against the numeric part of the id. Accepts the raw number ("9247") and the
+  // prefixed form ("cu-9247"). An exact hit outranks every name match.
+  const idQuery = raw.replace(/^(bank|cu)-/, "");
+  const isNumericQuery = /^\d+$/.test(idQuery);
+
   for (const fi of UNIVERSE) {
     const nameLc = fi.name.toLowerCase();
     const cityLc = fi.city.toLowerCase();
     const nTokens = searchTokens(fi.name);
     let score = 0;
 
+    if (isNumericQuery) {
+      const regId = fi.id.replace(/^(bank|cu)-/, "");
+      // Exact id wins outright; a prefix match helps when still typing.
+      if (regId === idQuery) score = 200;
+      else if (regId.startsWith(idQuery)) score = 120;
+    }
+
     // Raw substring on the full name is the strongest signal.
-    if (nameLc.startsWith(raw)) score = 100;
-    else if (nameLc.includes(raw)) score = 70;
+    if (score === 0) {
+      if (nameLc.startsWith(raw)) score = 100;
+      else if (nameLc.includes(raw)) score = 70;
+    }
 
     // Token overlap catches terse official names vs typed-out names.
-    if (qTokens.length) {
+    // Skipped for id queries — a digit string shouldn't fuzzy-match a name.
+    if (qTokens.length && !isNumericQuery) {
       const nSet = new Set(nTokens);
       const shared = qTokens.filter((t) => nSet.has(t)).length;
       if (shared) {
@@ -112,6 +128,17 @@ export const UNIVERSE_META = {
   banks: (banksData as UniverseFile).meta,
   cus: (cusData as UniverseFile).meta,
 };
+
+/** The regulator's identifier: FDIC certificate for banks, NCUA charter for
+ *  credit unions. It's the numeric half of the FI id. */
+export function regIdOf(fi: FI): string {
+  return fi.id.replace(/^(bank|cu)-/, "");
+}
+
+/** "Cert" for banks, "Charter" for credit unions. */
+export function regIdLabel(fi: FI): string {
+  return fi.type === "cu" ? "Charter" : "Cert";
+}
 
 export function inAssetBand(fi: FI): boolean {
   return fi.assets >= ASSET_FLOOR && fi.assets <= ASSET_CEILING;
