@@ -22,6 +22,7 @@ import {
 import { exportAllPartners } from "./_lib/exportCsv";
 import type { PartnerListId, PartnerState } from "./_lib/types";
 import { AddPartnerModal } from "./_components/AddPartnerModal";
+import { PartnerRoster, PrintHeader } from "./_components/PrintReport";
 import { PartnerStageInfo, StageChip } from "./_components/controls";
 
 function Kpi({
@@ -327,6 +328,8 @@ export default function PartnerDashboard() {
 
   return (
     <div className="space-y-6" data-print="page">
+      <PrintHeader state={state} />
+
       <div className="flex items-center justify-between gap-3" data-print="hide">
         <p className="text-sm text-slate-500">
           Channel partners — CUSOs, fintechs, core processors and consultancies whose FI
@@ -340,7 +343,10 @@ export default function PartnerDashboard() {
         </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div
+        className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
+        data-print="kpis"
+      >
         <Kpi
           label="All Partners"
           info="all"
@@ -393,6 +399,8 @@ export default function PartnerDashboard() {
           <BranchPanel state={state} />
         </div>
       </div>
+
+      <PartnerRoster state={state} />
 
       {adding && <AddPartnerModal onClose={() => setAdding(false)} />}
     </div>
