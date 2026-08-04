@@ -14,7 +14,7 @@ import {
   fmtCount,
   isPartnerListId,
 } from "../../_lib/stages";
-import { describeRevShare, listPartners, reachTotal } from "../../_lib/partners";
+import { listPartners, reachTotal } from "../../_lib/partners";
 import { exportPartnerList } from "../../_lib/exportCsv";
 import type { Partner, PartnerCategory, PartnerStageId } from "../../_lib/types";
 import { AddPartnerModal } from "../../_components/AddPartnerModal";
@@ -27,7 +27,7 @@ import {
   ReachCell,
 } from "../../_components/controls";
 
-type SortKey = "name" | "reach" | "stage" | "owner" | "updated";
+type SortKey = "name" | "reach" | "referrals" | "stage" | "owner" | "updated";
 
 export default function PartnerStagePage() {
   const params = useParams<{ stageId: string }>();
@@ -73,6 +73,8 @@ export default function PartnerStagePage() {
           return a.name.localeCompare(b.name) * dir;
         case "reach":
           return ((a.fiReach.value ?? -1) - (b.fiReach.value ?? -1)) * dir;
+        case "referrals":
+          return ((a.referralsProvided ?? 0) - (b.referralsProvided ?? 0)) * dir;
         case "stage":
           return (
             (ALL_PARTNER_STAGES.indexOf(a.stage) - ALL_PARTNER_STAGES.indexOf(b.stage)) * dir
@@ -271,11 +273,7 @@ export default function PartnerStagePage() {
                   </span>
                 </th>
                 <th className="px-3 py-2.5 text-right">{sortBtn("reach", "FI Clients")}</th>
-                <th className="px-3 py-2.5 text-left">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Terms
-                  </span>
-                </th>
+                <th className="px-3 py-2.5 text-right">{sortBtn("referrals", "Referrals")}</th>
                 <th className="px-3 py-2.5 text-left">{sortBtn("stage", "Stage")}</th>
                 <th className="px-3 py-2.5 text-left">{sortBtn("owner", "Owner")}</th>
                 <th className="px-3 py-2.5 text-left">
@@ -335,16 +333,14 @@ export default function PartnerStagePage() {
                       qualifier={p.fiReach.qualifier}
                     />
                   </td>
-                  <td className="px-3 py-2.5">
+                  <td className="px-3 py-2.5 text-right">
                     <span
                       className={cn(
-                        "text-xs",
-                        p.revShare && p.revShare.model !== "none"
-                          ? "text-slate-600"
-                          : "text-slate-300",
+                        "text-sm font-semibold tabular-nums",
+                        p.referralsProvided ? "text-slate-700" : "text-slate-300",
                       )}
                     >
-                      {describeRevShare(p.revShare)}
+                      {p.referralsProvided ?? 0}
                     </span>
                   </td>
                   <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>

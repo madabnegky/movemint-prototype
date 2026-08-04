@@ -118,6 +118,11 @@ export interface Partner {
   /** Movemint's own commentary ("Movemint Notes") — the highest-signal column. */
   notes?: string;
   owner?: string | null;
+  /** How many referrals this partner has actually sent us. Entered by hand —
+   *  deliberately independent of `sourcedFiIds`, which tracks the institutions
+   *  we've linked and lags behind the raw count. Absent = none recorded, which
+   *  reads as 0. */
+  referralsProvided?: number;
   revShare?: RevShare;
   /** FIs in the sales pipeline attributable to this partner. Mirrors
    *  PipelineRecord.partnerId; the API keeps both sides in sync. */

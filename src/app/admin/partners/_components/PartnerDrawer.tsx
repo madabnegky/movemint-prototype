@@ -325,6 +325,26 @@ export function PartnerDrawer({
             </Field>
           </div>
 
+          <Field
+            label="Referrals provided"
+            hint="Referrals this partner has actually sent us"
+          >
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={partner.referralsProvided ?? ""}
+              onChange={(e) =>
+                set({
+                  referralsProvided:
+                    e.target.value === "" ? undefined : Math.max(0, Number(e.target.value)),
+                })
+              }
+              placeholder="0"
+              className={inputCls}
+            />
+          </Field>
+
           <Field label="Company type" hint="Free text — categories below drive filtering">
             <input
               value={partner.companyType}

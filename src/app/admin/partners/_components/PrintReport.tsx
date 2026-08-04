@@ -1,7 +1,7 @@
 "use client";
 
 import { PARTNER_STAGE_LABELS, fmtCount, fmtReach } from "../_lib/stages";
-import { describeRevShare, listPartners } from "../_lib/partners";
+import { listPartners } from "../_lib/partners";
 import type { PartnerStageId, PartnerState } from "../_lib/types";
 
 /** Title block that appears only on the printed page. */
@@ -43,10 +43,6 @@ const REPORT_ORDER: PartnerStageId[] = [
   "not-a-fit",
 ];
 
-/** Stages whose rows carry commercial terms worth a column on paper. Everywhere
- *  else the column would be 100% "No terms yet". */
-const SHOW_TERMS = new Set<PartnerStageId>(["signed", "active"]);
-
 /**
  * Every partner grouped by stage, in report order. Print-only — on screen the
  * stage list pages already do this with filtering and sorting.
@@ -72,18 +68,21 @@ export function PartnerRoster({ state }: { state: PartnerState }) {
       {groups.map(({ stage, rows }) => {
         const reach = rows.reduce((n, p) => n + (p.fiReach.value ?? 0), 0);
         const unquantified = rows.filter((p) => p.fiReach.value == null).length;
-        const withTerms = SHOW_TERMS.has(stage);
+        const referrals = rows.reduce((n, p) => n + (p.referralsProvided ?? 0), 0);
         return (
           <div key={stage} data-print="block" className="mb-4">
             <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
               {PARTNER_STAGE_LABELS[stage]} · {rows.length}
-              {reach > 0 && (
-                <span className="font-medium normal-case tracking-normal text-slate-400">
-                  {" "}
-                  — {fmtCount(reach)} est. FI reach
-                  {unquantified > 0 && ` (${unquantified} unquantified)`}
-                </span>
-              )}
+              <span className="font-medium normal-case tracking-normal text-slate-400">
+                {reach > 0 && (
+                  <>
+                    {" "}
+                    — {fmtCount(reach)} est. FI reach
+                    {unquantified > 0 && ` (${unquantified} unquantified)`}
+                  </>
+                )}
+                {referrals > 0 && ` · ${fmtCount(referrals)} referrals provided`}
+              </span>
             </h3>
             <table>
               <thead>
@@ -91,8 +90,8 @@ export function PartnerRoster({ state }: { state: PartnerState }) {
                   <th className="py-1 pr-2 font-semibold">Partner</th>
                   <th className="py-1 pr-2 font-semibold">Type</th>
                   <th className="py-1 pr-2 font-semibold text-right">FI clients</th>
+                  <th className="py-1 pr-2 font-semibold text-right">Referrals</th>
                   <th className="py-1 pr-2 font-semibold">Focus</th>
-                  {withTerms && <th className="py-1 pr-2 font-semibold">Terms</th>}
                   <th className="py-1 pr-2 font-semibold">Owner</th>
                   <th className="py-1 font-semibold">Notes</th>
                 </tr>
@@ -105,14 +104,10 @@ export function PartnerRoster({ state }: { state: PartnerState }) {
                     <td className="py-1 pr-2 text-right tabular-nums whitespace-nowrap">
                       {fmtReach(p.fiReach)}
                     </td>
+                    <td className="py-1 pr-2 text-right tabular-nums">
+                      {p.referralsProvided ?? 0}
+                    </td>
                     <td className="py-1 pr-2 text-slate-600">{p.primaryFocus ?? "—"}</td>
-                    {withTerms && (
-                      <td className="py-1 pr-2 text-slate-600">
-                        {p.revShare && p.revShare.model !== "none"
-                          ? describeRevShare(p.revShare)
-                          : "—"}
-                      </td>
-                    )}
                     <td className="py-1 pr-2 text-slate-600 whitespace-nowrap">
                       {p.owner ?? "—"}
                     </td>
