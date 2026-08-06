@@ -41,6 +41,20 @@ interface PipelineContextValue {
 
 const PipelineContext = createContext<PipelineContextValue | null>(null);
 
+/**
+ * Rewrite `undefined` patch values to `null` before they go over the wire.
+ * Clearing a field (picking "Not set", blanking a text input) sets it to
+ * undefined, but JSON.stringify drops undefined keys entirely — the server's
+ * `{...existing, ...patch}` merge then sees no key and keeps the old value, so
+ * the cleared field reappears on the next load. null survives serialization and
+ * is falsy everywhere these fields are read (including isEmptyRecord).
+ */
+function wirePatch<T extends object>(patch: T): T {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(patch)) out[k] = v === undefined ? null : v;
+  return out as T;
+}
+
 export function PipelineProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<PipelineState | null>(null);
   const [loading, setLoading] = useState(true);
@@ -102,7 +116,7 @@ export function PipelineProvider({ children }: { children: React.ReactNode }) {
   const updateRecord = useCallback<PipelineContextValue["updateRecord"]>(
     (fiId, patch) => {
       applyLocal([fiId], patch);
-      void send({ type: "record", fiId, patch });
+      void send({ type: "record", fiId, patch: wirePatch(patch) });
     },
     [applyLocal, send],
   );
@@ -110,7 +124,7 @@ export function PipelineProvider({ children }: { children: React.ReactNode }) {
   const updateRecords = useCallback<PipelineContextValue["updateRecords"]>(
     (fiIds, patch) => {
       applyLocal(fiIds, patch);
-      void send({ type: "records", fiIds, patch });
+      void send({ type: "records", fiIds, patch: wirePatch(patch) });
     },
     [applyLocal, send],
   );

@@ -50,6 +50,18 @@ export const CONTACT_TYPES = [
   "In Person",
 ] as const;
 
+/** Starting set of lead sources, used when settings carry no list of their own.
+ *  Editable in Settings → Lead sources; "Other…" accepts anything not listed. */
+export const DEFAULT_LEAD_SOURCES = [
+  "Inbound",
+  "Outbound",
+  "Conference",
+  "Referral",
+  "Partner",
+  "Existing Relationship",
+  "Marketing Campaign",
+] as const;
+
 /** A person we're working with at an institution. First in the list is primary. */
 export interface Contact {
   name: string;
@@ -102,6 +114,10 @@ export interface PipelineSettings {
   coreOptions?: string[];
   losOptions?: string[];
   homeBankingOptions?: string[];
+  /** How deals are sourced. Same "Other…" free-text escape hatch as the tech
+   *  options above, so a new source never blocks logging a deal. Absent on
+   *  blobs written before the field existed — DEFAULT_LEAD_SOURCES fills in. */
+  leadSourceOptions?: string[];
 }
 
 export interface PipelineState {

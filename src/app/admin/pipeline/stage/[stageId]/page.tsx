@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ChevronLeft, ChevronRight, Download, Loader2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePipeline } from "../../_lib/PipelineContext";
-import { STAGE_LABELS, fmtAssets, isListId } from "../../_lib/stages";
+import { STAGE_LABELS, fmtAssets, isListId, leadSourceOptionsFor } from "../../_lib/stages";
 import { exportList } from "../../_lib/exportCsv";
 import { listMembers } from "../../_lib/universe";
 import type { FI, StageId } from "../../_lib/types";
@@ -164,7 +164,11 @@ export default function StageListPage({
     }
   };
 
-  const bulkApply = (patch: { stage?: StageId | null; owner?: string | null }) => {
+  const bulkApply = (patch: {
+    stage?: StageId | null;
+    owner?: string | null;
+    leadSource?: string;
+  }) => {
     updateRecords([...selected], patch);
     setSelected(new Set());
   };
@@ -358,6 +362,24 @@ export default function StageListPage({
             owners={state.settings.owners}
             onChange={(owner) => bulkApply({ owner })}
           />
+          <span className="text-xs text-slate-300">Lead source:</span>
+          {/* A plain select, not OptionOrOther: there's nowhere sensible to put
+              the "Other…" free-text field inside this one-line bar. Adding a new
+              source is a Settings action, then it shows up here. */}
+          <select
+            value=""
+            onChange={(e) => {
+              if (e.target.value) bulkApply({ leadSource: e.target.value });
+            }}
+            className="text-xs font-medium rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300 cursor-pointer"
+          >
+            <option value="">Set…</option>
+            {leadSourceOptionsFor(state.settings).map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
           <button
             onClick={() => setSelected(new Set())}
             className="ml-auto text-xs font-medium text-slate-300 hover:text-white"

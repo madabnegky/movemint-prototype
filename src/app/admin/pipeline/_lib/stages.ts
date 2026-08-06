@@ -1,4 +1,12 @@
-import type { BranchStageId, ListId, MainStageId, StageId, TierId } from "./types";
+import { DEFAULT_LEAD_SOURCES } from "./types";
+import type {
+  BranchStageId,
+  ListId,
+  MainStageId,
+  PipelineSettings,
+  StageId,
+  TierId,
+} from "./types";
 
 export const MAIN_STAGES: MainStageId[] = [
   "mql",
@@ -146,6 +154,21 @@ export function fmtAssets(n: number): string {
   if (n >= 1e6) return `$${(n / 1e6).toFixed(0)}M`;
   if (n >= 1e3) return `$${(n / 1e3).toFixed(0)}K`;
   return `$${n.toFixed(0)}`;
+}
+
+/**
+ * The lead sources to offer in a dropdown: the configured list, or the built-in
+ * defaults when settings carry none (older blobs, and the current seed). Pass
+ * `current` to keep an already-stored value in the list — a source that was
+ * typed via "Other…" or later removed from settings must stay selectable, or
+ * re-opening the record would silently show it as unset.
+ */
+export function leadSourceOptionsFor(
+  settings: Pick<PipelineSettings, "leadSourceOptions">,
+  current?: string,
+): string[] {
+  const base = settings.leadSourceOptions ?? [...DEFAULT_LEAD_SOURCES];
+  return current && !base.includes(current) ? [...base, current] : base;
 }
 
 export function fmtMoney(n: number): string {

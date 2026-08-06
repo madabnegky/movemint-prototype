@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Plus, Trash2, X } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
-import { STAGE_LABELS, fmtAssets } from "../_lib/stages";
+import { STAGE_LABELS, fmtAssets, leadSourceOptionsFor } from "../_lib/stages";
 import { inAssetBand } from "../_lib/universe";
 import { CONTACT_TYPES } from "../_lib/types";
 import type { Contact, FI } from "../_lib/types";
@@ -204,6 +204,8 @@ function DrawerBody({ fi }: { fi: FI }) {
   const [partner, setPartner] = useState(rec?.referralPartner ?? "");
 
   if (!state) return null;
+
+  const leadSourceOptions = leadSourceOptionsFor(state.settings, rec?.leadSource);
 
   return (
     <div className="px-6 py-5 space-y-5">
@@ -418,16 +420,14 @@ function DrawerBody({ fi }: { fi: FI }) {
             />
           </label>
 
-          {rec?.leadSource && (
-            <div>
-              <span className="text-xs font-semibold text-slate-500 block mb-1">
-                Lead source
-              </span>
-              <span className="inline-block text-xs font-medium bg-teal-50 text-teal-700 rounded px-2 py-1">
-                {rec.leadSource}
-              </span>
-            </div>
-          )}
+          <label className="block">
+            <span className="text-xs font-semibold text-slate-500 mb-1 block">Lead source</span>
+            <OptionOrOther
+              value={rec?.leadSource}
+              options={leadSourceOptions}
+              onChange={(v) => updateRecord(fi.id, { leadSource: v })}
+            />
+          </label>
 
           <div className="space-y-3 rounded-lg border border-slate-100 p-3">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">

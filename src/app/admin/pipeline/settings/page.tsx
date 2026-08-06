@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Download, Loader2, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { usePipeline } from "../_lib/PipelineContext";
-import { ALL_STAGES, STAGE_LABELS } from "../_lib/stages";
+import { ALL_STAGES, STAGE_LABELS, leadSourceOptionsFor } from "../_lib/stages";
 import { FI_BY_ID, regIdLabel, regIdOf } from "../_lib/universe";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -15,9 +15,71 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+/**
+ * Editor for a settings list of free-text values (owners, lead sources).
+ * Removing an entry only takes it out of the dropdown — records already using
+ * it keep the value, which is why the delete tooltip says so.
+ */
+function ListEditor({
+  items,
+  placeholder,
+  removeTitle,
+  onChange,
+}: {
+  items: string[];
+  placeholder: string;
+  removeTitle: string;
+  onChange: (next: string[]) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  return (
+    <>
+      <ul className="space-y-2 mb-3">
+        {items.length === 0 && <li className="text-xs text-slate-400">None yet.</li>}
+        {items.map((item) => (
+          <li
+            key={item}
+            className="flex items-center justify-between rounded-lg border border-slate-100 px-3 py-2 text-sm text-slate-700"
+          >
+            {item}
+            <button
+              onClick={() => onChange(items.filter((x) => x !== item))}
+              className="text-slate-300 hover:text-red-500"
+              title={removeTitle}
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const v = draft.trim();
+          if (v && !items.includes(v)) onChange([...items, v]);
+          setDraft("");
+        }}
+        className="flex gap-2"
+      >
+        <input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder={placeholder}
+          className="flex-1 text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
+        />
+        <button
+          type="submit"
+          className="inline-flex items-center gap-1.5 text-sm font-medium bg-slate-900 text-white rounded-lg px-3 py-2 hover:bg-slate-700"
+        >
+          <Plus className="w-4 h-4" /> Add
+        </button>
+      </form>
+    </>
+  );
+}
+
 export default function PipelineSettingsPage() {
   const { state, loading, updateSettings, resetToSeed } = usePipeline();
-  const [newOwner, setNewOwner] = useState("");
   const [confirmReset, setConfirmReset] = useState(false);
 
   if (loading || !state) {
@@ -79,49 +141,25 @@ export default function PipelineSettingsPage() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
       <div className="space-y-4">
         <Section title="Team owners">
-          <ul className="space-y-2 mb-3">
-            {settings.owners.map((o) => (
-              <li
-                key={o}
-                className="flex items-center justify-between rounded-lg border border-slate-100 px-3 py-2 text-sm text-slate-700"
-              >
-                {o}
-                <button
-                  onClick={() =>
-                    updateSettings({ owners: settings.owners.filter((x) => x !== o) })
-                  }
-                  className="text-slate-300 hover:text-red-500"
-                  title="Remove owner (existing assignments keep the name)"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </li>
-            ))}
-          </ul>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const name = newOwner.trim();
-              if (name && !settings.owners.includes(name)) {
-                updateSettings({ owners: [...settings.owners, name] });
-              }
-              setNewOwner("");
-            }}
-            className="flex gap-2"
-          >
-            <input
-              value={newOwner}
-              onChange={(e) => setNewOwner(e.target.value)}
-              placeholder="Add owner…"
-              className="flex-1 text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
-            />
-            <button
-              type="submit"
-              className="inline-flex items-center gap-1.5 text-sm font-medium bg-slate-900 text-white rounded-lg px-3 py-2 hover:bg-slate-700"
-            >
-              <Plus className="w-4 h-4" /> Add
-            </button>
-          </form>
+          <ListEditor
+            items={settings.owners}
+            placeholder="Add owner…"
+            removeTitle="Remove owner (existing assignments keep the name)"
+            onChange={(owners) => updateSettings({ owners })}
+          />
+        </Section>
+
+        <Section title="Lead sources">
+          <p className="text-xs text-slate-400 mb-4">
+            Offered in the Lead source dropdown on each FI, and in the bulk bar on stage
+            lists. Reps can still type a one-off value via “Other…”.
+          </p>
+          <ListEditor
+            items={leadSourceOptionsFor(settings)}
+            placeholder="Add lead source…"
+            removeTitle="Remove from the dropdown (FIs already using it keep the value)"
+            onChange={(leadSourceOptions) => updateSettings({ leadSourceOptions })}
+          />
         </Section>
 
         <Section title="Goals & modeling">
